@@ -45,22 +45,20 @@ public class LiftOpMode extends LinearOpMode {
             double correction;
             dpadUp.update();
             dpadDown.update();
+
             if (dpadUp.risingEdge()) {
                 targetHeight = 700;
             }
+
             if (dpadDown.risingEdge()) {
                 targetHeight = 0;
             }
-            if(aToggle.getState()){
+
+            if (aToggle.getState()) {
                 correction = controller.calculate(-liftEncoder.getCurrentPosition(), targetHeight);
+            } else {
+                correction = gamepadEx.getLeftY();
             }
-            else{
-                correction = gamepadEx.getLeftY()/2;
-            }
-
-
-
-
 
             telemetry.addData("Correction", correction);
             telemetry.update();

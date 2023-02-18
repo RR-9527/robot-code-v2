@@ -26,10 +26,10 @@ import kotlin.math.abs
 var LIFT_ZERO = 0
 
 @JvmField
-var LIFT_LOW = 250
+var LIFT_LOW = 100
 
 @JvmField
-var LIFT_MID = 400
+var LIFT_MID = 350
 
 @JvmField
 var LIFT_HIGH = 700
@@ -38,19 +38,19 @@ var LIFT_HIGH = 700
 var ANGLED_LIFT_LOW = 120
 
 @JvmField
-var ANGLED_LIFT_MID = 620
+var ANGLED_LIFT_MID = 300
 
 @JvmField
-var ANGLED_LIFT_HIGH = 1110
+var ANGLED_LIFT_HIGH = 600
 
 @JvmField
-var NORMAL_LIFT_P = 0.0000712
+var NORMAL_LIFT_P = 0.012
 
 @JvmField
-var NORMAL_LIFT_I = 0.0
+var NORMAL_LIFT_I = 0.029
 
 @JvmField
-var NORMAL_LIFT_D = 0.00001
+var NORMAL_LIFT_D = 0.0001
 
 @JvmField
 var MOTION_PROFILE_LIFT_P = 0.022
@@ -178,19 +178,17 @@ class Lift(private val usingMotionProfiling: Boolean) {
                 correction = 0.0
             liftMotor.power = correction
         } else {
-            if (abs(liftHeight - targetHeight) < 3) {
+            if (abs(liftHeight - targetHeight) < 6) {
+                drivenCorrection = 0.0
                 liftMotor.power = 0.0
             } else {
 //                liftNormalPID.targetPosition = targetHeight.toDouble()
 //                val correction = liftNormalPID.update(liftHeight.toDouble(), liftVelocity)
                 val correction = liftNormalPID.calculate(liftHeight.toDouble(), targetHeight.toDouble())
                 val filteredCorrection = liftFilter.filter(correction)
-                if (abs(filteredCorrection) < 0.05)
-                    liftMotor.power = 0.0
-                else {
-                    drivenCorrection = filteredCorrection
-                    liftMotor.power = filteredCorrection
-                }
+                drivenCorrection = filteredCorrection
+                liftMotor.power = filteredCorrection
+
             }
         }
     }

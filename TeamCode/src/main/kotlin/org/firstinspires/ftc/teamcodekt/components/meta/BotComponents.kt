@@ -15,7 +15,7 @@ abstract class BaseBotComponents {
 
     fun updateBaseComponents() {
         claw.update()
-        arm.update()
+        ;arm.update(lift)
         wrist.update()
         lift.update()
         lift.printLiftTelem()
