@@ -5,7 +5,7 @@ package ftc.rogue.blacksmith.internal.scheduler
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.util.ElapsedTime
 import ftc.rogue.blacksmith.Scheduler
-import ftc.rogue.blacksmith.internal.util.DoubleConsumer
+import ftc.rogue.blacksmith.internal.util.Consumer
 import ftc.rogue.blacksmith.internal.util.consume
 import ftc.rogue.blacksmith.listeners.Listener
 
@@ -16,8 +16,6 @@ internal class SchedulerInternal {
     var beforeEach = Runnable {}
 
     fun launch(opmode: LinearOpMode, afterEach: Runnable) {
-        Scheduler.emit(Scheduler.STARTING_MSG)
-
         launchManually({ opmode.opModeIsActive() && !opmode.isStopRequested }) {
             afterEach.run()
         }
@@ -29,6 +27,8 @@ internal class SchedulerInternal {
     }
 
     inline fun launchManually(condition: () -> Boolean, afterEach: Runnable = Runnable {}) {
+        Scheduler.emit(Scheduler.STARTING_MSG)
+
         while (condition()) {
             updateListenersSet()
 
@@ -38,9 +38,7 @@ internal class SchedulerInternal {
         }
     }
 
-    fun time(opmode: LinearOpMode, afterEach: DoubleConsumer) {
-        Scheduler.emit(Scheduler.STARTING_MSG)
-
+    fun debug(opmode: LinearOpMode, afterEach: Consumer<SchedulerDebugInfo>) {
         val elapsedTime = ElapsedTime()
 
         launchManually({ opmode.opModeIsActive() && !opmode.isStopRequested }) {
@@ -48,7 +46,11 @@ internal class SchedulerInternal {
 
             elapsedTime.reset()
 
-            afterEach.consume(time)
+            val debugInfo = SchedulerDebugInfo(
+                time, listeners.size, messages.size
+            )
+
+            afterEach.consume(debugInfo)
         }
     }
 

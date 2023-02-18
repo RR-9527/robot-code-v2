@@ -22,9 +22,5 @@ class RogueTestingOp : RogueBaseTele() {
         coneLaunchingChain.cancelOn(driver.x)
 
         coneUnflipperChain.invokeOn(driver.a)
-
-        (driver.left_bumper + driver.right_bumper).onRise {
-            bot.drivetrain.resetIMU()
-        }
     }
 }

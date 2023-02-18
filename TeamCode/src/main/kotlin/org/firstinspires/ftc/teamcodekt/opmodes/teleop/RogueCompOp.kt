@@ -7,12 +7,6 @@ import kotlin.math.sign
 @TeleOp
 class RogueCompOp : RogueBaseTele() {
     private fun describeDriverControls() = with(driver) {
-        (left_bumper + right_bumper).onRise {
-            bot.drivetrain.resetIMU()
-        }
-
-        b.onRise(bot.drivetrain::switchMode)
-
         right_trigger(deadzone = .2).whileHigh {
             powerMulti = 0.3825 * (driver.right_trigger() pow .825)
         }

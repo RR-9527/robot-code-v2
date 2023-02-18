@@ -1,8 +1,9 @@
 package ftc.rogue.blacksmith
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
-import ftc.rogue.blacksmith.internal.util.DoubleConsumer
+import ftc.rogue.blacksmith.internal.scheduler.SchedulerDebugInfo
 import ftc.rogue.blacksmith.internal.scheduler.SchedulerInternal
+import ftc.rogue.blacksmith.internal.util.Consumer
 import ftc.rogue.blacksmith.listeners.*
 
 /**
@@ -11,7 +12,7 @@ import ftc.rogue.blacksmith.listeners.*
  * A component that simplifies the process of scheduling actions to be performed at a
  * specific time or condition, for use in a [LinearOpMode]. It seeks to transform teleop code
  * into a declarative haven, where the robot's actions are defined in a set of [actions][Runnable]
- * bound to a [condition][Condition] on which to perform it.
+ * bound to a condition on which to perform it.
  *
  * Usage of this component groups all mutation of state into once central location, making it
  * infinitely easier to debug and maintain.
@@ -132,8 +133,8 @@ object Scheduler {
     }
 
     @JvmStatic
-    fun time(opmode: LinearOpMode, afterEach: DoubleConsumer) {
-        internal.time(opmode, afterEach)
+    fun debug(opmode: LinearOpMode, afterEach: Consumer<SchedulerDebugInfo>) {
+        internal.debug(opmode, afterEach)
     }
 
     @JvmStatic

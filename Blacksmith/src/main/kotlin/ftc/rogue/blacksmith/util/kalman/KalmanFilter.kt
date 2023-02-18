@@ -83,14 +83,14 @@ class KalmanFilter {
     @JvmOverloads
     fun filter(measurement: Double, u: Double = 0.0): Double {
         if (x.isNaN()) {
-            x = 1 / C * measurement
-            cov = 1 / C * Q * (1 / C)
+            x = measurement / C
+            cov = Q / (C * C)
         } else {
             val predX = A * x + B * u
             val predCov = A * cov * A + R
 
             // Kalman gain
-            val K = predCov * C * (1 / (C * predCov * C + Q))
+            val K = predCov * C / (C * predCov * C + Q)
 
             // Correction
             x = predX + K * (measurement - C * predX)

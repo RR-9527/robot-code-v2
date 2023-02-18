@@ -1,13 +1,15 @@
-package org.firstinspires.ftc.teamcodekt.opmodes.teleop
+package org.firstinspires.ftc.teamcodekt.opmodes.deprecated
 
 import com.acmerobotics.dashboard.config.Config
 import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
-import ftc.rogue.blacksmith.util.kt.pow
 import org.firstinspires.ftc.teamcode.AutoData.*
+import org.firstinspires.ftc.teamcodekt.opmodes.teleop.RogueBaseTele
 
 @Config
 @TeleOp
+@Disabled
+@Deprecated("Not needed anymore, at least for now")
 class LiftTestingOp : RogueBaseTele() {
     override fun describeControls(): Unit = with(bot) {
         driver.a.onRise(::setHeight1)

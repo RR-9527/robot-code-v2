@@ -9,8 +9,6 @@ fun interface AnvilRunConfigBuilder {
 
 typealias AnvilConsumer = Consumer<Anvil>
 
-typealias DoubleConsumer = Consumer<Double>
-
 fun interface Consumer<T> {
     fun T.consume()
 }

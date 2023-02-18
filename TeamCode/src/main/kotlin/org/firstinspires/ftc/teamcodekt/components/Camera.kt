@@ -29,7 +29,6 @@ class Camera {
     private val camera: OpenCvCamera
 
     val aprilTagDetectionPipeline = AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy)
-    val poleDetector = BasePoleDetector(BlackOp.mTelemetry)
 
     fun lookForwards() {
         targetAngle = CAM_FORWARDS

@@ -47,62 +47,20 @@ class Drivetrain {
         }
     }
 
-    private var shouldDriveRC = true
-
-    private val green = """
-        🟩🟩🟩🟩🟩🟩🟩◼️◼️◼️◼️◼️🟩🟩🟩🟩🟩🟩
-        🟩🟩🟩🟩🟩🟩◼️🟫🟫🟫🟫🟫◼️🟩🟩🟩🟩🟩
-        🟩🟩🟩🟩🟩◼️🟫🟫🟫🟫◼️◼️◼️◼️🟩🟩🟩🟩
-        🟩🟩🟩🟩🟩◼️🟫🟫🟫◼️🟦🟦🟦🟦◼️🟩🟩🟩
-        🟩🟩🟩◼️◼️◼️🟫🟫🟫◼️🟦🟦🟦🟦◼️🟩🟩🟩
-        🟩🟩🟩◼️🟫◼️🟫🟫🟫◼️🟦🟦🟦🟦◼️🟩🟩🟩
-        🟩🟩🟩◼️🟫◼️🟫🟫🟫◼️🟦🟦🟦🟦◼️🟩🟩🟩
-        🟩🟩🟩◼️🟫◼️🟫🟫🟫🟫◼️◼️◼️◼️🟩🟩🟩🟩
-        🟩🟩🟩◼️🟫◼️🟫🟫🟫🟫🟫🟫🟫◼️🟩🟩🟩🟩
-        🟩🟩🟩◼️◼️◼️🟫🟫🟫🟫🟫🟫🟫◼️🟩🟩🟩🟩
-        🟩🟩🟩🟩🟩◼️🟫🟫🟫◼️◼️◼️🟫◼️🟩🟩🟩🟩
-        🟩🟩🟩🟩🟩◼️🟫🟫🟫◼️🟩◼️🟫◼️🟩🟩🟩🟩
-        🟩🟩🟩🟩🟩◼️◼️◼️◼️◼️🟩◼️◼️◼️🟩🟩🟩🟩
-    """.trimIndent()
-
-    private val red = green.replace("\uD83D\uDFE9", "\uD83D\uDFE5")
-
-    private var currentColor = red
-
     fun drive(gamepad: Gamepad, powerMulti: Double) {
-//        Pulsar(interval = 1000)
-//            .onPulse {
-//                currentColor = if (currentColor === red) green else red
-//            }
-
-        if (shouldDriveRC) {
             driveRC(gamepad, powerMulti)
-        } else {
-            driveFC(gamepad, powerMulti)
-        }
-
-//        mTelemetry.addLine(currentColor)
-    }
-
-    fun switchMode() {
-        shouldDriveRC = !shouldDriveRC
-    }
-
-    fun resetIMU() {
-        imu.reset()
     }
 
     private fun driveRC(gamepad: Gamepad, powerMulti: Double) {
         var (x, y, r) = gamepad.getDriveSticks()
         r *= .9f
 
-
 //        mTelemetry.addData("x corection", (tiltCorrectionMult * imu.angles[imuAngleUsed]).withDeadzone<Float>(.25))
 
         val theta = atan2(y, x)
         val power = hypot(x, y)
 
-        var xComponent = power * cos(theta - PI / 4)
+        val xComponent = power * cos(theta - PI / 4)
         val yComponent = power * sin(theta - PI / 4)
 
 //        xComponent += (tiltCorrectionMult * imu.angles[imuAngleUsed]).withDeadzone<Float>(.25)
@@ -133,35 +91,6 @@ class Drivetrain {
 //        mTelemetry.addData("0rd angle", a)
 //        mTelemetry.addData("1nd angle", b)
 //        mTelemetry.addData("2st angle", c)
-    }
-
-    private fun driveFC(gamepad: Gamepad, powerMulti: Double) {
-        val (x, _y, rx) = gamepad.getDriveSticks()
-        val y = -_y
-
-        val heading = Math.toRadians(-imu.heading)
-        val rotX = x * cos(heading) - y * sin(heading)
-        val rotY = x * sin(heading) + y * cos(heading)
-
-        val powers = doubleArrayOf(
-            rotY + rotX - rx,
-            rotY - rotX + rx,
-            rotY - rotX - rx,
-            rotY + rotX + rx,
-        )
-
-        val max = powers.max()
-        if (max > 1) {
-            powers.mapInPlace { it / max }
-        }
-
-        val _powerMulti = if (!gamepad.isAnyJoystickTriggered()) 0.0 else powerMulti
-
-        powers.mapInPlace { (it pow 3) * _powerMulti }
-
-        withEachMotor {
-            this.power = powers[it]
-        }
     }
 
     private fun DoubleArray.mapInPlace(transform: (Double) -> Double) = repeat(size) {

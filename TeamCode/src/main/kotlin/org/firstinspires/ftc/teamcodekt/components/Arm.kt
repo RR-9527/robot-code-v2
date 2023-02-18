@@ -17,36 +17,34 @@ class Arm {
     private val armServo = SimpleServo(hwMap, DeviceNames.ARM_SERVO, 0.0, 180.0)
 
     var targetAngle = ARM_RESTING
+        set(value) {
+            inDepositMode = false
+            field = value
+        }
 
     var inDepositMode = false
 
     fun setToForwardsPos() {
-        inDepositMode = false
         targetAngle = ARM_FORWARDS
     }
 
     fun setToBackwardsPos() {
-        inDepositMode = false
         targetAngle = ARM_BACKWARDS
     }
 
     fun setToForwardsAngledPos() {
-        inDepositMode = false
         targetAngle = ARM_FORWARDS - 23
     }
 
     fun setToBackwardsPosButLikeSliiiightlyHigher() {
-        inDepositMode = false
         targetAngle = 42.0
     }
 
     fun setToBackwardsPosLastCycle() {
-        inDepositMode = false
         targetAngle = 39.5
     }
 
     fun setToRestingPos() {
-        inDepositMode = false
         targetAngle = ARM_RESTING
     }
 
@@ -61,6 +59,7 @@ class Arm {
             } else {
                 ARM_DEP_ANGLED
             }
+            inDepositMode = true
         }
 
         armServo.turnToAngle(targetAngle)
