@@ -4,16 +4,20 @@ import com.acmerobotics.roadrunner.geometry.Pose2d
 import ftc.rogue.blacksmith.internal.util.AnvilRunConfigBuilder
 
 class AnvilRunConfig internal constructor() {
-    @get:JvmSynthetic internal var buildsSynchronously = false
+    @get:JvmSynthetic
+    internal var buildsSynchronously = false
         private set
 
-    @get:JvmSynthetic internal var runsSynchronously = false
+    @get:JvmSynthetic
+    internal var runsSynchronously = false
         private set
 
-    @get:JvmSynthetic internal var predicate = { true }
+    @get:JvmSynthetic
+    internal var predicate = { true }
         private set
 
-    @get:JvmSynthetic internal var startPoseSupplier: (() -> Pose2d)? = null
+    @get:JvmSynthetic
+    internal var startPoseSupplier: (() -> Pose2d)? = null
         private set
 
     @JvmOverloads
@@ -40,6 +44,6 @@ class AnvilRunConfig internal constructor() {
 
     companion object {
         @JvmField
-        val DEFAULT = AnvilRunConfigBuilder { AnvilRunConfig() }
+        val DEFAULT = AnvilRunConfigBuilder {}
     }
 }

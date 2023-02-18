@@ -66,7 +66,7 @@ abstract class BlackOp : LinearOpMode() {
         fun mTelemetry() = mTelemetry
 
         @get:JvmSynthetic
-        var mTelemetry by NotNull<MultipleTelemetry>(errorMsg = "Can't access mTelemetry before a BlackOp instance is initalized!")
+        var mTelemetry by NotNull<MultipleTelemetry>(errorMsg = "Can't access mTelemetry before a BlackOp instance is initialized!")
             private set
 
         /**
@@ -81,7 +81,7 @@ abstract class BlackOp : LinearOpMode() {
         fun hwMap() = hwMap
 
         @get:JvmSynthetic
-        var hwMap by NotNull<HardwareMap>(errorMsg = "Can't access hwMap before a BlackOp instance is initalized!")
+        var hwMap by NotNull<HardwareMap>(errorMsg = "Can't access hwMap before a BlackOp instance is initialized!")
             private set
 
         /**

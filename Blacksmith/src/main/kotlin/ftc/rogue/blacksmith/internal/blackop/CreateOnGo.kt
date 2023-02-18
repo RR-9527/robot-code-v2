@@ -58,7 +58,8 @@ class CreateOnGoInternal<T : Any>
     }
 }
 
-fun BlackOp.injectCreateOnGoFields() = this::class.java
+@JvmSynthetic
+internal fun Any.injectCreateOnGoFields() = this::class.java
     .getFieldsAnnotatedWith(CreateOnGo::class.java)
     .forEach { field ->
         val clazz = field.type

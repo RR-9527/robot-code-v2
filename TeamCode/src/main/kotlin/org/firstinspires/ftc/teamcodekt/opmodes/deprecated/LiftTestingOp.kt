@@ -29,29 +29,25 @@ class LiftTestingOp : RogueBaseTele() {
 
         driver.left_bumper.onRise(claw::openForIntakeWide)
         driver.left_bumper.onFall(claw::close)
-
-        (driver.left_bumper + driver.right_bumper).onRise {
-            bot.drivetrain.resetIMU()
-        }
     }
 
-    private fun setHeight1(){
+    private fun setHeight1() {
         bot.lift.targetHeight = AUTO_INTAKE_LIFT_HEIGHT_1
     }
 
-    private fun setHeight2(){
+    private fun setHeight2() {
         bot.lift.targetHeight = AUTO_INTAKE_LIFT_HEIGHT_2
     }
 
-    private fun setHeight3(){
+    private fun setHeight3() {
         bot.lift.targetHeight = AUTO_INTAKE_LIFT_HEIGHT_3
     }
 
-    private fun setHeight4(){
+    private fun setHeight4() {
         bot.lift.targetHeight = AUTO_INTAKE_LIFT_HEIGHT_4
     }
 
-    private fun setHeight5(){
+    private fun setHeight5() {
         bot.lift.targetHeight = AUTO_INTAKE_LIFT_HEIGHT_5
     }
 }

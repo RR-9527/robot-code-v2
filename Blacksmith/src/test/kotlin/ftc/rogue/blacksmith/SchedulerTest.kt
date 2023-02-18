@@ -12,11 +12,11 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.assertDoesNotThrow
+import kotlin.test.assertTrue
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class SchedulerTest {
     private val linearOpMode = mockk<LinearOpMode>()
-    private val telemetry = mockk<Telemetry>(relaxed = true)
     private var isStopped = false
 
     init {
@@ -27,7 +27,6 @@ internal class SchedulerTest {
     @BeforeEach
     fun setUp() {
         Scheduler.nuke()
-        clearMocks(telemetry)
         isStopped = false
     }
 
@@ -75,21 +74,41 @@ internal class SchedulerTest {
     fun `scheduler messaging works`() {
         val msg = 234109324923L
 
+        val expected = listOf("First", "Second")
+        val actual = mutableListOf<String>()
+
         Scheduler.on(msg) {
-            telemetry.addLine("msg")
+            actual += "First"
         }
 
         Scheduler.on(msg) {
-            telemetry.addLine("msg")
+            actual += "Second"
         }
 
         Scheduler.on(0) {
-            telemetry.addLine("!msg")
+            actual += "Should never be called"
         }
 
         Scheduler.emit(msg)
 
-        verify(exactly = 2) { telemetry.addLine("msg") }
-        verify(exactly = 0) { telemetry.addLine("!msg") }
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `scheduler debug works (enough)`() {
+        for (i in 0 until 3) {
+            Listener { true }.hook()
+        }
+
+        for (i in 0 until 3) {
+            Scheduler.on(0) {}
+        }
+
+        Scheduler.debug(linearOpMode) {
+            assertTrue { time > 0 }
+            assertTrue { numHookedListeners == 3 }
+            assertTrue { numUniqueMessageSubs == 1 }
+            isStopped = true
+        }
     }
 }
