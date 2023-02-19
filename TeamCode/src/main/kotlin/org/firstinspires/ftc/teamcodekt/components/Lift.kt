@@ -22,10 +22,10 @@ import kotlin.math.abs
 
 // Too many fields...
 
-@JvmField var LIFT_ZERO = 0
-@JvmField var LIFT_LOW  = 100
-@JvmField var LIFT_MID  = 350
-@JvmField var LIFT_HIGH = 700
+@JvmField var LIFT_ZERO = -5
+@JvmField var LIFT_LOW  = 140
+@JvmField var LIFT_MID  = 360
+@JvmField var LIFT_HIGH = 750
 
 @JvmField var ANGLED_LIFT_LOW  = 100
 @JvmField var ANGLED_LIFT_MID  = 350
@@ -95,14 +95,14 @@ class Lift {
     }
 
     fun update() {
-        if (abs(liftHeight - targetHeight) < 6) {
-            drivenCorrection = 0.0
-            liftMotor.power = 0.0
-        } else {
+        if(abs(targetHeight-liftHeight) > 6){
             val correction = liftNormalPID.calculate(liftHeight.toDouble(), targetHeight.toDouble())
             val filteredCorrection = liftFilter.filter(correction)
             drivenCorrection = filteredCorrection
             liftMotor.power = filteredCorrection
+        }
+        else{
+            liftMotor.power = 0.0
         }
     }
 

@@ -6,6 +6,7 @@ import ftc.rogue.blacksmith.chains.CancellableChain
 import ftc.rogue.blacksmith.listeners.Listener
 import ftc.rogue.blacksmith.listeners.after
 import org.firstinspires.ftc.teamcodekt.components.LIFT_LOW
+import org.firstinspires.ftc.teamcodekt.components.LIFT_MID
 import org.firstinspires.ftc.teamcodekt.components.meta.TeleOpBotComponents
 
 class RegularDepositChain(val bot: TeleOpBotComponents) : CancellableChain {
@@ -22,11 +23,13 @@ class RegularDepositChain(val bot: TeleOpBotComponents) : CancellableChain {
                 return@onFall
             }
 
-            bot.lift.clippedHeight = (bot.lift.clippedHeight - 300).coerceAtLeast(50)
+            if(bot.lift.targetHeight > LIFT_LOW)
+                bot.lift.targetHeight = (bot.lift.targetHeight - 100)
 
             bot.arm.setToForwardsPos()
 
-            after(190).milliseconds {
+
+            after(210).milliseconds {
                 bot.claw.openForDeposit()
             }
 
