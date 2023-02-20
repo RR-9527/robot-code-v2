@@ -4,22 +4,14 @@
 package org.firstinspires.ftc.teamcodekt.components
 
 import com.acmerobotics.dashboard.config.Config
-import com.arcrobotics.ftclib.hardware.RevIMU
-import com.noahbres.meepmeep.core.exhaustive
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction
 import com.qualcomm.robotcore.hardware.Gamepad
-import com.qualcomm.robotcore.util.ElapsedTime
-import ftc.rogue.blacksmith.BlackOp
 import ftc.rogue.blacksmith.BlackOp.Companion.hwMap
-import ftc.rogue.blacksmith.BlackOp.Companion.mTelemetry
-import ftc.rogue.blacksmith.annotations.ConfigKt
-import ftc.rogue.blacksmith.listeners.Pulsar
 import ftc.rogue.blacksmith.util.kt.invoke
 import ftc.rogue.blacksmith.util.kt.maxMagnitudeAbs
 import ftc.rogue.blacksmith.util.kt.pow
-import ftc.rogue.blacksmith.util.kt.withDeadzone
 import org.firstinspires.ftc.teamcodekt.components.meta.DeviceNames
 import java.util.*
 import kotlin.math.*
@@ -36,11 +28,7 @@ class Drivetrain {
     private val backLeft   = hwMap<DcMotorEx>(DeviceNames.DRIVE_BL).apply { direction = Direction.REVERSE }
     private val backRight  = hwMap<DcMotorEx>(DeviceNames.DRIVE_BR)
 
-    private val imu = RevIMU(hwMap)
-
     init {
-        imu.init()
-
         withEachMotor {
             zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
             mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
@@ -55,7 +43,7 @@ class Drivetrain {
         var (x, y, r) = gamepad.getDriveSticks()
         r *= .9f
 
-//        mTelemetry.addData("x corection", (tiltCorrectionMult * imu.angles[imuAngleUsed]).withDeadzone<Float>(.25))
+//        mTelemetry.addData("x corection", (tiltCorrectionMult * Imu.angles[imuAngleUsed]).withDeadzone<Float>(.25))
 
         val theta = atan2(y, x)
         val power = hypot(x, y)
@@ -63,7 +51,7 @@ class Drivetrain {
         val xComponent = power * cos(theta - PI / 4)
         val yComponent = power * sin(theta - PI / 4)
 
-//        xComponent += (tiltCorrectionMult * imu.angles[imuAngleUsed]).withDeadzone<Float>(.25)
+//        xComponent += (tiltCorrectionMult * Imu.angles[imuAngleUsed]).withDeadzone<Float>(.25)
 
         val max = maxMagnitudeAbs<Double>(xComponent, yComponent, 1e-16)
 
@@ -86,7 +74,7 @@ class Drivetrain {
             this.power = powers[it]
         }
 
-//        val (a, b, c) = imu.angles
+//        val (a, b, c) = Imu.angles
 //
 //        mTelemetry.addData("0rd angle", a)
 //        mTelemetry.addData("1nd angle", b)

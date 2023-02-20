@@ -6,6 +6,7 @@ import com.outoftheboxrobotics.photoncore.PhotonCore
 import ftc.rogue.blacksmith.BlackOp
 import ftc.rogue.blacksmith.Scheduler
 import ftc.rogue.blacksmith.listeners.ReforgedGamepad
+import org.firstinspires.ftc.teamcodekt.components.Imu
 import org.firstinspires.ftc.teamcodekt.components.chains.*
 import org.firstinspires.ftc.teamcodekt.components.meta.createTeleOpBotComponents
 
@@ -24,7 +25,11 @@ abstract class RogueBaseTele : BlackOp() {
     protected val coneUnflipperChain by createOnGo<ConeUnflipperChain> { bot }
 
     final override fun go() {
+        PhotonCore.experimental.setMaximumParallelCommands(8)
+//        PhotonCore.experimental.setSinglethreadedOptimized(false)
         PhotonCore.enable()
+
+        Imu.init(this)
 
         describeControls()
 
