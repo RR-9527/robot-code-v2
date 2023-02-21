@@ -12,10 +12,10 @@ import org.firstinspires.ftc.teamcodekt.components.meta.TeleOpBotComponents
 class RegularDepositChain(val bot: TeleOpBotComponents) : CancellableChain {
     private var isCancelled = false
 
-    override fun invokeOn(button: Listener) = (button + { bot.lift.clippedHeight > 50 })
+    override fun invokeOn(button: Listener) = (button + { bot.lift.clippedHeight > 90 })
         .onRise {
             isCancelled = false
-            bot.arm.setToDepositMode()
+            bot.arm.setToForwardsPos()
             bot.wrist.setToForwardsPos()
         }
         .onFall {
@@ -23,21 +23,17 @@ class RegularDepositChain(val bot: TeleOpBotComponents) : CancellableChain {
                 return@onFall
             }
 
-            if(bot.lift.targetHeight > LIFT_LOW)
-                bot.lift.targetHeight = (bot.lift.targetHeight - 100)
+            bot.lift.targetHeight = (bot.lift.targetHeight - 400).coerceAtLeast(900)
 
-            bot.arm.setToForwardsPos()
-
-
-            after(210).milliseconds {
+            after(130).milliseconds {
                 bot.claw.openForDeposit()
             }
 
-            after(395).milliseconds {
+            after(355).milliseconds {
                 finish()
             }
 
-            after(425).milliseconds {
+            after(400).milliseconds {
                 bot.lift.goToZero()
             }
         }

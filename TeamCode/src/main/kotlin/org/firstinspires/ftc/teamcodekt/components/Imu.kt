@@ -26,7 +26,6 @@ object Imu {
             while (!opmode.isStopRequested && opmode.opModeIsActive()) {
                 val (x, y, z) = imu.angularOrientation
                 angles = arrayOf(x, y, z)
-
                 xRotationRate = imu.angularVelocity.xRotationRate
             }
         }.start()

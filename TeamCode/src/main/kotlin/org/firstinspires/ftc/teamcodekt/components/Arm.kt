@@ -7,22 +7,24 @@ import com.arcrobotics.ftclib.hardware.SimpleServo
 import ftc.rogue.blacksmith.BlackOp.Companion.hwMap
 import org.firstinspires.ftc.teamcodekt.components.meta.DeviceNames
 
-@JvmField var ARM_FORWARDS   = 136.5
-@JvmField var ARM_BACKWARDS  = 44.5
-@JvmField var ARM_RESTING    = 96.0
-@JvmField var ARM_DEP_ANGLED = 122.5
-@JvmField var ARM_DEP_FLAT   = 140.5
+@JvmField
+var ARM_FORWARDS = 136.5
+@JvmField
+var ARM_BACKWARDS = 44.5
+@JvmField
+var ARM_RESTING = 96.0
+@JvmField
+var ARM_DEP_ANGLED = 122.5
+@JvmField
+var ARM_DEP_FLAT = 140.5
 
 class Arm {
     private val armServo = SimpleServo(hwMap, DeviceNames.ARM_SERVO, 0.0, 180.0)
 
     var targetAngle = ARM_RESTING
         set(value) {
-            inDepositMode = false
             field = value
         }
-
-    var inDepositMode = false
 
     fun setToForwardsPos() {
         targetAngle = ARM_FORWARDS
@@ -48,20 +50,7 @@ class Arm {
         targetAngle = ARM_RESTING
     }
 
-    fun setToDepositMode() {
-        inDepositMode = true
-    }
-
-    fun update(lift: Lift) {
-        if (inDepositMode) {
-            targetAngle = if (lift.targetHeight > 525) {
-                ARM_DEP_FLAT
-            } else {
-                ARM_DEP_ANGLED
-            }
-            inDepositMode = true
-        }
-
+    fun update() {
         armServo.turnToAngle(targetAngle)
     }
 }

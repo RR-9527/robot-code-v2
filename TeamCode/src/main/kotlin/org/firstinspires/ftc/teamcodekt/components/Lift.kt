@@ -23,8 +23,8 @@ import kotlin.math.abs
 // Too many fields...
 
 @JvmField var LIFT_ZERO = -5
-@JvmField var LIFT_LOW  = 140
-@JvmField var LIFT_MID  = 360
+@JvmField var LIFT_LOW  = 210
+@JvmField var LIFT_MID  = 450
 @JvmField var LIFT_HIGH = 750
 
 @JvmField var ANGLED_LIFT_LOW  = 100
@@ -44,7 +44,7 @@ import kotlin.math.abs
  */
 class Lift {
     private val liftMotor = hwMap<DcMotorSimple>(DeviceNames.LIFT_MOTOR)
-    
+
     private val liftNormalPID = PIDController(NORMAL_LIFT_P, NORMAL_LIFT_I, NORMAL_LIFT_D)
 
     private val liftFilter = KalmanFilter(PROCESS_NOISE, MEASUREMENT_NOISE)
@@ -95,13 +95,12 @@ class Lift {
     }
 
     fun update() {
-        if(abs(targetHeight-liftHeight) > 6){
+        if (abs(targetHeight - liftHeight) > 6) {
             val correction = liftNormalPID.calculate(liftHeight.toDouble(), targetHeight.toDouble())
             val filteredCorrection = liftFilter.filter(correction)
             drivenCorrection = filteredCorrection
             liftMotor.power = filteredCorrection
-        }
-        else{
+        } else {
             liftMotor.power = 0.0
         }
     }
