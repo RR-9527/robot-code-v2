@@ -7,6 +7,8 @@ import ftc.rogue.blacksmith.util.SignalEdgeDetector
 import ftc.rogue.blacksmith.util.runOnce
 
 /**
+ * [Docs link](https://blacksmithftc.vercel.app/scheduler-api/listeners)
+ *
  * A component that  performs the set of subscribed [actions][Runnable] when the state of the
  * [condition][Condition] matches the signal state that the action was
  * subscribed on (e.g. `on rising edge` or `while low`).

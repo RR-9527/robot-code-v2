@@ -5,6 +5,8 @@ package ftc.rogue.blacksmith.util.kt
 import kotlin.reflect.KProperty
 
 /**
+ * [Docs link](https://blacksmithftc.vercel.app/util/kt/lateinitval)
+ *
  * A delegate class used to simulate a lateinit value; any variable that delegates to this may
  * only be initialized once, but it may be initialized whenever it is desired.
  *

@@ -22,9 +22,6 @@ class Arm {
     private val armServo = SimpleServo(hwMap, DeviceNames.ARM_SERVO, 0.0, 180.0)
 
     var targetAngle = ARM_RESTING
-        set(value) {
-            field = value
-        }
 
     fun setToForwardsPos() {
         targetAngle = ARM_FORWARDS
@@ -35,7 +32,7 @@ class Arm {
     }
 
     fun setToForwardsAngledPos() {
-        targetAngle = ARM_FORWARDS - 23
+        targetAngle = ARM_FORWARDS - 17
     }
 
     fun setToBackwardsPosButLikeSliiiightlyHigher() {

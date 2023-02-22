@@ -1,3 +1,6 @@
+parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" || fail ; pwd -P )
+cd "$parent_path"/..
+
 find \
  './Blacksmith/src' \
  './blacksmith-docs/docs' \

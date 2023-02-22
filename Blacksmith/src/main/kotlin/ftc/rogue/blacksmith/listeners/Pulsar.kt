@@ -1,5 +1,8 @@
 package ftc.rogue.blacksmith.listeners
 
+/**
+ * [Docs link](https://blacksmithftc.vercel.app/scheduler-api/pulsar)
+ */
 class Pulsar(interval: Int) {
     private var startTime = System.currentTimeMillis()
 

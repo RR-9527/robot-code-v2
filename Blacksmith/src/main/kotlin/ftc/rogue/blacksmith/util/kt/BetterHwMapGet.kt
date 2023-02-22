@@ -3,6 +3,8 @@ package ftc.rogue.blacksmith.util.kt
 import com.qualcomm.robotcore.hardware.HardwareMap
 
 /**
+ * [Docs link](https://blacksmithftc.vercel.app/util/kt/better-hwmap-get)
+ *
  * Syntactic sugar for [HardwareMap.get].
  *
  * __Note: This is Kotlin only.__

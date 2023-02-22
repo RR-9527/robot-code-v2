@@ -12,6 +12,8 @@ import java.util.concurrent.TimeUnit
 // ---------------------------------------------------------------------------------------------
 
 /**
+ * [Docs link](https://blacksmithftc.vercel.app/util/meepmeep/persistence)
+ *
  * A class to persist the state of the visualizer window.
  *
  * Basically saves the position of the [MeepMeep] GUI window so that it opens in the some position

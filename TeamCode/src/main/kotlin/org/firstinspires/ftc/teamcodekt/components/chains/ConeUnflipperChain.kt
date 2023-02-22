@@ -12,8 +12,13 @@ import org.firstinspires.ftc.teamcodekt.components.meta.TeleOpBotComponents
 
 @Config
 class ConeUnflipperChain(val bot: TeleOpBotComponents) : Chain {
-    @JvmField
-    var flipperTargetHeight = 63
+    companion object {
+        @JvmField
+        var flipperTargetHeight = 115
+
+        @JvmField
+        var flipperTargetAngle = 27.5
+    }
 
     private var isRunning = false
 
@@ -23,12 +28,11 @@ class ConeUnflipperChain(val bot: TeleOpBotComponents) : Chain {
             bot.intake.enable()
 
             bot.lift.targetHeight = flipperTargetHeight
-            isRunning = true
 
-            after(30).milliseconds {
-                bot.arm.targetAngle = ARM_BACKWARDS - 7.5
-                bot.wrist.setToRestingPos()
-            }
+            bot.arm.targetAngle = flipperTargetAngle
+            bot.wrist.setToRestingPos()
+
+            isRunning = true
         }
 
         button.onFall {
@@ -46,7 +50,7 @@ class ConeUnflipperChain(val bot: TeleOpBotComponents) : Chain {
             bot.lift.goToZero()
         }
 
-        Listener { isRunning && bot.rcs.getDistance(DistanceUnit.CM) < .4 }.onRise {
+        Listener { isRunning && bot.rcs.getDistance(DistanceUnit.CM) < .8 }.onRise {
             bot.intake.disable()
             isRunning = false
 

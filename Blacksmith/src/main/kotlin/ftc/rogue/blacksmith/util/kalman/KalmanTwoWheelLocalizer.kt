@@ -5,6 +5,9 @@ import com.acmerobotics.roadrunner.localization.TwoTrackingWheelLocalizer
 import ftc.rogue.blacksmith.units.AngleUnit.DEGREES
 import ftc.rogue.blacksmith.util.toRad
 
+/**
+ * [READ DOCS FOR THIS (click me)](https://blacksmithftc.vercel.app/util/kalmanfilters/kalmanfilter-localizers)
+ */
 class KalmanTwoWheelLocalizer(
     private val localizer: TwoTrackingWheelLocalizer,
 ) : TwoTrackingWheelLocalizer(localizer.getWheelPoses()) {

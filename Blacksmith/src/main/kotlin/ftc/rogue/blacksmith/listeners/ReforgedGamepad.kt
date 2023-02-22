@@ -7,6 +7,8 @@ import ftc.rogue.blacksmith.Scheduler
 import kotlin.math.abs
 
 /**
+ * [Docs link](https://blacksmithftc.vercel.app/scheduler-api/reforged-gamepad)
+ *
  * A wrapper around the base [Gamepad] class that can create [Listeners][Listener] for each button.
  * Listeners are only hooked when it's usage is required.
  *
@@ -499,17 +501,40 @@ class ReforgedGamepad(val gamepad: Gamepad) {
 
     // -- END MACHINE GENERATED CODE --
 
-    class GamepadBooleanListener internal constructor(val input: () -> Boolean) : Listener(input) {
+    class GamepadBooleanListener
+        private constructor(
+            val input: () -> Boolean
+        ) : Listener(input) {
+
         fun get() = input()
 
         @JvmSynthetic
         operator fun invoke() = input()
+
+        companion object {
+            @JvmSynthetic
+            internal operator fun invoke(input: () -> Boolean): GamepadBooleanListener {
+                return GamepadBooleanListener(input)
+            }
+        }
     }
 
-    class GamepadAnalogListener internal constructor(deadzone: Double, val input: () -> Float) : Listener({ abs(input()) > deadzone }) {
+    class GamepadAnalogListener
+        private constructor(
+            deadzone: Double,
+            val input: () -> Float
+        ) : Listener({ abs(input()) > deadzone }) {
+
         fun get() = input()
 
         @JvmSynthetic
         operator fun invoke() = input()
+
+        companion object {
+            @JvmSynthetic
+            internal operator fun invoke(deadzone: Double, input: () -> Float): GamepadAnalogListener {
+                return GamepadAnalogListener(deadzone, input)
+            }
+        }
     }
 }

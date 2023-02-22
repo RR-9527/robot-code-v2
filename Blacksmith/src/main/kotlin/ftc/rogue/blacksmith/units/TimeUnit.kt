@@ -1,5 +1,8 @@
 package ftc.rogue.blacksmith.units
 
+/**
+ * [Docs link](https://blacksmithftc.vercel.app/etc/units/time)
+ */
 enum class TimeUnit(private val msConversionFactor: Double) {
     NANOSECONDS (msConversionFactor = 1.0 / 1e+6),
     MICROSECONDS(msConversionFactor = 1.0 / 1e+3),

@@ -1,4 +1,4 @@
-package ftc.rogue.blacksmith.util
+package ftc.rogue.blacksmith.internal
 
 import ftc.rogue.blacksmith.internal.*
 import ftc.rogue.blacksmith.internal.util.*

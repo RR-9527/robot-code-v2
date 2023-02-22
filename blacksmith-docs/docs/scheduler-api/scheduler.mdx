@@ -113,6 +113,15 @@ Convenient for when you aren't doing anything on a loop during initialization un
 </TabItem>
 </Tabs>
 
+### Scheduler.launchManually
+
+Manually launches the Scheduler using the given lambda which returns a boolean, stopping when it
+returns false.
+
+Has all the same functionality of `Scheduler.launch()`
+
+TODO: document this more thoroughly
+
 ### Scheduler.beforeEach
 
 Runs a block of code *before* all the Listeners and the `afterEach` block (the one passed directly into `Scheduler.launch` runs).
@@ -165,13 +174,24 @@ Runs a block of code *before* all the Listeners and the `afterEach` block (the o
 </TabItem>
 </Tabs>
 
-### Scheduler.time ⏰
+### Scheduler.debug
 
-Utility method for roughly benchmarking performance. Does not average, only prints the raw time
-each cycle.
+Utility method for to help benchmark performance or debug Scheduler-related issues
 
-The 'afterEach' block now takes in a double representing the time in ms that you can now do whatever
-you want with
+The 'afterEach' block now takes in a SchedulerDebugInfo that contains some debug information. The
+class definition is as follows:
+
+```kt
+class SchedulerDebugInfo(
+    val loopTime: Double, /* raw loop time, not averaged */
+    val numHookedListeners: Int,
+    val numUniqueMessageSubs: Int,
+)
+```
+
+:::caution
+Keep in mind Blacksmith may internally subscribe to a few messages or something akin.
+:::
 
 <ParamsList params={[
   {
@@ -182,8 +202,8 @@ you want with
   },
   {
     name: 'afterEach',
-    type: '(Double) -> Void',
-    desc: 'An optional block of code to run every tick, after the listeners have ran',
+    type: '(Consumer<SchedulerDebugInfo>) -> Void',
+    desc: 'An block of code to run every tick, after the listeners have ran. Takes in a \'SchedulerDebugInfo\' instance.',
     typeLink: TypeLinks.LAMBDA,
     defaultsTo: '() -> {}'
   }
@@ -199,8 +219,10 @@ you want with
 
       waitForStart();
 
-      Scheduler.time(this, (loopTime) -> {
-          telemetry.addData("LoopTime (ms)", loopTime)
+      Scheduler.debug(this, (info) -> {
+          telemetry.addData("LoopTime (ms)", info.getLoopTime())
+          telemetry.addData("Number of hooked listeners", info.getNumHookedListeners())
+          telemetry.addData("Number of (unique) msg subscribers", info.getNumUniqueMessageSubs())
           telemetry.update()
       });
   }
@@ -215,60 +237,12 @@ you want with
 
       waitForStart()
 
-      Scheduler.time(this) {
-          telemetry.addData("LoopTime (ms)", it)
+      Scheduler.debug(this) {
+          telemetry.addData("LoopTime (ms)", it.loopTime)
+          telemetry.addData("Number of hooked listeners", it.numHookedListeners)
+          telemetry.addData("Number of (unique) msg subscribers", it.numUniqueMessageSubs)
           telemetry.update()
       }
-  }
-  ```
-
-</TabItem>
-</Tabs>
-
-### Scheduler.nuke
-
-Goes nuclear.
-
-Destroys everything Scheduler API related.
-
-Clears and unhooks all of the listeners, clears all of the messages, clears the beforeEach block.
-
-<Tabs groupId="programming-language">
-<TabItem value="java" label="Java">
-
-  ```java
-  @Override
-  public void runOpMode() throws InterruptedException {
-      Scheduler.beforeEach(() -> System.out.println("Hi!"));
-
-      Listener(() -> true).whileHigh(() -> System.out.println("I'm high!"));
-
-      Scheduler.on("message", () -> ...)
-
-      Scheduler.reset()
-
-      // Scheduler.beforeEach == () -> {}
-      // Scheduler.listeners.size == 0
-      // Scheduler.messages.size == 0
-  }
-  ```
-
-</TabItem>
-<TabItem value="kt" label="Kotlin">
-
-  ```kotlin
-  override fun runOpMode() {
-      Scheduler.beforeEach { println("Hi!") }
-
-      Listener { true }.whileHigh { println("I'm high!") }
-
-      Scheduler.on("message") {}
-
-      Scheduler.reset()
-
-      // Scheduler.beforeEach == () -> {}
-      // Scheduler.listeners.size == 0
-      // Scheduler.messages.size == 0
   }
   ```
 
@@ -378,3 +352,57 @@ export function SchedulerLaunchParamList() {
     ]}/>
   )
 }
+
+## Other Scheduler methods
+
+### Scheduler.nuke
+
+Goes nuclear.
+
+Destroys everything Scheduler API related.
+
+Clears and unhooks all of the listeners, clears all of the messages, clears the beforeEach block.
+
+Basically just a hard reset. But with a cooler name. Thanks GHCup.
+
+<Tabs groupId="programming-language">
+<TabItem value="java" label="Java">
+
+  ```java
+  @Override
+  public void runOpMode() throws InterruptedException {
+      Scheduler.beforeEach(() -> System.out.println("Hi!"));
+
+      Listener(() -> true).whileHigh(() -> System.out.println("I'm high!"));
+
+      Scheduler.on("message", () -> ...)
+
+      Scheduler.reset()
+
+      // Scheduler.beforeEach == () -> {}
+      // Scheduler.listeners.size == 0
+      // Scheduler.messages.size == 0
+  }
+  ```
+
+</TabItem>
+<TabItem value="kt" label="Kotlin">
+
+  ```kotlin
+  override fun runOpMode() {
+      Scheduler.beforeEach { println("Hi!") }
+
+      Listener { true }.whileHigh { println("I'm high!") }
+
+      Scheduler.on("message") {}
+
+      Scheduler.reset()
+
+      // Scheduler.beforeEach == () -> {}
+      // Scheduler.listeners.size == 0
+      // Scheduler.messages.size == 0
+  }
+  ```
+
+</TabItem>
+</Tabs>

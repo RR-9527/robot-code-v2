@@ -3,10 +3,12 @@
 package ftc.rogue.blacksmith.util.kalman
 
 /**
+ * [Docs link](https://blacksmithftc.vercel.app/util/kalmanfilters/kalmanfilter-object)
+ *
  * A Kalman Filter for 1D data.
  * It can be used for multiple dimensioned data, however a separate
  * object must be created for each dimension.
-
+ *
  * @author TLindauer
  */
 class KalmanFilter {

@@ -2,11 +2,8 @@ package ftc.rogue.blacksmith
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import ftc.rogue.blacksmith.listeners.Listener
-import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.verify
-import org.firstinspires.ftc.robotcore.external.Telemetry
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -105,9 +102,9 @@ internal class SchedulerTest {
         }
 
         Scheduler.debug(linearOpMode) {
-            assertTrue { time > 0 }
-            assertTrue { numHookedListeners == 3 }
-            assertTrue { numUniqueMessageSubs == 1 }
+            assertTrue("time > 0") { loopTime > 0 }
+            assertTrue("numHookedListeners == 3") { numHookedListeners == 3 }
+            assertTrue("numUniqueMessageSubs == 1") { numUniqueMessageSubs == 1 }
             isStopped = true
         }
     }

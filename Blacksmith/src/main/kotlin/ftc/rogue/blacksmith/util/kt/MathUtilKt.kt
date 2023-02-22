@@ -8,6 +8,10 @@ import kotlin.math.abs
 import kotlin.math.absoluteValue
 import kotlin.math.pow
 
+// ---------------------------------------------------
+// https://blacksmithftc.vercel.app/util/kt/math-utils-kt
+// ---------------------------------------------------
+
 inline fun <reified T : Number> Number.toIn(from: DistanceUnit = GlobalUnits.distance) = asNumberType<T> {
     from.toIn(this.toDouble())
 }

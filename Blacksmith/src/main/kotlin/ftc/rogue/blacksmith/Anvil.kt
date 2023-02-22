@@ -95,6 +95,9 @@ class Anvil
     ) {
 
     companion object {
+        /**
+         * [READ DOCS FOR THIS (click me)](https://blacksmithftc.vercel.app/anvil/creating-and-running#anvilforgetrajectory)
+         */
         @JvmStatic
         @JvmOverloads
         inline fun forgeTrajectory(
@@ -105,6 +108,9 @@ class Anvil
             return builder( Anvil(drive, startPose) )
         }
 
+        /**
+         * [READ DOCS FOR THIS (click me)](https://blacksmithftc.vercel.app/anvil/creating-and-running#running-the-initial-trajectory)
+         */
         @JvmStatic
         fun startAutoWith(instance: Anvil): AnvilRunner {
             return AnvilRunner().startAutoWith(instance)
@@ -117,142 +123,237 @@ class Anvil
 
     // -- Direct path mappings (Basic) --
 
+    /**
+     * [Link to method docs](https://blacksmithftc.vercel.app/anvil/pathing-mappings#anvilforward)
+     */
     fun forward(distance: Number) = tap {
         internal._forward(distance)
     }
 
+    /**
+     * [Link to method docs](https://blacksmithftc.vercel.app/anvil/pathing-mappings#anvilback)
+     */
     fun back(distance: Number) = tap {
         internal._back(distance)
     }
 
+    /**
+     * [Link to method docs](https://blacksmithftc.vercel.app/anvil/pathing-mappings#anvilturn)
+     */
     fun turn(angle: Number) = tap {
         internal._turn(angle)
     }
 
+    /**
+     * [Link to method docs](https://blacksmithftc.vercel.app/anvil/pathing-mappings#anvilstrafeleft)
+     */
     fun strafeLeft(distance: Number) = tap {
         internal._strafeLeft(distance)
     }
 
+    /**
+     * [Link to method docs](https://blacksmithftc.vercel.app/anvil/pathing-mappings#anvilstraferight)
+     */
     fun strafeRight(distance: Number) = tap {
         internal._strafeRight(distance)
     }
 
     // -- Direct path mappings (Lines) --
 
+    /**
+     * [Link to method docs](https://blacksmithftc.vercel.app/anvil/pathing-mappings#anvillineto)
+     */
     fun lineTo(x: Number, y: Number) = tap {
         internal._lineTo(x, y)
     }
 
+    /**
+     * [Link to method docs](https://blacksmithftc.vercel.app/anvil/pathing-mappings#anvilstrafeto)
+     */
     fun strafeTo(x: Number, y: Number) = tap {
         internal._lineTo(x, y)
     }
 
+    /**
+     * [Link to method docs](https://blacksmithftc.vercel.app/anvil/pathing-mappings#anvillinetoconstantheading)
+     */
     fun lineToConstantHeading(x: Number, y: Number) = tap {
         internal._lineTo(x, y)
     }
 
+    /**
+     * [Link to method docs](https://blacksmithftc.vercel.app/anvil/pathing-mappings#anvillinetolinearheading)
+     */
     fun lineToLinearHeading(x: Number, y: Number, heading: Number) = tap {
         internal._lineToLinearHeading(x, y, heading)
     }
 
+    /**
+     * [Link to method docs](https://blacksmithftc.vercel.app/anvil/pathing-mappings#anvillinetosplineheading)
+     */
     fun lineToSplineHeading(x: Number, y: Number, heading: Number) = tap {
         internal._lineToSplineHeading(x, y, heading)
     }
 
     // -- Direct path mappings (Splines) --
 
+    /**
+     * [Link to method docs](https://blacksmithftc.vercel.app/anvil/pathing-mappings#anvilsplineto)
+     */
     fun splineTo(x: Number, y: Number, endTangent: Number) = tap {
         internal._splineTo(x, y, endTangent)
     }
 
+    /**
+     * [Link to method docs](https://blacksmithftc.vercel.app/anvil/pathing-mappings#anvilsplinetoconstantheading)
+     */
     fun splineToConstantHeading(x: Number, y: Number, endTangent: Number) = tap {
         internal._splineToConstantHeading(x, y, endTangent)
     }
 
+    /**
+     * [Link to method docs](https://blacksmithftc.vercel.app/anvil/pathing-mappings#anvilsplinetolinearheading)
+     */
     fun splineToLinearHeading(x: Number, y: Number, heading: Number, endTangent: Number) = tap {
         internal._splineToLinearHeading(x, y, heading, endTangent)
     }
 
+    /**
+     * [Link to method docs](https://blacksmithftc.vercel.app/anvil/pathing-mappings#anvilsplinetosplineheading)
+     */
     fun splineToSplineHeading(x: Number, y: Number, heading: Number, endTangent: Number) = tap {
         internal._splineToSplineHeading(x, y, heading, endTangent)
     }
 
     // -- Advanced mappings --
 
+    /**
+     * [Link to method docs](https://blacksmithftc.vercel.app/anvil/advanced-mappings#anvilwaittime)
+     */
     fun waitTime(time: Number) = tap {
         internal._waitTime(time)
     }
 
+    /**
+     * [Link to method docs](https://blacksmithftc.vercel.app/anvil/advanced-mappings#anvilsetreversed)
+     */
     fun setReversed(reversed: Boolean) = tap {
         internal._setReversed(reversed)
     }
 
+    /**
+     * [Link to method docs](https://blacksmithftc.vercel.app/anvil/advanced-mappings#anvilsettangent)
+     */
     fun setTangent(tangent: Number) = tap {
         internal._setTangent(tangent)
     }
 
+    /**
+     * [Link to method docs](https://blacksmithftc.vercel.app/anvil/advanced-mappings#anviladdtrajectory-1)
+     */
     fun addTrajectory(trajectory: Trajectory) = tap {
         internal._addTrajectory(trajectory)
     }
 
+    /**
+     * [Link to method docs](https://blacksmithftc.vercel.app/anvil/advanced-mappings#anviladdtrajectory-2)
+     */
     fun addTrajectory(trajectory: () -> Trajectory) = tap {
         internal._addTrajectory(trajectory)
     }
 
     // -- Markers --
 
+    /**
+     * [Link to method docs](https://blacksmithftc.vercel.app/anvil/markers#anviladdtemporalmarker)
+     */
     @JvmOverloads
     fun addTemporalMarker(offset: Number = 0.0, callback: MarkerCallback) = tap {
         internal._addTemporalMarker(offset, callback)
     }
 
+    /**
+     * [Link to method docs](https://blacksmithftc.vercel.app/anvil/markers#anviladddisplacementmarker)
+     */
     @JvmOverloads
     fun addDisplacementMarker(offset: Number = 0.0, callback: MarkerCallback) = tap {
         internal._addDisplacementMarker(offset, callback)
     }
 
+    /**
+     * [Link to method docs](https://blacksmithftc.vercel.app/anvil/markers#anviladdspatialmarker)
+     */
     fun addSpatialMarker(offsetX: Number, offsetY: Number, callback: MarkerCallback) = tap {
         internal._addSpatialMarker(offsetX, offsetY, callback)
     }
 
     // -- Utilities --
 
+    /**
+     * [Link to method docs](https://blacksmithftc.vercel.app/anvil/custom-mappings#anvilsetposeestimatenow)
+     */
     fun setPoseEstimateNow(pose: Pose2d) = tap {
         internal.setPoseEstimate(pose)
     }
 
+    /**
+     * [Link to method docs](https://blacksmithftc.vercel.app/anvil/custom-mappings#anvilsetposeestimateintemporalmarker)
+     */
     fun setPoseEstimateInTemporalMarker(pose: Pose2d) = tap {
         internal.__setPoseEstimateInTemporalMarker(pose)
     }
 
+    /**
+     * [Link to method docs](https://blacksmithftc.vercel.app/anvil/custom-mappings#anvilinreverse)
+     */
     fun inReverse(pathsToDoInReverse: AnvilConsumer) = tap {
         internal.__inReverse(pathsToDoInReverse)
     }
 
+    /**
+     * [READ DOCS FOR THIS (click me)](https://blacksmithftc.vercel.app/anvil/custom-mappings#anvildoinreverse)
+     *
+     * (probably don't use this lol unless you understand how anvil works which you don't. Easy to
+     * shoot yourself in the foot)
+     */
     fun doInReverse() = tap {
         internal.`$doInReverse`()
     }
 
+    /**
+     * [Link to method docs](https://blacksmithftc.vercel.app/anvil/custom-mappings#anvilnoop)
+     */
     @get:JvmName("noop")
     val noop: Anvil
         get() = also { internal._noop() }
 
+    /**
+     * [READ DOCS FOR THIS (click me)](https://blacksmithftc.vercel.app/anvil/custom-mappings#anvilwithrawbuilder)
+     */
     fun <T> withRawBuilder(builder: Consumer<T>) = tap {
         internal._withRawBuilder(builder)
     }
 
+    /**
+     * [Link to method docs](https://blacksmithftc.vercel.app/anvil/custom-mappings#anvildotimes)
+     */
     fun doTimes(times: Int, pathsToDo: AnvilCycle) = tap {
         internal.doTimes(times, pathsToDo)
     }
 
     // -- Constraints --
 
+    /**
+     * [Link to method docs](https://blacksmithftc.vercel.app/anvil/constraints#anvilresetconstraints)
+     */
     fun resetConstraints() = tap {
         internal._resetConstraints()
     }
 
     /**
      * __IMPORTANT:__ These units are NOT auto-converted
+     * 
+     * [Link to method docs](https://blacksmithftc.vercel.app/anvil/constraints#anvilsetvelconstraint-1)
      */
     fun setVelConstraint(velConstraint: TrajectoryVelocityConstraint) = tap {
         internal._setVelConstraint(velConstraint)
@@ -260,17 +361,24 @@ class Anvil
 
     /**
      * __IMPORTANT:__ These units are NOT auto-converted
+     * 
+     * [Link to method docs](https://blacksmithftc.vercel.app/anvil/constraints#anvilsetvelconstraint-2)
      */
     fun setVelConstraint(maxVel: Number, maxAngularVel: Number, trackWidth: Number) = tap {
         internal._setVelConstraint(maxVel, maxAngularVel, trackWidth)
     }
 
+    /**
+     * [Link to method docs](https://blacksmithftc.vercel.app/anvil/constraints#anvilresetvelconstraint)
+     */
     fun resetVelConstraint() = tap {
         internal._resetVelConstraint()
     }
 
     /**
      * __IMPORTANT:__ These units are NOT auto-converted
+     * 
+     * [Link to method docs](https://blacksmithftc.vercel.app/anvil/constraints#anvilsetaccelconstraint-1)
      */
     fun setAccelConstraint(accelConstraint: TrajectoryAccelerationConstraint) = tap {
         internal._setAccelConstraint(accelConstraint)
@@ -278,28 +386,41 @@ class Anvil
 
     /**
      * __IMPORTANT:__ These units are NOT auto-converted
+     * 
+     * [Link to method docs](https://blacksmithftc.vercel.app/anvil/constraints#anvilsetaccelconstraint-2)
      */
     fun setAccelConstraint(maxAccel: Number) = tap {
         internal._setAccelConstraint(maxAccel)
     }
 
+    /**
+     * [Link to method docs](https://blacksmithftc.vercel.app/anvil/constraints#anvilresetaccelconstraint)
+     */
     fun resetAccelConstraint() = tap {
         internal._resetAccelConstraint()
     }
 
     /**
      * __IMPORTANT:__ These units are NOT auto-converted
+     * 
+     * [Link to method docs](https://blacksmithftc.vercel.app/anvil/constraints#anvilsetturnconstraint)
      */
     fun setTurnConstraint(maxAngVel: Number, maxAngAccel: Number) = tap {
         internal._setTurnConstraint(maxAngVel, maxAngAccel)
     }
 
+    /**
+     * [Link to method docs](https://blacksmithftc.vercel.app/anvil/constraints#anvilresetturnconstraint)
+     */
     fun resetTurnConstraint() = tap {
         internal._resetTurnConstraint()
     }
 
     // -- Building, creating, running --
 
+    /**
+     * [READ DOCS FOR THIS (click me)](https://blacksmithftc.vercel.app/anvil/creating-and-running#running-subsequent-trajectories)
+     */
     @JvmOverloads
     fun thenRun(
         nextTrajectory: (Pose2d) -> Anvil,
@@ -308,6 +429,9 @@ class Anvil
         internal.`$thenRun`(nextTrajectory, configBuilder)
     }
 
+    /**
+     * [READ DOCS FOR THIS (click me)](https://blacksmithftc.vercel.app/anvil/creating-and-running#just-building-a-trajectorysequence)
+     */
     fun <T> build(): T {
         return internal.`$build`()
     }

@@ -3,6 +3,8 @@
 package ftc.rogue.blacksmith.util
 
 /**
+ * TODO: Add docs & link it
+ *
  * Evaluates a condition, and checks if the state of the condition is on the rising edge, falling
  * edge, is high, and/or is low.
  *

@@ -1,0 +1,108 @@
+import ParamsList from '@site/src/components/ParamsList';
+
+# EvalOnGo (Java)
+
+:::caution Important
+This only works if you extend the `BlackOp` class. More info about that [here](./overview). It's essentially LinearOpMode with
+a few extra utilities, and it's made for use with the Blacksmith Library.
+
+**If you're using Kotlin, check out [createOnGo/evalOnGo](./create-on-go-kt) for a more versatile and idiomatic method**
+:::
+
+:::tip
+If you're instantiating a class that doesn't need any args, or only takes a `hardwareMap`, check out
+[@CreateOnGo](./create-on-go-java) instead!
+:::
+
+You know how in a typical OpMode you sometimes have to be all like this or something?
+
+```java
+private MyArmClass myArm;
+
+@Override
+public void init() throws InterruptedException {
+    myArm = myMethodToCreateAnArm();
+}
+
+public MyArmClass myMethodToCreateAnArm() {
+    return MyArmClass(name, param1, param1, ...);
+}
+```
+
+With `@EvalOnGo`, you can simply do this instead:
+
+```java
+@EvalOnGo("myMethodToCreateAnArm")
+private MyArmClass myArm; // (Sadly doesn't work with final variables D:)
+```
+
+Yep, that's it. Of course, there is one small teeny weeny itsy-bitsy caveat though:
+
+The specific method type MUST have a <ins>no-args version</ins>, or it _will_ error.
+
+Also, make sure you type in the method name exactly and that it returns the correct type (it can return
+a subclass), or it will error as well.
+
+```java
+public class MyOp extends BlackOp {
+    @EvalOnGo(method="makeMyClaw")
+    private MyClaw myClaw;
+
+    // this-will-error
+    @EvalOnGo(method="makeMyArm1")
+    private MyArm myArm1;
+
+    // this-will-error
+    @EvalOnGo(method="makeMyArm2")
+    private MyArm myArm2;
+
+    private MyClaw makeMyClaw() {
+        return ...;
+    }
+
+    // It's fine if there's an args version as long as there's a
+    // no-args overload, such as the above
+    MyClaw makeMyClaw(int param1) {
+        return ...;
+    }
+
+    // this-will-error
+    // Will throw an error since there's no no-args version
+    // this-will-error
+    public MyArm myArm1(String name) {
+    // this-will-error
+        return ...;
+    // this-will-error
+    }
+
+    // this-will-error
+    // Will throw an error since it returns the wrong type
+    // this-will-error
+    protected MaiWaife myArm2() {
+    // this-will-error
+        return ...;
+    // this-will-error
+    }
+}
+```
+
+## Calling a static method from another class
+
+:::warning
+Make sure the method you're calling from another class is static and has no args
+:::
+
+Just add another parameter called `clazz` and assign it to whatever class contains the static method.
+
+```java
+@EvalOnGo(method="makeArm", clazz=MyArmClass.class)
+private MyArmClass myArm;
+
+// ...
+
+class MyArmClass {
+    public static MyArmClass makeArm() {
+        // ...
+    }
+}
+```

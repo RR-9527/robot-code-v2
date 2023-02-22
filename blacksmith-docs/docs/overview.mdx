@@ -13,6 +13,10 @@ The Blacksmith Library is a collection of tools and such for FTC, which focuses 
 aiming to be as intuitive as possible. It allows you to program more declaratively and worry less about common logic
 that serve only to distract you and add more potential points of failure.
 
+**Blacksmith & docs by toptobes (Sin#9527)**
+
+**Kalman filter wizardry by T-Lind (TXKL#1554)**
+
 :::info
 All code documentation provide both Java and Kotlin examples
 :::
@@ -20,9 +24,19 @@ All code documentation provide both Java and Kotlin examples
 ## Enough with the buzzwords, what does it do?
 
 The Blacksmith Library provides a few different things:
- - [The Scheduler API](/scheduler-api/overview) - An API to drastically simplify the creation and maintainability of your OpModes, and make them much cleaner and terser. It provides many methods to hide away a lot of extra logic that you don't need to worry about, such as scheduling when to run certain code.
- - [Anvil](/anvil/overview) - A wrapper around [Roadrunner's](https://learnroadrunner.com/) [TrajectorySequenceBuilder](https://learnroadrunner.com/trajectory-sequence.html) which provides a much nicer API for creating trajectories, as well as implicit unit conversion and utilities for creating trajectories on the fly without slowing down your auto.
- - [BlackOp](/black-op/overview) - An extension to the traditional OpMode/LinearOpMode which contains some extra features for a more seamless and carefree development experience
+ - [The Scheduler API](/scheduler-api/overview) - An API to drastically simplify the creation and
+  maintainability of your OpModes, and make them much cleaner and terser. It provides many methods
+  to hide away a lot of extra logic that you don't need to worry about, such as scheduling when to
+  run certain code.
+ - [Anvil](/anvil/overview) - A wrapper around [Roadrunner's](https://learnroadrunner.com/)
+  [TrajectorySequenceBuilder](https://learnroadrunner.com/trajectory-sequence.html) which provides
+  a much nicer API for creating trajectories, as well as implicit unit conversion and utilities for
+  creating trajectories on the fly without slowing down your auto.
+ - [BlackOp](/black-op/overview) - An extension to the traditional OpMode/LinearOpMode which
+  contains some extra features for a more seamless and carefree development experience
+ - [Kalman Filters](./util/kalmanfilters/kalmanfilter-object) - Helps improve encoder (by
+  potentially a lot) reading by dampening noise. Helped improve our own auto's localization a lot,
+  and solved a lot of our lift issues.
  - And quite a decent amount of [utilities...](/util/overview)
 
 I recommend checking those out for examples of each.

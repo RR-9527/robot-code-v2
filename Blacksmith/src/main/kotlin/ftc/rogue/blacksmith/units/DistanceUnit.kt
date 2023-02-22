@@ -2,6 +2,9 @@
 
 package ftc.rogue.blacksmith.units
 
+/**
+ * [Docs link](https://blacksmithftc.vercel.app/etc/units/distance)
+ */
 enum class DistanceUnit(private val inchConversionFactor: Double) {
     CENTIMETERS   (inchConversionFactor = 1.0 / 2.54),
     INCHES        (inchConversionFactor = 1.0),

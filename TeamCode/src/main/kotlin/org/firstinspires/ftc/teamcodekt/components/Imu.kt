@@ -7,7 +7,7 @@ import ftc.rogue.blacksmith.util.kt.invoke
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation
 
 object Imu {
-    private val imu = BlackOp.hwMap<BNO055IMU>("imu")
+    private lateinit var imu: BNO055IMU
 
     @get:JvmStatic
     var angles = arrayOf<Float>()
@@ -17,13 +17,21 @@ object Imu {
     var xRotationRate = 0f
         private set
 
+    private var start = false
+
+    fun start() {
+        start = true
+    }
+
     fun init(opmode: LinearOpMode) {
+        imu = BlackOp.hwMap("imu")
+
         val parameters = BNO055IMU.Parameters()
         parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS
         imu.initialize(parameters)
 
-        Thread {
-            while (!opmode.isStopRequested && opmode.opModeIsActive()) {
+        Thread{
+            while (!opmode.isStopRequested && (start || opmode.opModeIsActive())) {
                 val (x, y, z) = imu.angularOrientation
                 angles = arrayOf(x, y, z)
                 xRotationRate = imu.angularVelocity.xRotationRate

@@ -69,9 +69,10 @@ class AnvilInternal
     private fun getCurrentEndPose(): Pose2d {
         val sequenceSegments = builderProxy.getSequenceSegments()
 
-        return sequenceSegments
+        val last = sequenceSegments
             .last()
-            .invokeMethod("getEndPose")
+
+        return last.invokeMethod("getEndPose")
     }
 
     // -- Direct path mappings (Basic) --
@@ -280,6 +281,8 @@ class AnvilInternal
         val config = AnvilRunConfig()
         configBuilder.run { AnvilRunConfig().build() }
 
+        flushDeque()
+
         val nextStartPose = config.startPoseSupplier?.invoke()
             ?: getCurrentEndPose()
 
@@ -287,6 +290,7 @@ class AnvilInternal
 
         if (!config.buildsSynchronously) {
             builderDeque.addFirst {
+                // Can't use '_addTemporalMarker' as that adds to the end of the deque
                 builderProxy.UNSTABLE_addTemporalMarkerOffset(0.0) {
                     preforgedTrajectories[key] = builderScope.async { nextTrajectory( nextStartPose ).build() }
                 }
@@ -307,12 +311,15 @@ class AnvilInternal
         }
     }
 
-    @Suppress("UNCHECKED_CAST")
-    fun <T : Any> `$build`(): T {
+    private fun flushDeque() {
         for (i in builderDeque.indices) {
             builderDeque.removeFirst().invoke()
         }
+    }
 
+    @Suppress("UNCHECKED_CAST")
+    fun <T : Any> `$build`(): T {
+        flushDeque()
         return (builderProxy.build() as T).also { builtTrajectory = it }
     }
 }

@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.hardware.HardwareMap
 import ftc.rogue.blacksmith.internal.blackop.CreateOnGoInternal
 import ftc.rogue.blacksmith.internal.blackop.injectCreateOnGoFields
+import ftc.rogue.blacksmith.internal.blackop.injectEvalOnGoFields
 import ftc.rogue.blacksmith.internal.util.NotNull
 
 /**
@@ -48,6 +49,7 @@ abstract class BlackOp : LinearOpMode() {
         mTelemetry = MultipleTelemetry(telemetry, FtcDashboard.getInstance().telemetry)
 
         injectCreateOnGoFields()
+        injectEvalOnGoFields()
 
         Scheduler.emit(STARTING_MSG)
         go()
@@ -84,6 +86,12 @@ abstract class BlackOp : LinearOpMode() {
         var hwMap by NotNull<HardwareMap>(errorMsg = "Can't access hwMap before a BlackOp instance is initialized!")
             private set
 
+        @JvmStatic
+        fun quickLog(line: String) {
+            mTelemetry.addLine(line)
+            mTelemetry.update()
+        }
+
         /**
          * The starting message emitted when runOpMode() is called on a BlackOp.
          *
@@ -98,20 +106,20 @@ abstract class BlackOp : LinearOpMode() {
     // -- KOTLIN ONLY BELOW --
 
     /**
-     * READ DOCS FOR THIS
+     * [READ DOCS FOR THIS (click me)](https://blacksmithftc.vercel.app/black-op/create-on-go-kt)
      */
     @JvmSynthetic
     protected fun <T : Any> evalOnGo(constructor: () -> T) =
         CreateOnGoInternal(constructor)
 
     /**
-     * READ DOCS FOR THIS
+     * [READ DOCS FOR THIS (click me)](https://blacksmithftc.vercel.app/black-op/create-on-go-kt)
      */
     protected inline fun <reified T : Any> createOnGo(noinline arg: () -> Any) =
         CreateOnGoInternal<T>(*arrayOf(arg)) // Needs array spread or type checker errors
 
     /**
-     * READ DOCS FOR THIS
+     * [READ DOCS FOR THIS (click me)](https://blacksmithftc.vercel.app/black-op/create-on-go-kt)
      */
     protected inline fun <reified T : Any> createOnGo(vararg args: () -> Any) =
         CreateOnGoInternal<T>(*args)

@@ -16,7 +16,13 @@ internal class SchedulerInternal {
     var beforeEach = Runnable {}
 
     fun launch(opmode: LinearOpMode, afterEach: Runnable) {
-        launchManually({ opmode.opModeIsActive() && !opmode.isStopRequested }) {
+        Scheduler.emit(Scheduler.STARTING_MSG)
+
+        while (opmode.opModeIsActive() && !opmode.isStopRequested) {
+            updateListenersSet()
+
+            beforeEach.run()
+            tick()
             afterEach.run()
         }
     }
@@ -41,7 +47,7 @@ internal class SchedulerInternal {
     fun debug(opmode: LinearOpMode, afterEach: Consumer<SchedulerDebugInfo>) {
         val elapsedTime = ElapsedTime()
 
-        launchManually({ opmode.opModeIsActive() && !opmode.isStopRequested }) {
+        launch(opmode) {
             val time = elapsedTime.milliseconds()
 
             elapsedTime.reset()
@@ -55,9 +61,12 @@ internal class SchedulerInternal {
     }
 
     fun nuke() {
+        updateListenersSet()
+
         listeners.forEach {
             it.destroy()
         }
+        listeners.clear()
 
         messages.clear()
 

@@ -22,13 +22,13 @@ import kotlin.math.abs
 
 // Too many fields...
 
-@JvmField var LIFT_ZERO = -5
-@JvmField var LIFT_LOW  = 210
-@JvmField var LIFT_MID  = 450
-@JvmField var LIFT_HIGH = 750
+@JvmField var LIFT_ZERO = 0
+@JvmField var LIFT_LOW  = 270
+@JvmField var LIFT_MID  = 550
+@JvmField var LIFT_HIGH = 780
 
-@JvmField var ANGLED_LIFT_LOW  = 100
-@JvmField var ANGLED_LIFT_MID  = 350
+@JvmField var ANGLED_LIFT_LOW  = 210
+@JvmField var ANGLED_LIFT_MID  = 360
 @JvmField var ANGLED_LIFT_HIGH = 550
 
 @JvmField var NORMAL_LIFT_P = 0.012
@@ -83,11 +83,11 @@ class Lift {
     }
 
     fun goToAngledMidPredeposit() {
-        targetHeight = ANGLED_LIFT_MID + 50
+        targetHeight = ANGLED_LIFT_MID
     }
 
     fun goToAngledMidButHigher() {
-        targetHeight = ANGLED_LIFT_MID + 85
+        targetHeight = ANGLED_LIFT_MID
     }
 
     fun goToAngledLow() {
@@ -95,13 +95,14 @@ class Lift {
     }
 
     fun update() {
-        if (abs(targetHeight - liftHeight) > 6) {
+        if (abs(targetHeight - liftHeight) > 3) {
             val correction = liftNormalPID.calculate(liftHeight.toDouble(), targetHeight.toDouble())
             val filteredCorrection = liftFilter.filter(correction)
             drivenCorrection = filteredCorrection
             liftMotor.power = filteredCorrection
         } else {
             liftMotor.power = 0.0
+            drivenCorrection = 0.0
         }
     }
 

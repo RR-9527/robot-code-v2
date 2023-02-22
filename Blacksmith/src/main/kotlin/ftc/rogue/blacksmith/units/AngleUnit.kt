@@ -2,6 +2,9 @@ package ftc.rogue.blacksmith.units
 
 import kotlin.math.PI
 
+/**
+ * [Docs link](https://blacksmithftc.vercel.app/etc/units/angle)
+ */
 enum class AngleUnit(private val degreesConversionFactor: Double) {
     DEGREES    (degreesConversionFactor = 1.0),
     RADIANS    (degreesConversionFactor = 180.0 / PI),

@@ -86,12 +86,17 @@ import ftc.rogue.blacksmith.listeners.*
 object Scheduler {
     const val STARTING_MSG = 2350948905823L
 
+    /**
+     * [Link to method docs](https://blacksmithftc.vercel.app/scheduler-api/scheduler#schedulerbeforeeach)
+     */
     @JvmStatic
     fun beforeEach(block: Runnable) {
         internal.beforeEach = block
     }
 
     /**
+     * [Link to method docs](https://blacksmithftc.vercel.app/scheduler-api/scheduler#schedulerlaunch-)
+     *
      * Starts the [Scheduler], and runs the program in the given [afterEach] until the [LinearOpMode]
      * is no longer active.
      * Java usage example:
@@ -121,32 +126,50 @@ object Scheduler {
         internal.launch(opmode, afterEach)
     }
 
+    /**
+     * [Link to method docs](https://blacksmithftc.vercel.app/scheduler-api/scheduler#schedulerlaunchonstart)
+     */
     @JvmStatic
     @JvmOverloads
     fun launchOnStart(opmode: LinearOpMode, afterEach: Runnable = Runnable {}) {
         internal.launchOnStart(opmode, afterEach)
     }
 
+    /**
+     * [Link to method docs](https://blacksmithftc.vercel.app/scheduler-api/scheduler#schedulerlaunchmanually)
+     */
     @JvmStatic
     inline fun launchManually(condition: () -> Boolean, afterEach: Runnable = Runnable {}) {
         internal.launchManually(condition, afterEach)
     }
 
+    /**
+     * [Link to method docs](https://blacksmithftc.vercel.app/scheduler-api/scheduler#schedulerdebug)
+     */
     @JvmStatic
     fun debug(opmode: LinearOpMode, afterEach: Consumer<SchedulerDebugInfo>) {
         internal.debug(opmode, afterEach)
     }
 
+    /**
+     * [Link to method docs](https://blacksmithftc.vercel.app/scheduler-api/scheduler#scheduleron)
+     */
     @JvmStatic
     fun on(message: Any, callback: Runnable) {
         internal.on(message, callback)
     }
 
+    /**
+     * [Link to method docs](https://blacksmithftc.vercel.app/scheduler-api/scheduler#scheduleremit)
+     */
     @JvmStatic
     fun emit(message: Any) {
         internal.emit(message)
     }
 
+    /**
+     * [Link to method docs](https://blacksmithftc.vercel.app/scheduler-api/scheduler#schedulernuke)
+     */
     @JvmStatic
     fun nuke() {
         internal.nuke()

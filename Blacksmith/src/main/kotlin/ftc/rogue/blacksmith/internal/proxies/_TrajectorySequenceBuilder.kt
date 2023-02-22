@@ -221,8 +221,13 @@ internal class _TrajectorySequenceBuilder(
         return internalBuilder.invokeMethodRethrowing("build")
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun getSequenceSegments(): List<Any> {
-        return internalBuilder.invokeMethod("getSequenceSegments")
+        return internalBuilder::class.java.getDeclaredField("sequenceSegments")
+            .run {
+                isAccessible = true
+                get(internalBuilder)
+            } as List<Any>
     }
 
     private fun getMethod(name: String, vararg args: Class<*>): Method {

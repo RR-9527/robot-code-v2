@@ -13,6 +13,9 @@ import java.io.FileReader
 import java.util.*
 import kotlin.reflect.KProperty
 
+/**
+ * [READ DOCS FOR ME (click me)](https://blacksmithftc.vercel.app/util/global-units)
+ */
 object GlobalUnits {
     var distance by SetUnitFirst<DistanceUnit>()
         private set

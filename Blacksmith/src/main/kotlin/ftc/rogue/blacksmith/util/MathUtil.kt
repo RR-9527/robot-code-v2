@@ -13,6 +13,10 @@ import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.absoluteValue
 
+// ---------------------------------------------------
+// https://blacksmithftc.vercel.app/util/math-utils
+// ---------------------------------------------------
+
 @JvmOverloads
 fun Number.toIn(from: DistanceUnit = GlobalUnits.distance): Double = from.toIn(this)
 

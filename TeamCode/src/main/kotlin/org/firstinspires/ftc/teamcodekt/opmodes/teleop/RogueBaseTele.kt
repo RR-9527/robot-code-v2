@@ -11,18 +11,18 @@ import org.firstinspires.ftc.teamcodekt.components.chains.*
 import org.firstinspires.ftc.teamcodekt.components.meta.createTeleOpBotComponents
 
 abstract class RogueBaseTele : BlackOp() {
-    protected val driver by createOnGo<ReforgedGamepad> { gamepad1 }
-    protected val codriver by createOnGo<ReforgedGamepad> { gamepad2 }
+    protected val driver   by createOnGo<ReforgedGamepad>{ gamepad1 }
+    protected val codriver by createOnGo<ReforgedGamepad>{ gamepad2 }
 
     protected var powerMulti = 0.0
 
     protected val bot by evalOnGo(::createTeleOpBotComponents)
 
-    protected val intakeChain by createOnGo<IntakeChain> { bot }
-    protected val regularDepositChain by createOnGo<RegularDepositChain> { bot }
-    protected val reverseDepositChain by createOnGo<ReverseDepositChain> { bot }
-    protected val coneLaunchingChain by createOnGo<ConeLaunchingChain> { bot }
-    protected val coneUnflipperChain by createOnGo<ConeUnflipperChain> { bot }
+    protected val intakeChain         by createOnGo< IntakeChain         > { bot }
+    protected val regularDepositChain by createOnGo< RegularDepositChain > { bot }
+    protected val reverseDepositChain by createOnGo< ReverseDepositChain > { bot }
+    protected val coneLaunchingChain  by createOnGo< ConeLaunchingChain  > { bot }
+    protected val coneUnflipperChain  by createOnGo< ConeUnflipperChain  > { bot }
 
     final override fun go() {
         PhotonCore.experimental.setMaximumParallelCommands(8)
@@ -37,10 +37,15 @@ abstract class RogueBaseTele : BlackOp() {
             powerMulti = 1.0
         }
 
-        Scheduler.launchOnStart(opmode = this) {
+        waitForStart()
+
+        Scheduler.debug(opmode = this) {
             bot.drivetrain.drive(driver.gamepad, powerMulti)
             bot.updateBaseComponents()
             bot.lift.printLiftTelem()
+            mTelemetry.addData("Loop times",  loopTime)
+            mTelemetry.addData("# listeners", numHookedListeners)
+            mTelemetry.addData("# msg subs",  numUniqueMessageSubs)
             mTelemetry.update()
         }
     }

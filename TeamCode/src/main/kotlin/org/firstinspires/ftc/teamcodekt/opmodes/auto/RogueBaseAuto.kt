@@ -33,6 +33,7 @@ abstract class RogueBaseAuto : BlackOp() {
         PhotonCore.enable()
 
         Imu.init(this)
+        Imu.start()
 
         readPoleOffset()
 
@@ -41,10 +42,11 @@ abstract class RogueBaseAuto : BlackOp() {
 
         signalID = bot.camera.waitForStartWithVision(this) ?: 2
 
-        Scheduler.launch(opmode = this) {
+        Scheduler.debug(opmode = this) {
             bot.updateBaseComponents()
             bot.drive.update()
             mTelemetry.addLine("Pole offset: x->${poleOffset.x}, y->${poleOffset.y}")
+            mTelemetry.addData("Loop time", loopTime)
             mTelemetry.update()
         }
     }
@@ -57,9 +59,9 @@ abstract class RogueBaseAuto : BlackOp() {
 
         Scheduler.launchManually({ !gamepad1.a }) {
             driver.dpad_right.onRise { x += .25 }
-            driver.dpad_left.onRise  { x -= .25 }
-            driver.dpad_up.onRise    { y += .25 }
-            driver.dpad_down.onRise  { y -= .25 }
+            driver.dpad_left .onRise { x -= .25 }
+            driver.dpad_up   .onRise { y += .25 }
+            driver.dpad_down .onRise { y -= .25 }
 
             val xf = (if (x > 0) "+" else "-") + "%4.2f".format(x.absoluteValue)
             val yf = (if (y > 0) "+" else "-") + "%4.2f".format(y.absoluteValue)
@@ -73,8 +75,12 @@ abstract class RogueBaseAuto : BlackOp() {
             telemetry.update()
         }
 
+        driver.dpad_right.destroy()
+        driver.dpad_left .destroy()
+        driver.dpad_up   .destroy()
+        driver.dpad_down .destroy()
+
         poleOffset = Vector2d(x.toCm(DistanceUnit.INCHES), y.toCm(DistanceUnit.INCHES))
-        Scheduler.nuke()
     }
 
     companion object {

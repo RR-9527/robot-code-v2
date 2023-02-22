@@ -9,6 +9,11 @@ a few extra utilities, and it's made for use with the Blacksmith Library.
 **If you're using Kotlin, check out [createOnGo/evalOnGo](./create-on-go-kt) for a more versatile and idiomatic method**
 :::
 
+:::tip
+If you need to instantiate a class that needs parameters, or just want to use the return value of
+a method, check out [@EvalOnGo](./eval-on-go-java) instead!
+:::
+
 You know how in a typical OpMode you have to be all like this or something?
 
 ```java
@@ -58,14 +63,18 @@ class MyClaw {
     }
 
     // It's fine if there's additional multi-arg constructors
-    public MyClaw(HardwareMap hwMap) { ... }
+    public MyClaw(HardwareMap hwMap) {
+        ...
+    }
 }
 
 class SampleMecanumDrive {
     // ...
 
     // This is fine, just be sure to pass in 'passHwMap = true' to @CreateOnGo
-    public SampleMecanumDrive(HardwareMap hardwareMap) { ... }
+    public SampleMecanumDrive(HardwareMap hardwareMap) {
+        ...
+    }
 
     // ...
 }
@@ -73,6 +82,8 @@ class SampleMecanumDrive {
 class MyWife {
     // No no-args constructor, will throw exception when tries to @CreateOnGo
     // (Also you shouldn't be objectifying women smh)
-    public MyWife(Tenges cost) { ... }
+    public MyWife(Tenges cost) {
+        ...
+    }
 }
 ```

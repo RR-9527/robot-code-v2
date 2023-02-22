@@ -19,6 +19,8 @@ import ftc.rogue.blacksmith.units.TimeUnit
 // -----------------------------------------------------------------------------------------------
 
 /**
+ * [Docs link](https://blacksmithftc.vercel.app/scheduler-api/timer)
+ *
  * A timer that can be used to schedule actions to be performed at a specific time.
  *
  * Java usage example:

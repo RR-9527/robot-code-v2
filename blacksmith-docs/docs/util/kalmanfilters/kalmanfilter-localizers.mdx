@@ -11,22 +11,22 @@ import TabItem from '@theme/TabItem';
 Kalman filters are great tools for the mechanisms on your robot, but they're great on your localizer as well! The standard run-of-the-mill two wheel and three wheel tracking localizer has been extended to by adding Kalman filters on each of the localizer's outputs.
 Doing this reduces the drift of the robot and should help make your autonomous more reliable.
 
+:::warning
+If you have a `SampleMecanumDriveCancellable`, make sure to edit BOTH `SampleMecanumDrive` and `SampleMecanumDriveCancellable`,
+otherwise it may not be put into effect! <ins>If you're using some other drive object, change the localizer there instead.</ins>
+:::
+
 ## Tuning
 
 Each set of Kalman noise fields per localizer is the same. A rough approximation like the one below (that's what we used) should be fine. Note to pay attention to the range of numbers you're dealing with!
 Anywhere from 5-35 for the wheel position and velocity filters is reasonable, and 0.10-0.75 is reasonable for the heading filters. I'd reccomend starting with a low number and gradually increasing until you notice adverse affects, if any.
 
-
-
 ## Kalman Two Wheel Localization
 
-To use your two wheel Kalman localizer, edit the fields as seen above in `KalmanTwoWheelLocalizer` and simply change the `setLocalizer` line in `SampleMecanumDrive` and `SampleMecanumDriveCancellable` to the following:
-
-:::warning
-Make sure to edit BOTH `SampleMecanumDrive` and `SampleMecanumDriveCancellable`, otherwise it may not be put into effect! If you're using some other drive object, change the localizer there.
-:::
+To use your two wheel Kalman localizer, edit the fields as seen above in `KalmanTwoWheelLocalizer` and simply change the `setLocalizer` line in `SampleMecanumDrive` to the following:
 
 ```java
+    // The 'this' refers to the SampleMecanumDrive (or whatever) you're inside
     setLocalizer(new KalmanTwoWheelLocalizer(new TwoWheelTrackingLocalizer(hardwareMap, this))
       .setHeadingFilterCoeffs(R0, Q0)
       .setWheelPos1FilterCoeffs(R1, Q1)
@@ -40,15 +40,11 @@ Of course, set `R0`-`R5` and `Q0`-`Q5` to whatever values you have tuned.
 
 ## Kalman Three Wheel Localization
 
-:::warning
-Make sure to edit BOTH `SampleMecanumDrive` and `SampleMecanumDriveCancellable`, otherwise it may not be put into effect! If you're using some other drive object, change the localizer there.
-:::
-
 To use your three wheel Kalman localizer, edit the fields as seen above in `KalmanThreeWheelLocalizer` and change the `setLocalizer` line in `SampleMecanumDrive` and `SampleMecanumDriveCancellable` to the following:
 It's pretty much the same thing as for the two wheel localizer but with a few name changes.
 
-
 ```java
+    // The 'this' refers to the SampleMecanumDrive (or whatever) you're inside
     setLocalizer(new KalmanThreeWheelLocalizer(new StandardTrackingWheelLocalizer(hardwareMap, this))
       .setHeadingFilterCoeffs(R0, Q0)
       .setWheelPos1FilterCoeffs(R1, Q1)

@@ -55,20 +55,20 @@ class RogueMidLeftAuto : RogueBaseAuto() {
         .lineToLinearHeading(-78.75 + poleOffset.x, -42.5 + poleOffset.y, -49)
 
     private fun Anvil.goToDeposit(it: Int) = when (it) {
-        0 -> splineTo(-81.3 + poleOffset.x, -42.2 + poleOffset.y, -42.3)
-        1 -> splineTo(-81.1 + poleOffset.x, -42.2 + poleOffset.y, -39.0)
-        2 -> splineTo(-80.7 + poleOffset.x, -42.6 + poleOffset.y, -32.8)
-        3 -> splineTo(-80.7 + poleOffset.x, -39.5 + poleOffset.y, -32.5)
-        4 -> splineTo(-80.1 + poleOffset.x, -39.5 + poleOffset.y, -30.0)
+        0 -> splineTo(-80.2 + poleOffset.x, -40.8 + poleOffset.y, -39)
+        1 -> splineTo(-79.1 + poleOffset.x, -39.5 + poleOffset.y, -33)
+        2 -> splineTo(-76.9 + poleOffset.x, -39 + poleOffset.y, -24)
+        3 -> splineTo(-76.7 + poleOffset.x, -38 + poleOffset.y, -18)
+        4 -> splineTo(-78 + poleOffset.x, -37 + poleOffset.y, -17)
         else -> throw CycleException()
     }
 
     private fun Anvil.goToIntake(it: Int) = when (it) {
-        0 -> splineTo(-161.8, -22.0, 180)
-        1 -> splineTo(-161.3, -21.5, 180)
-        2 -> splineTo(-161.0, -21.2, 180)
-        3 -> splineTo(-160.4, -20.9, 180)
-        4 -> splineTo(-160.6, -20.7, 180)
+        0 -> splineTo(-161.2, -22.0, 180)
+        1 -> splineTo(-160.3, -20.5, 180)
+        2 -> splineTo(-160, -19.2, 180)
+        3 -> splineTo(-159, -18.2, 180)
+        4 -> splineTo(-159, -16.7, 180)
         else -> throw CycleException()
     }.doInReverse()
 
