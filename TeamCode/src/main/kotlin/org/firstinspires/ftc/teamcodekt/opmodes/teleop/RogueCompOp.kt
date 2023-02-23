@@ -32,6 +32,8 @@ class RogueCompOp : RogueBaseTele() {
         reverseDepositChain.invokeOn(y)
         reverseDepositChain.cancelOn(x)
 
+        coneUnflipperChain.invokeOn(a)
+
         // -- MANUAL CLAW CONTROLS --
 
         left_stick_x.whileHigh {
@@ -51,7 +53,7 @@ class RogueCompOp : RogueBaseTele() {
         val bumpersPressed = left_bumper + right_bumper
 
         (right_stick_y(deadzone = .1) + !bumpersPressed).whileHigh {
-            bot.lift.targetHeight += (-codriver.right_stick_y() * 10).toInt()
+            bot.lift.clippedHeight += (-codriver.right_stick_y() * 10).toInt()
         }
 
         // -- MANUAL LIFT RESET --

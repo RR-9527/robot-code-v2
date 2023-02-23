@@ -48,6 +48,6 @@ class Arm {
     }
 
     fun update() {
-        armServo.turnToAngle(targetAngle)
+//        armServo.turnToAngle(targetAngle)
     }
 }

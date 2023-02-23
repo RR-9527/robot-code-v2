@@ -115,12 +115,11 @@ Here's a basic example of a TeleOp before and after using Blacksmith:
 ```java
 @TeleOp
 public class CoolTeleOp extends BlackOp {
+    @EvalOnGo(method = "makeGamepad2")
     private ReforgedGamepad codriver;
 
     @Override
     public void go() {
-        codriver = new ReforgedGamepad(gamepad2);
-
         describeControls(); // Good idea to move it to a method for readability
 
         Scheduler.launchOnStart(this, () -> {
@@ -131,6 +130,10 @@ public class CoolTeleOp extends BlackOp {
     private void describeControls() {
         codriver.a.onRise(() -> claw.intake()); // Simple and easy to read
         codriver.a.onFall(() -> claw.close()); // Complexity is abstracted away
+    }
+
+    private ReforgedGamepad makeGamepad2() {  // Basic example of @CreateOnGo/@EvalOnGo
+        return new ReforgedGamepad(gamepad2);
     }
 }
 ```

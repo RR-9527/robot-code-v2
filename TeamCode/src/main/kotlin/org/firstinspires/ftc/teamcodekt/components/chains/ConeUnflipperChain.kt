@@ -54,7 +54,11 @@ class ConeUnflipperChain(val bot: TeleOpBotComponents) : Chain {
             bot.intake.disable()
             isRunning = false
 
-            after(15).milliseconds {
+            after(30).milliseconds {
+                bot.claw.close()
+            }
+
+            after(35).milliseconds {
                 bot.claw.close()
             }
 

@@ -24,16 +24,16 @@ import kotlin.math.abs
 
 @JvmField var LIFT_ZERO = 0
 @JvmField var LIFT_LOW  = 270
-@JvmField var LIFT_MID  = 550
-@JvmField var LIFT_HIGH = 780
+@JvmField var LIFT_MID  = 533
+@JvmField var LIFT_HIGH = 750
 
 @JvmField var ANGLED_LIFT_LOW  = 210
-@JvmField var ANGLED_LIFT_MID  = 360
+@JvmField var ANGLED_LIFT_MID  = 352
 @JvmField var ANGLED_LIFT_HIGH = 550
 
-@JvmField var NORMAL_LIFT_P = 0.012
-@JvmField var NORMAL_LIFT_I = 0.029
-@JvmField var NORMAL_LIFT_D = 0.0001
+@JvmField var NORMAL_LIFT_P = 0.02
+@JvmField var NORMAL_LIFT_I = 0.039
+@JvmField var NORMAL_LIFT_D = 0.0003
 
 @JvmField var PROCESS_NOISE     = 10.0
 @JvmField var MEASUREMENT_NOISE = 10.0
@@ -95,15 +95,15 @@ class Lift {
     }
 
     fun update() {
-        if (abs(targetHeight - liftHeight) > 3) {
-            val correction = liftNormalPID.calculate(liftHeight.toDouble(), targetHeight.toDouble())
-            val filteredCorrection = liftFilter.filter(correction)
-            drivenCorrection = filteredCorrection
-            liftMotor.power = filteredCorrection
-        } else {
-            liftMotor.power = 0.0
-            drivenCorrection = 0.0
-        }
+//        if (abs(targetHeight - liftHeight) > 3) {
+//            val correction = liftNormalPID.calculate(liftHeight.toDouble(), targetHeight.toDouble())
+//            val filteredCorrection = liftFilter.filter(correction)
+//            drivenCorrection = filteredCorrection
+//            liftMotor.power = filteredCorrection
+//        } else {
+//            liftMotor.power = 0.0
+//            drivenCorrection = 0.0
+//        }
     }
 
     fun resetEncoder() {

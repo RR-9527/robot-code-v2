@@ -1,5 +1,6 @@
 package ftc.rogue.blacksmith.internal.blackop
 
+import com.qualcomm.robotcore.hardware.HardwareMap
 import ftc.rogue.blacksmith.BlackOp
 import ftc.rogue.blacksmith.annotations.CreateOnGo
 import ftc.rogue.blacksmith.annotations.EvalOnGo
@@ -16,11 +17,16 @@ internal fun Any.injectCreateOnGoFields() = this::class.java
         val shouldPassHwMap = field.getAnnotation(CreateOnGo::class.java)?.passHwMap == true
 
         try {
-
             val instance = if (shouldPassHwMap) {
-                clazz.getConstructor().newInstance(BlackOp.hwMap)
+                clazz.getDeclaredConstructor(HardwareMap::class.java).run {
+                    isAccessible = true
+                    newInstance(BlackOp.hwMap)
+                }
             } else {
-                clazz.getConstructor().newInstance()
+                clazz.getDeclaredConstructor().run {
+                    isAccessible = true
+                    newInstance()
+                }
             }
 
             field.isAccessible = true
@@ -36,6 +42,8 @@ internal fun Any.injectCreateOnGoFields() = this::class.java
         }
     }
 
+internal object ClassThatTheAnnotationIsIn
+
 @JvmSynthetic
 internal fun Any.injectEvalOnGoFields() = this::class.java
     .getDeclaredFieldsAnnotatedWith(EvalOnGo::class.java)
@@ -46,7 +54,7 @@ internal fun Any.injectEvalOnGoFields() = this::class.java
         lateinit var method: Method
 
         try {
-            method = if (methodClazz == EvalOnGo.ClassThatTheAnnotationIsIn::class) {
+            method = if (methodClazz == ClassThatTheAnnotationIsIn::class) {
                 this::class.java.getDeclaredMethod(methodName)
             } else {
                 methodClazz.java.getDeclaredMethod(methodName)

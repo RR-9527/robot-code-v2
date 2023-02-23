@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.outoftheboxrobotics.photoncore.PhotonCore;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcodekt.components.Imu;
 import org.firstinspires.ftc.teamcodekt.components.meta.BotComponentsKt;
 import org.firstinspires.ftc.teamcodekt.components.meta.TeleOpBotComponents;
@@ -12,6 +14,7 @@ import ftc.rogue.blacksmith.annotations.CreateOnGo;
 import ftc.rogue.blacksmith.annotations.EvalOnGo;
 import ftc.rogue.blacksmith.listeners.ReforgedGamepad;
 
+@TeleOp
 public class JavaBlacksmithTesting extends BlackOp {
     @EvalOnGo(method = "makeReforgedGamepad1")
     private ReforgedGamepad driver;
@@ -22,8 +25,8 @@ public class JavaBlacksmithTesting extends BlackOp {
     @EvalOnGo(method = "createTeleOpBotComponents", clazz = BotComponentsKt.class)
     private TeleOpBotComponents bot;
 
-    @CreateOnGo
-    private Hi hi;
+    @CreateOnGo(passHwMap = true)
+    private SampleMecanumDrive hi;
 
     private double powerMulti = 1.0;
 
@@ -33,12 +36,12 @@ public class JavaBlacksmithTesting extends BlackOp {
 
         Imu.INSTANCE.init(this);
 
+        waitForStart();
+
         Scheduler.beforeEach(() -> powerMulti = 1.0);
 
         driver.dpad_up.onRise(bot.getLift()::goToHigh);
         driver.dpad_down.onRise(bot.getLift()::goToLow);
-
-        waitForStart();
 
         Scheduler.debug(this, (info) -> {
             bot.getDrivetrain().drive(driver.getGamepad(), powerMulti);
@@ -59,6 +62,4 @@ public class JavaBlacksmithTesting extends BlackOp {
     private ReforgedGamepad makeReforgedGamepad2() {
         return new ReforgedGamepad(gamepad2);
     }
-
-    static class Hi {}
 }

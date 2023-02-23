@@ -56,24 +56,24 @@ class RogueMidLeftAuto : RogueBaseAuto() {
 
     private fun Anvil.goToDeposit(it: Int) = when (it) {
         0 -> splineTo(-80.2 + poleOffset.x, -40.8 + poleOffset.y, -39)
-        1 -> splineTo(-79.1 + poleOffset.x, -39.5 + poleOffset.y, -33)
-        2 -> splineTo(-76.9 + poleOffset.x, -39 + poleOffset.y, -24)
-        3 -> splineTo(-76.7 + poleOffset.x, -38 + poleOffset.y, -18)
-        4 -> splineTo(-78 + poleOffset.x, -37 + poleOffset.y, -17)
+        1 -> splineTo(-79.1 + poleOffset.x, -37 + poleOffset.y, -36.4)
+        2 -> splineTo(-76.9 + poleOffset.x, -34.5 + poleOffset.y, -33)
+        3 -> splineTo(-76.7 + poleOffset.x, -33.5 + poleOffset.y, -26)
+        4 -> splineTo(-76 + poleOffset.x, -31.5 + poleOffset.y, -25)
         else -> throw CycleException()
     }
 
     private fun Anvil.goToIntake(it: Int) = when (it) {
         0 -> splineTo(-161.2, -22.0, 180)
-        1 -> splineTo(-160.3, -20.5, 180)
-        2 -> splineTo(-160, -19.2, 180)
-        3 -> splineTo(-159, -18.2, 180)
-        4 -> splineTo(-159, -16.7, 180)
+        1 -> splineTo(-160.3, -19.5, 180)
+        2 -> splineTo(-160.0, -16.2, 180)
+        3 -> splineTo(-160, -14.7, 180)
+        4 -> splineTo(-160, -13.8, 180)
         else -> throw CycleException()
     }.doInReverse()
 
     private fun Anvil.awaitRegularIntake() = this
-        .addTemporalMarker(-170) {
+        .addTemporalMarker(-200) {
             bot.intake.disable()
         }
 

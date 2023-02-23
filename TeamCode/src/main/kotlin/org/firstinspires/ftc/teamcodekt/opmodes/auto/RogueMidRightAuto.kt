@@ -3,13 +3,10 @@ package org.firstinspires.ftc.teamcodekt.opmodes.auto
 import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import ftc.rogue.blacksmith.Anvil
-import ftc.rogue.blacksmith.units.DistanceUnit
 import ftc.rogue.blacksmith.units.GlobalUnits
-import ftc.rogue.blacksmith.util.toCm
 import ftc.rogue.blacksmith.util.toRad
 import org.firstinspires.ftc.teamcode.AutoData
 import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants
-import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive
 import org.firstinspires.ftc.teamcodekt.util.CycleException
 
 @Autonomous
@@ -55,20 +52,20 @@ class RogueMidRightAuto : RogueBaseAuto() {
         .lineToLinearHeading(83.2 + poleOffset.x, -43.9 + poleOffset.y, 180 + 40)
 
     private fun Anvil.goToDeposit(it: Int) = when (it) {
-        0 -> splineTo(81.00 + poleOffset.x, -45.2 + poleOffset.y, 224.5)
-        1 -> splineTo(79.13 + poleOffset.x, -44.7 + poleOffset.y, 223.5)
-        2 -> splineTo(80.70 + poleOffset.x, -45.3 + poleOffset.y, 220.5)
-        3 -> splineTo(80.70 + poleOffset.x, -45.7 + poleOffset.y, 220.5)
-        4 -> splineTo(80.70 + poleOffset.x, -47.7 + poleOffset.y, 213.5)
+        0 -> splineTo(81.00 + poleOffset.x, -43.5 + poleOffset.y, 224.5)
+        1 -> splineTo(79.13 + poleOffset.x, -43 + poleOffset.y, 223.5)
+        2 -> splineTo(80.70 + poleOffset.x, -42.5 + poleOffset.y, 220.5)
+        3 -> splineTo(80.70 + poleOffset.x, -42 + poleOffset.y, 220.5)
+        4 -> splineTo(80.70 + poleOffset.x, -41.5 + poleOffset.y, 213.5)
         else -> throw CycleException()
     }
 
     private fun Anvil.goToIntake(it: Int) = when (it) {
         0 -> splineTo(162.3, -27.9, 0)
-        1 -> splineTo(161.5, -27.9, 0)
-        2 -> splineTo(161.2, -27.9, 0)
-        3 -> splineTo(161.0, -27.9, 0)
-        4 -> splineTo(161.4, -27.4, 0)
+        1 -> splineTo(161.5, -27.4, 0)
+        2 -> splineTo(161.2, -26.9, 0)
+        3 -> splineTo(161.0, -26.4, 0)
+        4 -> splineTo(161.4, -25.9, 0)
         else -> throw CycleException()
     }.doInReverse()
 
