@@ -71,7 +71,7 @@ publishing {
         release(MavenPublication) {
             groupId = 'com.github.RR-9527'
             artifactId = 'blacksmith-ftc'
-            version = '0.3.2'
+            version = '0.4.1'
 
             afterEvaluate {
                 from components.release
