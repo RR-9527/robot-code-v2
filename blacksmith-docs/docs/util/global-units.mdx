@@ -83,7 +83,7 @@ pubic class MyTeleOp extends BlackOp {
     Pose2d startPose = new Pose2d(toIn(50), toIn(50), toRad(180));
 
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void go() {
         // This is called too late
         GlobalUnits.setUnits(DistanceUnit.CENTIMETERS, AngleUnit.DEGREES);
     }
