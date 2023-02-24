@@ -12,10 +12,10 @@ import ftc.rogue.blacksmith.internal.blackop.CreateOnGoJavaKt;
 public class AutoData {
     public static int DEPOSIT_DROP_AMOUNT = 500;
 
-    public static int AUTO_INTAKE_LIFT_HEIGHT_1 = 115;
-    public static int AUTO_INTAKE_LIFT_HEIGHT_2 = 90;
-    public static int AUTO_INTAKE_LIFT_HEIGHT_3 = 83;
-    public static int AUTO_INTAKE_LIFT_HEIGHT_4 = 40;
+    public static int AUTO_INTAKE_LIFT_HEIGHT_1 = 130;
+    public static int AUTO_INTAKE_LIFT_HEIGHT_2 = 115;
+    public static int AUTO_INTAKE_LIFT_HEIGHT_3 = 92;
+    public static int AUTO_INTAKE_LIFT_HEIGHT_4 = 23;
     public static int AUTO_INTAKE_LIFT_HEIGHT_5 = 0;
 
     public static double LOW_DEPOSIT_1 = 20;

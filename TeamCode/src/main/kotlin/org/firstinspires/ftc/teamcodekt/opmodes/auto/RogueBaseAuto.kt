@@ -35,7 +35,7 @@ abstract class RogueBaseAuto : BlackOp() {
         Imu.init(this)
         Imu.start()
 
-        readPoleOffset()
+//        readPoleOffset()
 
         val startTraj = mainTraj(startPose)
         Anvil.startAutoWith(startTraj).onSchedulerLaunch()
