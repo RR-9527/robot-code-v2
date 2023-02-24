@@ -126,13 +126,7 @@ class RogueMidRightAuto : RogueBaseAuto() {
 
     private fun Anvil.regularIntakePrep(iterations: Int) = this
         .addTemporalMarker(65) {
-            when (iterations) {
-                0 -> bot.lift.targetHeight = liftOffsets[iterations]
-                1 -> bot.lift.targetHeight = liftOffsets[iterations]
-                2 -> bot.lift.targetHeight = liftOffsets[iterations]
-                3 -> bot.lift.targetHeight = liftOffsets[iterations]
-            }
-
+            bot.lift.targetHeight = liftOffsets[iterations]
             bot.wrist.setToBackwardsPos()
             bot.arm.setToBackwardsPosButLikeSliiiightlyHigher()
         }
@@ -161,13 +155,10 @@ class RogueMidRightAuto : RogueBaseAuto() {
                     lineToLinearHeading(95.5, -23, -90)
                     lineToLinearHeading(37, -23, -90)
                 }
-                2 -> inReverse {
+                2 -> lineToLinearHeading(95.5, -23, -90)
+                3 -> inReverse {
                     splineTo(147.9, -25.9, 0)
                     turn(-90)
-                }
-                3 -> {
-                    lineToLinearHeading(95.5, -23, -90)
-                    lineToLinearHeading(150, -23, -90)
                 }
             }
 

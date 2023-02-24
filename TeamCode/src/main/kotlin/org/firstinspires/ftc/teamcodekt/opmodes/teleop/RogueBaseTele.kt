@@ -26,10 +26,7 @@ abstract class RogueBaseTele : BlackOp() {
 
     final override fun go() {
         PhotonCore.experimental.setMaximumParallelCommands(8)
-//        PhotonCore.experimental.setSinglethreadedOptimized(false)
         PhotonCore.enable()
-
-        Imu.init(this)
 
         describeControls()
 
@@ -37,15 +34,10 @@ abstract class RogueBaseTele : BlackOp() {
             powerMulti = 1.0
         }
 
-        waitForStart()
-
-        Scheduler.debug(opmode = this) {
+        Scheduler.launchOnStart(opmode = this) {
             bot.drivetrain.drive(driver.gamepad, powerMulti)
             bot.updateBaseComponents()
             bot.lift.printLiftTelem()
-            mTelemetry.addData("Loop times",  loopTime)
-            mTelemetry.addData("# listeners", numHookedListeners)
-            mTelemetry.addData("# msg subs",  numUniqueMessageSubs)
             mTelemetry.update()
         }
     }

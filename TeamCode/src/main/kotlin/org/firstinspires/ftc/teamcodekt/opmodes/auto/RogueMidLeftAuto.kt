@@ -56,10 +56,10 @@ class RogueMidLeftAuto : RogueBaseAuto() {
 
     private fun Anvil.goToDeposit(it: Int) = when (it) {
         0 -> splineTo(-80.2 + poleOffset.x, -40.8 + poleOffset.y, -39)
-        1 -> splineTo(-79.1 + poleOffset.x, -37 + poleOffset.y, -36.4)
+        1 -> splineTo(-79.1 + poleOffset.x, -37.0 + poleOffset.y, -36.4)
         2 -> splineTo(-76.9 + poleOffset.x, -34.5 + poleOffset.y, -33)
         3 -> splineTo(-76.7 + poleOffset.x, -33.5 + poleOffset.y, -26)
-        4 -> splineTo(-76 + poleOffset.x, -31.5 + poleOffset.y, -25)
+        4 -> splineTo(-76.0 + poleOffset.x, -31.5 + poleOffset.y, -25)
         else -> throw CycleException()
     }
 
@@ -67,41 +67,33 @@ class RogueMidLeftAuto : RogueBaseAuto() {
         0 -> splineTo(-161.2, -22.0, 180)
         1 -> splineTo(-160.3, -19.5, 180)
         2 -> splineTo(-160.0, -16.2, 180)
-        3 -> splineTo(-160, -14.7, 180)
-        4 -> splineTo(-160, -13.8, 180)
+        3 -> splineTo(-160.0, -14.7, 180)
+        4 -> splineTo(-160.0, -13.8, 180)
         else -> throw CycleException()
     }.doInReverse()
 
     private fun Anvil.awaitRegularIntake() = this
-        .addTemporalMarker(-200) {
-            bot.intake.disable()
-        }
-
-        .addTemporalMarker {
+        .addTemporalMarker(-35) {
             bot.claw.close()
         }
 
-        .addTemporalMarker(275) {
+        .addTemporalMarker(175) {
             bot.lift.goToAngledMidButHigher()
         }
 
-        .addTemporalMarker(425) {
+        .addTemporalMarker(300) {
             bot.arm.setToForwardsAngledPos()
             bot.wrist.setToForwardsPos()
         }
 
-        .waitTime(300)
+        .waitTime(120)
 
     private fun Anvil.awaitFastIntake() = this
-        .addTemporalMarker(-275) {
-            bot.intake.disable()
-        }
-
-        .addTemporalMarker(-75) {
+        .addTemporalMarker(-185) {
             bot.claw.close()
         }
 
-        .addTemporalMarker(15) {
+        .addTemporalMarker(75) {
             bot.arm.setToForwardsAngledPos()
             bot.lift.goToAngledMidButHigher()
         }
@@ -110,6 +102,7 @@ class RogueMidLeftAuto : RogueBaseAuto() {
             bot.wrist.setToForwardsPos()
         }
 
+        .waitTime(70)
         .waitTime(120)
 
     private fun Anvil.initialDeposit() = this
@@ -117,9 +110,9 @@ class RogueMidLeftAuto : RogueBaseAuto() {
             bot.lift.targetHeight -= AutoData.DEPOSIT_DROP_AMOUNT
             bot.arm.setToForwardsPos()
         }
-        .addTemporalMarker(50) {
+
+        .addTemporalMarker(-50) {
             bot.claw.openForDeposit()
-            bot.intake.enable()
         }
 
     private fun Anvil.deposit(iterations: Int) = this.apply {
@@ -136,36 +129,25 @@ class RogueMidLeftAuto : RogueBaseAuto() {
     }
 
     private fun Anvil.regularIntakePrep(iterations: Int) = this
-        .addTemporalMarker(185) {
-            when (iterations) {
-                0 -> {
-                    bot.lift.targetHeight = liftOffsets[iterations]+12
-                }
-                1 -> {
-                    bot.lift.targetHeight = liftOffsets[iterations]+15
-                }
-                else -> {
-                    bot.lift.targetHeight = liftOffsets[iterations]
-                }
-            }
+        .addTemporalMarker(65) {
+            bot.lift.targetHeight = liftOffsets[iterations]
             bot.wrist.setToBackwardsPos()
             bot.arm.setToBackwardsPosButLikeSliiiightlyHigher()
         }
 
-        .addTemporalMarker(325) {
+        .addTemporalMarker(205) {
             bot.claw.openForIntakeNarrow()
-            bot.intake.enable()
         }
 
     private fun Anvil.fastIntakePrep(iterations: Int) = this
-        .addTemporalMarker(185) {
-            bot.lift.targetHeight = liftOffsets[iterations]
-
+        .addTemporalMarker(65) {
             bot.arm.setToBackwardsPosLastCycle()
             bot.wrist.setToBackwardsPos()
+        }
 
+        .addTemporalMarker(165) {
+            bot.lift.targetHeight = liftOffsets[iterations]
             bot.claw.openForIntakeNarrow()
-            bot.intake.enable()
         }
 
     private fun parkTraj(startPose: Pose2d) =
@@ -173,9 +155,9 @@ class RogueMidLeftAuto : RogueBaseAuto() {
             resetBot()
 
             when (signalID) {
-                1 -> {
-                    lineToLinearHeading(-92.5, -21, 90)
-                    lineToLinearHeading(-150, -16, 90)
+                1 -> inReverse {
+                    splineTo(-160, -13.8, 180)
+                    turn(90)
                 }
                 2 -> lineToLinearHeading(-92.5, -21, 90)
                 3 -> {

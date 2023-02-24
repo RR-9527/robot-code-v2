@@ -66,7 +66,9 @@ class AnvilInternal
         return builtTrajectory.invokeMethodRethrowing("end")
     }
 
-    private fun getCurrentEndPose(): Pose2d {
+    fun getCurrentEndPose(): Pose2d {
+        flushDeque()
+
         val sequenceSegments = builderProxy.getSequenceSegments()
 
         val last = sequenceSegments
