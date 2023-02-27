@@ -1,29 +1,15 @@
 package org.firstinspires.ftc.teamcodekt.opmodes.auto
 
 import com.acmerobotics.roadrunner.geometry.Pose2d
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import ftc.rogue.blacksmith.Anvil
-import ftc.rogue.blacksmith.units.GlobalUnits
 import ftc.rogue.blacksmith.util.toRad
 import org.firstinspires.ftc.teamcode.AutoData
 import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants
-import org.firstinspires.ftc.teamcodekt.util.CycleException
 
-@Autonomous
-class RogueMidRightAuto : RogueBaseAuto() {
-    override val startPose = GlobalUnits.pos(91, -163, 90)
-
+abstract class RogueMidAuto : RogueBaseAuto() {
     override fun mainTraj(startPose: Pose2d) =
         Anvil.forgeTrajectory(bot.drive, startPose)
-            .setVelConstraint(44, 250.toRad(), DriveConstants.TRACK_WIDTH)
-
-            .addTemporalMarker {
-                bot.lift.goToAngledMidPredeposit()
-                bot.claw.close()
-                bot.arm.setToForwardsAngledPos()
-                bot.wrist.setToForwardsPos()
-            }
-
+            .initialSetup()
             .initialGoToDeposit()
             .initialDeposit()
 
@@ -41,33 +27,28 @@ class RogueMidRightAuto : RogueBaseAuto() {
                 }
 
                 goToDeposit(it)
-                deposit(it)
+                deposit()
             }
 
             .thenRun(::parkTraj)
 
-    private fun Anvil.initialGoToDeposit() = this
-        .forward(132)
-        .turn(142.5)
-        .lineToLinearHeading(79.7 + poleOffset.x, -43.2 + poleOffset.y, 220)
+    abstract fun Anvil.initialGoToDeposit(): Anvil
 
-    private fun Anvil.goToDeposit(it: Int) = when (it) {
-        0 -> splineTo(80.00 - .85 + poleOffset.x, -42.9 + poleOffset.y, 221.5)
-        1 -> splineTo(78.13 - .85 + poleOffset.x, -42.0 + poleOffset.y, 220.5)
-        2 -> splineTo(78.80 - .05 + poleOffset.x, -41.9 + poleOffset.y, 219.5)
-        3 -> splineTo(75.40 - .05 + poleOffset.x, -39.3 + poleOffset.y, 218.3)
-        4 -> splineTo(75.50 - .05 + poleOffset.x, -38.8 + poleOffset.y, 213.5)
-        else -> throw CycleException()
-    }
+    abstract fun Anvil.goToDeposit(it: Int): Anvil
 
-    private fun Anvil.goToIntake(it: Int) = when (it) {
-        0 -> splineTo(161.5 - 0.0, -28.1 - 1.2, 0)
-        1 -> splineTo(160.4 - 0.7, -26.9 - 2.2, 0)
-        2 -> splineTo(159.0 - 0.7, -25.4 - 2.2, 0)
-        3 -> splineTo(159.1 - 0.1, -24.4 - 2.2, 0)
-        4 -> splineTo(158.3 + 0.1, -22.9 - 2.2, 0)
-        else -> throw CycleException()
-    }.doInReverse()
+    abstract fun Anvil.goToIntake(it: Int): Anvil
+
+    abstract fun parkTraj(startPose: Pose2d): Anvil
+
+    private fun Anvil.initialSetup() = this
+        .setVelConstraint(44, 250.toRad(), DriveConstants.TRACK_WIDTH)
+
+        .addTemporalMarker {
+            bot.lift.goToAngledMid()
+            bot.claw.close()
+            bot.arm.setToForwardsAngledPos()
+            bot.wrist.setToForwardsPos()
+        }
 
     private fun Anvil.awaitRegularIntake() = this
         .addTemporalMarker(-55) {
@@ -75,7 +56,7 @@ class RogueMidRightAuto : RogueBaseAuto() {
         }
 
         .addTemporalMarker(125) {
-            bot.lift.goToAngledMidButHigher()
+            bot.lift.goToAngledMid()
         }
 
         .addTemporalMarker(280) {
@@ -96,7 +77,7 @@ class RogueMidRightAuto : RogueBaseAuto() {
 
         .addTemporalMarker(75) {
             bot.arm.setToForwardsAngledPos()
-            bot.lift.goToAngledMidButHigher()
+            bot.lift.goToAngledMid()
         }
 
         .addTemporalMarker(100) {
@@ -115,15 +96,13 @@ class RogueMidRightAuto : RogueBaseAuto() {
             bot.claw.openForDeposit()
         }
 
-    private fun Anvil.deposit(iterations: Int) = this.apply {
+    private fun Anvil.deposit() = this.apply {
         addTemporalMarker(-165) {
             bot.lift.targetHeight -= AutoData.DEPOSIT_DROP_AMOUNT
             bot.arm.setToForwardsPos()
         }
 
-        val durationOffset = if (iterations < 4) -25 else -85
-
-        addTemporalMarker(durationOffset) {
+        addTemporalMarker(-25) {
             bot.claw.openForDeposit()
         }
     }
@@ -151,27 +130,7 @@ class RogueMidRightAuto : RogueBaseAuto() {
             bot.intake.enable()
         }
 
-    private fun parkTraj(startPose: Pose2d) =
-        Anvil.forgeTrajectory(bot.drive, startPose) {
-            resetBot()
-
-            when (signalID) {
-                1 -> {
-                    strafeRight(14)
-                    splineToSplineHeading(30, -27, 90, 180)
-                }
-                2 -> {
-                    lineToLinearHeading(78.5, -23, 90)
-                }
-                3 -> inReverse {
-                    splineToSplineHeading(139.9, -25.9, 90, 0)
-                }
-            }
-
-            this
-        }
-
-    private fun Anvil.resetBot() = this
+    protected fun Anvil.resetBot() = this
         .addTemporalMarker {
             bot.arm.setToRestingPos()
             bot.wrist.setToRestingPos()

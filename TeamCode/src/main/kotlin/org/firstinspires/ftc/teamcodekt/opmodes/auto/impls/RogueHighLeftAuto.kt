@@ -1,24 +1,27 @@
-package org.firstinspires.ftc.teamcodekt.opmodes.auto
+package org.firstinspires.ftc.teamcodekt.opmodes.auto.impls
 
 import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
+import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import ftc.rogue.blacksmith.Anvil
 import ftc.rogue.blacksmith.units.GlobalUnits
 import ftc.rogue.blacksmith.util.toRad
 import org.firstinspires.ftc.teamcode.AutoData
 import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants
+import org.firstinspires.ftc.teamcodekt.opmodes.auto.RogueBaseAuto
 import org.firstinspires.ftc.teamcodekt.util.CycleException
 
+@Disabled
 @Autonomous
-class RogueMidLeftAuto : RogueBaseAuto() {
+class RogueHighLeftAuto : RogueBaseAuto() {
     override val startPose = GlobalUnits.pos(-91, -163, 90)
 
     override fun mainTraj(startPose: Pose2d) =
         Anvil.forgeTrajectory(bot.drive, startPose)
-            .setVelConstraint(44, 250.toRad(), DriveConstants.TRACK_WIDTH)
+            .setVelConstraint(40, 250.toRad(), DriveConstants.TRACK_WIDTH)
 
             .addTemporalMarker {
-                bot.lift.goToAngledMidPredeposit()
+                bot.lift.goToAngledMid()
                 bot.claw.close()
                 bot.arm.setToForwardsAngledPos()
                 bot.wrist.setToForwardsPos()
@@ -48,71 +51,75 @@ class RogueMidLeftAuto : RogueBaseAuto() {
 
     private fun Anvil.initialGoToDeposit() = this
         .forward(132)
-        .turn(-139.5)
-        .lineToLinearHeading(-78.75 + poleOffset.x, -42.5 + poleOffset.y, -49)
+        .turn(-49.5)
+        .lineToLinearHeading(-78.75 + poleOffset.x, -15.5 + poleOffset.y, 49)
 
     private fun Anvil.goToDeposit(it: Int) = when (it) {
-        0 -> splineTo(-80.2 + poleOffset.x, -40.8 + poleOffset.y, -39.0)
-        1 -> splineTo(-79.1 + poleOffset.x, -37.0 + poleOffset.y, -36.4)
-        2 -> splineTo(-76.9 + poleOffset.x, -34.5 + poleOffset.y, -33.0)
-        3 -> splineTo(-76.7 + poleOffset.x, -33.5 + poleOffset.y, -26.0)
-        4 -> splineTo(-76.0 + poleOffset.x, -31.5 + poleOffset.y, -23.8)
+        0 -> splineTo(-81.3 + poleOffset.x, -12.2 + poleOffset.y, 42.3)
+        1 -> splineTo(-81.1 + poleOffset.x, -12.2 + poleOffset.y, 39.0)
+        2 -> splineTo(-80.7 + poleOffset.x, -12.6 + poleOffset.y, 32.8)
+        3 -> splineTo(-80.7 + poleOffset.x, -09.5 + poleOffset.y, 32.5)
+        4 -> splineTo(-80.1 + poleOffset.x, -09.5 + poleOffset.y, 30.0)
         else -> throw CycleException()
     }
 
     private fun Anvil.goToIntake(it: Int) = when (it) {
-        0 -> splineTo(-164.1, -22.0 - 1.5, 180)
-        1 -> splineTo(-163.1, -19.5 - 1.7, 180)
-        2 -> splineTo(-162.5, -16.2 + 0.6, 180)
-        3 -> splineTo(-162.0, -14.7 + 1.7, 180)
-        4 -> splineTo(-161.5, -13.8 + 2.8, 180)
+        0 -> splineTo(-161.8, -22.0, 180)
+        1 -> splineTo(-161.3, -21.5, 180)
+        2 -> splineTo(-161.0, -21.2, 180)
+        3 -> splineTo(-160.4, -20.9, 180)
+        4 -> splineTo(-160.6, -20.7, 180)
         else -> throw CycleException()
     }.doInReverse()
 
     private fun Anvil.awaitRegularIntake() = this
-        .addTemporalMarker(-55) {
+        .addTemporalMarker(-170) {
+            bot.intake.disable()
+        }
+
+        .addTemporalMarker {
             bot.claw.close()
         }
 
-        .addTemporalMarker(125) {
-            bot.lift.goToAngledMidButHigher()
+        .addTemporalMarker(275) {
+            bot.lift.goToAngledMid()
         }
 
-        .addTemporalMarker(280) {
+        .addTemporalMarker(425) {
             bot.arm.setToForwardsAngledPos()
             bot.wrist.setToForwardsPos()
         }
 
-        .waitTime(120)
+        .waitTime(300)
 
     private fun Anvil.awaitFastIntake() = this
-        .addTemporalMarker(-215) {
+        .addTemporalMarker(-275) {
             bot.intake.disable()
         }
 
-        .addTemporalMarker(-185) {
+        .addTemporalMarker(-75) {
             bot.claw.close()
         }
 
-        .addTemporalMarker(75) {
+        .addTemporalMarker(15) {
             bot.arm.setToForwardsAngledPos()
-            bot.lift.goToAngledMidButHigher()
+            bot.lift.goToAngledMid()
         }
 
         .addTemporalMarker(100) {
             bot.wrist.setToForwardsPos()
         }
 
-        .waitTime(70)
+        .waitTime(120)
 
     private fun Anvil.initialDeposit() = this
         .addTemporalMarker(-165) {
             bot.lift.targetHeight -= AutoData.DEPOSIT_DROP_AMOUNT
             bot.arm.setToForwardsPos()
         }
-
-        .addTemporalMarker(-20) {
+        .addTemporalMarker(50) {
             bot.claw.openForDeposit()
+            bot.intake.enable()
         }
 
     private fun Anvil.deposit(iterations: Int) = this.apply {
@@ -121,7 +128,7 @@ class RogueMidLeftAuto : RogueBaseAuto() {
             bot.arm.setToForwardsPos()
         }
 
-        val durationOffset = if (iterations < 4) -25 else -85
+        val durationOffset = if (iterations < 4) -20 else -70
 
         addTemporalMarker(durationOffset) {
             bot.claw.openForDeposit()
@@ -129,24 +136,34 @@ class RogueMidLeftAuto : RogueBaseAuto() {
     }
 
     private fun Anvil.regularIntakePrep(iterations: Int) = this
-        .addTemporalMarker(65) {
-            bot.lift.targetHeight = liftOffsets[iterations]
+        .addTemporalMarker(185) {
+            when (iterations) {
+                0 -> {
+                    bot.lift.targetHeight = liftOffsets[iterations]+12
+                }
+                1 -> {
+                    bot.lift.targetHeight = liftOffsets[iterations]+15
+                }
+                else -> {
+                    bot.lift.targetHeight = liftOffsets[iterations]
+                }
+            }
             bot.wrist.setToBackwardsPos()
             bot.arm.setToBackwardsPosButLikeSliiiightlyHigher()
         }
 
-        .addTemporalMarker(205) {
-            bot.claw.openForIntakeWide()
+        .addTemporalMarker(325) {
+            bot.claw.openForIntakeNarrow()
+            bot.intake.enable()
         }
 
     private fun Anvil.fastIntakePrep(iterations: Int) = this
-        .addTemporalMarker(65) {
+        .addTemporalMarker(185) {
+            bot.lift.targetHeight = liftOffsets[iterations]
+
             bot.arm.setToBackwardsPosLastCycle()
             bot.wrist.setToBackwardsPos()
-        }
 
-        .addTemporalMarker(165) {
-            bot.lift.targetHeight = liftOffsets[iterations]
             bot.claw.openForIntakeNarrow()
             bot.intake.enable()
         }
@@ -156,15 +173,14 @@ class RogueMidLeftAuto : RogueBaseAuto() {
             resetBot()
 
             when (signalID) {
-                1 -> inReverse {
-                    splineTo(-151.5, -16.8, 180)
+                1 -> {
+                    lineToLinearHeading(-92.5, -21, 90)
+                    lineToLinearHeading(-150, -16, 90)
                 }
-                2 -> {
-                    lineToLinearHeading(-92.5, -17, 90)
-                }
+                2 -> lineToLinearHeading(-92.5, -21, 90)
                 3 -> {
-                    strafeLeft(14)
-                    splineToSplineHeading(-40, -25, 90, 180)
+                    lineToLinearHeading(-92.5, -21, 90)
+                    lineToLinearHeading(-30, -16, 90)
                 }
             }
 

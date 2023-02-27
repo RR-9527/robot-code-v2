@@ -30,7 +30,7 @@ object Imu {
         parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS
         imu.initialize(parameters)
 
-        Thread{
+        Thread {
             while (!opmode.isStopRequested && (start || opmode.opModeIsActive())) {
                 val (x, y, z) = imu.angularOrientation
                 angles = arrayOf(x, y, z)

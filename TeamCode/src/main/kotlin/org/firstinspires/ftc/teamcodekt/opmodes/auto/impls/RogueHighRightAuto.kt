@@ -1,29 +1,27 @@
-package org.firstinspires.ftc.teamcodekt.opmodes.auto
+package org.firstinspires.ftc.teamcodekt.opmodes.auto.impls
 
 import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import ftc.rogue.blacksmith.Anvil
-import ftc.rogue.blacksmith.units.DistanceUnit
 import ftc.rogue.blacksmith.units.GlobalUnits
-import ftc.rogue.blacksmith.util.toCm
 import ftc.rogue.blacksmith.util.toRad
 import org.firstinspires.ftc.teamcode.AutoData
 import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants
-import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive
+import org.firstinspires.ftc.teamcodekt.opmodes.auto.RogueBaseAuto
 import org.firstinspires.ftc.teamcodekt.util.CycleException
 
 @Disabled
 @Autonomous
-class RogueHighLeftAuto : RogueBaseAuto() {
-    override val startPose = GlobalUnits.pos(-91, -163, 90)
+class RogueHighRightAuto : RogueBaseAuto() {
+    override val startPose = GlobalUnits.pos(91, -163, 90)
 
     override fun mainTraj(startPose: Pose2d) =
         Anvil.forgeTrajectory(bot.drive, startPose)
             .setVelConstraint(40, 250.toRad(), DriveConstants.TRACK_WIDTH)
 
             .addTemporalMarker {
-                bot.lift.goToAngledMidPredeposit()
+                bot.lift.goToAngledHigh()
                 bot.claw.close()
                 bot.arm.setToForwardsAngledPos()
                 bot.wrist.setToForwardsPos()
@@ -53,24 +51,24 @@ class RogueHighLeftAuto : RogueBaseAuto() {
 
     private fun Anvil.initialGoToDeposit() = this
         .forward(132)
-        .turn(-49.5)
-        .lineToLinearHeading(-78.75 + poleOffset.x, -15.5 + poleOffset.y, 49)
+        .turn(45)
+        .lineToLinearHeading(83.2 + poleOffset.x, -15.9 + poleOffset.y, 135)
 
     private fun Anvil.goToDeposit(it: Int) = when (it) {
-        0 -> splineTo(-81.3 + poleOffset.x, -12.2 + poleOffset.y, 42.3)
-        1 -> splineTo(-81.1 + poleOffset.x, -12.2 + poleOffset.y, 39.0)
-        2 -> splineTo(-80.7 + poleOffset.x, -12.6 + poleOffset.y, 32.8)
-        3 -> splineTo(-80.7 + poleOffset.x, -09.5 + poleOffset.y, 32.5)
-        4 -> splineTo(-80.1 + poleOffset.x, -09.5 + poleOffset.y, 30.0)
+        0 -> splineTo(81.00 + poleOffset.x, -15.2 + poleOffset.y, 135)
+        1 -> splineTo(79.13 + poleOffset.x, -14.7 + poleOffset.y, 135)
+        2 -> splineTo(80.70 + poleOffset.x, -15.3 + poleOffset.y, 135)
+        3 -> splineTo(80.70 + poleOffset.x, -15.3 + poleOffset.y, 135)
+        4 -> splineTo(80.70 + poleOffset.x, -15.9 + poleOffset.y, 135)
         else -> throw CycleException()
     }
 
     private fun Anvil.goToIntake(it: Int) = when (it) {
-        0 -> splineTo(-161.8, -22.0, 180)
-        1 -> splineTo(-161.3, -21.5, 180)
-        2 -> splineTo(-161.0, -21.2, 180)
-        3 -> splineTo(-160.4, -20.9, 180)
-        4 -> splineTo(-160.6, -20.7, 180)
+        0 -> splineTo(162.3, -27.9, 0)
+        1 -> splineTo(161.5, -27.9, 0)
+        2 -> splineTo(161.2, -27.9, 0)
+        3 -> splineTo(161.0, -27.9, 0)
+        4 -> splineTo(161.4, -27.4, 0)
         else -> throw CycleException()
     }.doInReverse()
 
@@ -84,7 +82,7 @@ class RogueHighLeftAuto : RogueBaseAuto() {
         }
 
         .addTemporalMarker(275) {
-            bot.lift.goToAngledMidPredeposit()
+            bot.lift.goToAngledMid()
         }
 
         .addTemporalMarker(425) {
@@ -105,7 +103,7 @@ class RogueHighLeftAuto : RogueBaseAuto() {
 
         .addTemporalMarker(15) {
             bot.arm.setToForwardsAngledPos()
-            bot.lift.goToAngledMidPredeposit()
+            bot.lift.goToAngledMid()
         }
 
         .addTemporalMarker(100) {
@@ -119,7 +117,8 @@ class RogueHighLeftAuto : RogueBaseAuto() {
             bot.lift.targetHeight -= AutoData.DEPOSIT_DROP_AMOUNT
             bot.arm.setToForwardsPos()
         }
-        .addTemporalMarker(50) {
+
+        .addTemporalMarker(-50) {
             bot.claw.openForDeposit()
             bot.intake.enable()
         }
@@ -130,7 +129,7 @@ class RogueHighLeftAuto : RogueBaseAuto() {
             bot.arm.setToForwardsPos()
         }
 
-        val durationOffset = if (iterations < 4) -20 else -70
+        val durationOffset = if (iterations < 4) -50 else -100
 
         addTemporalMarker(durationOffset) {
             bot.claw.openForDeposit()
@@ -140,16 +139,12 @@ class RogueHighLeftAuto : RogueBaseAuto() {
     private fun Anvil.regularIntakePrep(iterations: Int) = this
         .addTemporalMarker(185) {
             when (iterations) {
-                0 -> {
-                    bot.lift.targetHeight = liftOffsets[iterations]+12
-                }
-                1 -> {
-                    bot.lift.targetHeight = liftOffsets[iterations]+15
-                }
-                else -> {
-                    bot.lift.targetHeight = liftOffsets[iterations]
-                }
+                0 -> bot.lift.targetHeight = liftOffsets[iterations]
+                1 -> bot.lift.targetHeight = liftOffsets[iterations] + 9
+                2 -> bot.lift.targetHeight = liftOffsets[iterations] + 19
+                3 -> bot.lift.targetHeight = liftOffsets[iterations] - 11
             }
+
             bot.wrist.setToBackwardsPos()
             bot.arm.setToBackwardsPosButLikeSliiiightlyHigher()
         }
@@ -176,13 +171,13 @@ class RogueHighLeftAuto : RogueBaseAuto() {
 
             when (signalID) {
                 1 -> {
-                    lineToLinearHeading(-92.5, -21, 90)
-                    lineToLinearHeading(-150, -16, 90)
+                    lineToLinearHeading(95.5, -23, -90)
+                    lineToLinearHeading(37, -23, -90)
                 }
-                2 -> lineToLinearHeading(-92.5, -21, 90)
+                2 -> lineToLinearHeading(95.5, -23, -90)
                 3 -> {
-                    lineToLinearHeading(-92.5, -21, 90)
-                    lineToLinearHeading(-30, -16, 90)
+                    lineToLinearHeading(95.5, -23, -90)
+                    lineToLinearHeading(150, -23, -90)
                 }
             }
 

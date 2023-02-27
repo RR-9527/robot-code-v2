@@ -3,15 +3,9 @@
 package org.firstinspires.ftc.teamcodekt.components
 
 import com.acmerobotics.dashboard.config.Config
-import com.acmerobotics.roadrunner.control.PIDCoefficients
-import com.acmerobotics.roadrunner.control.PIDFController
-import com.acmerobotics.roadrunner.profile.MotionProfile
-import com.acmerobotics.roadrunner.profile.MotionProfileGenerator
-import com.acmerobotics.roadrunner.profile.MotionState
 import com.arcrobotics.ftclib.controller.PIDController
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.qualcomm.robotcore.hardware.DcMotorSimple
-import com.qualcomm.robotcore.util.ElapsedTime
 import ftc.rogue.blacksmith.BlackOp
 import ftc.rogue.blacksmith.BlackOp.Companion.hwMap
 import ftc.rogue.blacksmith.util.kt.clamp
@@ -78,20 +72,16 @@ class Lift {
         targetHeight = LIFT_HIGH
     }
 
-    fun goToAngledHigh() {
-        targetHeight = ANGLED_LIFT_HIGH
-    }
-
-    fun goToAngledMidPredeposit() {
-        targetHeight = ANGLED_LIFT_MID
-    }
-
-    fun goToAngledMidButHigher() {
-        targetHeight = ANGLED_LIFT_MID
-    }
-
     fun goToAngledLow() {
         targetHeight = ANGLED_LIFT_LOW
+    }
+
+    fun goToAngledMid() {
+        targetHeight = ANGLED_LIFT_MID
+    }
+
+    fun goToAngledHigh() {
+        targetHeight = ANGLED_LIFT_HIGH
     }
 
     fun update(useDeadzone: Boolean) {
