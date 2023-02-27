@@ -18,11 +18,11 @@ abstract class RogueBaseTele : BlackOp() {
 
     protected val bot by evalOnGo(::createTeleOpBotComponents)
 
-    protected val intakeChain         by createOnGo< IntakeChain         > { bot }
-    protected val regularDepositChain by createOnGo< RegularDepositChain > { bot }
-    protected val reverseDepositChain by createOnGo< ReverseDepositChain > { bot }
-    protected val coneLaunchingChain  by createOnGo< ConeLaunchingChain  > { bot }
-    protected val coneUnflipperChain  by createOnGo< ConeUnflipperChain  > { bot }
+    protected val intakeChain         by createOnGo< IntakeChain         >{ bot }
+    protected val regularDepositChain by createOnGo< RegularDepositChain >{ bot }
+    protected val reverseDepositChain by createOnGo< ReverseDepositChain >{ bot }
+    protected val coneLaunchingChain  by createOnGo< ConeLaunchingChain  >{ bot }
+    protected val coneUnflipperChain  by createOnGo< ConeUnflipperChain  >{ bot }
 
     final override fun go() {
         PhotonCore.experimental.setMaximumParallelCommands(8)
@@ -36,7 +36,7 @@ abstract class RogueBaseTele : BlackOp() {
 
         Scheduler.launchOnStart(opmode = this) {
             bot.drivetrain.drive(driver.gamepad, powerMulti)
-            bot.updateBaseComponents()
+            bot.updateBaseComponents(true)
             bot.lift.printLiftTelem()
             mTelemetry.update()
         }

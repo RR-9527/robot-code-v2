@@ -34,17 +34,15 @@ class RogueCompOp : RogueBaseTele() {
 
         coneUnflipperChain.invokeOn(a)
 
-        // -- MANUAL CLAW CONTROLS --
+        // -- MANUAL WRIST CONTROLS --
 
         left_stick_x.whileHigh {
             if (left_stick_x().sign < 0) {
-                bot.claw.openForIntakeWide()
-                bot.intake.enable()
+                bot.wrist.setToForwardsPos()
             }
 
             if (left_stick_x().sign > 0) {
-                bot.intake.disable()
-                bot.claw.close()
+                bot.wrist.setToBackwardsPos()
             }
         }
 
@@ -52,13 +50,13 @@ class RogueCompOp : RogueBaseTele() {
 
         val bumpersPressed = left_bumper + right_bumper
 
-        (right_stick_y(deadzone = .1) + !bumpersPressed).whileHigh {
+        (right_stick_y(deadzone = .2) + !bumpersPressed).whileHigh {
             bot.lift.clippedHeight += (-codriver.right_stick_y() * 10).toInt()
         }
 
         // -- MANUAL LIFT RESET --
 
-        (bumpersPressed + right_stick_y(deadzone = .1)).whileHigh {
+        (bumpersPressed + right_stick_y(deadzone = .2)).whileHigh {
             bot.lift.targetHeight += (-codriver.right_stick_y() * 2.5).toInt()
         }
 

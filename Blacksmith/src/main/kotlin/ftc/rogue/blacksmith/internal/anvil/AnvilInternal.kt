@@ -285,15 +285,15 @@ class AnvilInternal
 
         flushDeque()
 
-        val nextStartPose = config.startPoseSupplier?.invoke()
-            ?: getCurrentEndPose()
-
         val key = Any()
 
         if (!config.buildsSynchronously) {
             builderDeque.addFirst {
                 // Can't use '_addTemporalMarker' as that adds to the end of the deque
                 builderProxy.UNSTABLE_addTemporalMarkerOffset(0.0) {
+                    val nextStartPose = config.startPoseSupplier?.invoke()
+                        ?: getEndPose()
+
                     preforgedTrajectories[key] = builderScope.async { nextTrajectory( nextStartPose ).build() }
                 }
             }
@@ -301,6 +301,9 @@ class AnvilInternal
 
         _addTemporalMarker(0.0) {
             if (!config.predicate()) return@_addTemporalMarker
+
+            val nextStartPose = config.startPoseSupplier?.invoke()
+                ?: getEndPose()
 
             val nextTrajectoryBuilt =
                 if (config.buildsSynchronously) {

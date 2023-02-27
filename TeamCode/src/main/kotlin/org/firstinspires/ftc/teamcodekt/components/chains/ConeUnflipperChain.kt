@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcodekt.components.meta.TeleOpBotComponents
 class ConeUnflipperChain(val bot: TeleOpBotComponents) : Chain {
     companion object {
         @JvmField
-        var flipperTargetHeight = 115
+        var flipperTargetHeight = 113
 
         @JvmField
         var flipperTargetAngle = 27.5

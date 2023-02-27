@@ -62,13 +62,14 @@ fun mainTraj(drive: DriveShim) =
             setPoseEstimateInTemporalMarker(internal.getCurrentEndPose())
 
             when (1) {
-                1 -> inReverse {
-                    splineTo(-160, -13.8, 180)
+                1 -> {
+                    strafeRight(14)
+                    splineToSplineHeading(30, -27, 90, 180)
                 }
                 2 -> lineToLinearHeading(-92.5, -21, 90)
                 3 -> {
-                    lineToLinearHeading(-92.5, -21, 90)
-                    lineToLinearHeading(-30, -16, 90)
+                    lineToLinearHeading(-30, -16, 0)
+                    turn(90)
                 }
             }
         }
@@ -85,7 +86,7 @@ private fun Anvil.goToDeposit(it: Int) = when (it) {
     1 -> splineTo(-79.1, -37, -36.4)
     2 -> splineTo(-76.9, -34.5, -33)
     3 -> splineTo(-76.7, -33.5, -26)
-    4 -> splineTo(-76, -31.5, -25)
+    4 -> splineTo(76.70, -38.8, 211.5)
     else -> throw CycleException()
 }
 

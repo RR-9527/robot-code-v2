@@ -29,7 +29,6 @@ abstract class RogueBaseAuto : BlackOp() {
 
     final override fun go() {
         PhotonCore.experimental.setMaximumParallelCommands(8)
-//        PhotonCore.experimental.setSinglethreadedOptimized(false)
         PhotonCore.enable()
 
         Imu.init(this)
@@ -43,7 +42,7 @@ abstract class RogueBaseAuto : BlackOp() {
         signalID = bot.camera.waitForStartWithVision(this) ?: 2
 
         Scheduler.debug(opmode = this) {
-            bot.updateBaseComponents()
+            bot.updateBaseComponents(false)
             bot.drive.update()
             mTelemetry.addLine("Pole offset: x->${poleOffset.x}, y->${poleOffset.y}")
             mTelemetry.addData("Loop time", loopTime)
