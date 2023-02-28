@@ -61,8 +61,8 @@ abstract class BlackOp : LinearOpMode() {
          *
          * Is only assigned to a driver station telemetry when a BlackOp instance is initialized.
          *
-         * **DO NOT CALL/USE DIRECTLY BEFORE A [BlackOp] INSTANCE IS INITIALIZED OR IT WON'T
-         * BE THE RIGHT TELEMETRY**
+         * Do not use directly before a [BlackOp] instance is initialized, or it won't be the right
+         * telemetry
          */
         @JvmStatic
         fun mTelemetry() = mTelemetry
@@ -76,8 +76,8 @@ abstract class BlackOp : LinearOpMode() {
          *
          * Is only assigned to a hardware map when a BlackOp instance is initialized.
          *
-         * **DO NOT CALL/USE DIRECTLY BEFORE A [BlackOp] INSTANCE IS INITIALIZED OR IT WON'T
-         * BE THE RIGHT HARDWARE MAP**
+         * Do not use directly before a [BlackOp] instance is initialized, or it won't be the right
+         * hwMap
          */
         @JvmStatic
         fun hwMap() = hwMap
@@ -103,7 +103,7 @@ abstract class BlackOp : LinearOpMode() {
         const val STARTING_MSG = 3248023743480398723L
     }
 
-    // -- KOTLIN ONLY BELOW --
+    // -- KOTLIN ONLY BELOW (Check out @CreateOnGo and @EvalOnGo for Java) --
 
     /**
      * [READ DOCS FOR THIS (click me)](https://blacksmithftc.vercel.app/black-op/create-on-go-kt)

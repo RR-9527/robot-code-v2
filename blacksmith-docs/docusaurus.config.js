@@ -51,7 +51,7 @@ const config = {
         defaultMode: 'dark',
       },
       navbar: {
-        title: 'Blacksmith',
+        title: 'Blacksmith v0.4.1',
         logo: {
           alt: 'Blacksmith Logo',
           src: 'img/logo/blacksmith-logo.svg',

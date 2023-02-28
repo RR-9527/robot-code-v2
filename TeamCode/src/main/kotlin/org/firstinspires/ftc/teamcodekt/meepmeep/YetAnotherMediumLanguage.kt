@@ -41,8 +41,8 @@ fun mainTraj(drive: DriveShim) =
 
         .doTimes(RogueBaseAuto.NUM_CYCLES) {
             when (it) {
-                RogueBaseAuto.LAST_CYCLE -> fastIntakePrep(it)
-                else -> regularIntakePrep(it)
+                RogueBaseAuto.LAST_CYCLE -> fastIntakePrep()
+                else -> regularIntakePrep()
             }
 
             goToIntake(it)
@@ -53,7 +53,7 @@ fun mainTraj(drive: DriveShim) =
             }
 
             goToDeposit(it)
-            deposit(it)
+            deposit()
         }
 
         .apply {
@@ -105,10 +105,10 @@ private fun Anvil.awaitFastIntake() = this
 
 private fun Anvil.initialDeposit() = this
 
-private fun Anvil.deposit(iterations: Int) = this
+private fun Anvil.deposit() = this
 
-private fun Anvil.regularIntakePrep(iterations: Int) = this
+private fun Anvil.regularIntakePrep() = this
 
-private fun Anvil.fastIntakePrep(iterations: Int) = this
+private fun Anvil.fastIntakePrep() = this
 
 private fun Anvil.resetBot() = this

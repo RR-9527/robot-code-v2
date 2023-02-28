@@ -438,6 +438,7 @@ class Anvil
 
     // -- Internal --
 
+    // Just so Kotlin doesn't highlight 'also' as yellow, it's distracting here
     private inline fun tap(action: () -> Unit) =
         also { action() }
 }

@@ -3,6 +3,7 @@
 package ftc.rogue.blacksmith.listeners
 
 import ftc.rogue.blacksmith.units.TimeUnit
+import ftc.rogue.blacksmith.Scheduler
 
 // -----------------------------------------------------------------------------------------------
 // Dear reader-
@@ -22,32 +23,6 @@ import ftc.rogue.blacksmith.units.TimeUnit
  * [Docs link](https://blacksmithftc.vercel.app/scheduler-api/timer)
  *
  * A timer that can be used to schedule actions to be performed at a specific time.
- *
- * Java usage example:
- * ```java
- * @Override
- * public void runOpMode() throws InterruptedException {
- *     Timer timer = new Timer(5, TimeUnit.SECONDS);
- *
- *     // Runs the given Runnable while waiting for the timer to finish
- *     timer.whileWaiting(this::doSomething);
- *
- *     // Runs the given Runnable once after 5 seconds
- *     timer.onDone(this::doSomethingElse);
- *
- *     // Runs the given Runnable every tick after 5 seconds, until the timer is reset
- *     timer.whileDone(this::doYetAnotherThing);
- *
- *     waitForStart();
- *
- *     // Timer should be reset before usage. Prevents the timer from running immediately.
- *     // This will primarily be used in combination with a gamepad trigger.
- *     gamepadx1.a.onHigh(timer::reset);
- *
- *     // Starts the timer
- *     Scheduler.launch(this);
- * }
- * ```
  *
  * @author KG
  *
@@ -134,6 +109,30 @@ class Timer @JvmOverloads constructor(
      */
     fun after(time: Long) = ftc.rogue.blacksmith.listeners.after(time)
 }
+
+// -------------------------- Made you look --------------------------
+//
+//              ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⢔⣂⣤⣤⣤⣾⣭⣭⣍⣀⣰⠢⠀⡀⠀⠀⠀⠀⠀
+//              ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡠⣪⡿⠉⠁⠈⠀⠁⠀⠀⠈⠉⠙⠳⣶⣌⠠⡀⠀⠀⠀
+//              ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⢡⡿⠁⠀⠀⠀⢀⡀⠀⠀⠀⠀⠀⠀⠈⢻⣧⠐⠄⠀⠀
+//              ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣄⣿⠇⢀⣴⣿⠛⠛⡛⠛⠛⠛⠻⢶⣄⠀⠀⠹⣧⠰⡀⠀
+//              ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⣸⡏⠀⠘⣿⣎⠒⠄⣈⣀⡀⠀⠄⣤⣿⠇⠀⠀⢹⣆⢁⠀
+//              ⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⢡⣿⠁⠀⠀⠈⠙⠷⠶⠶⠶⠶⠶⠟⠋⠁⠀⠀⠀⠈⣿⢸⠀
+//              ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⣾⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠸⠃
+//              ⠀⠀⠀⠀⠀⠀⠀⠀⠀⡄⡿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢹⡄⠀
+//              ⠀⠀⠀⠀⠀⠀⠀⠀⢠⢸⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⡇⡇
+//              ⠀⠀⠀⠀⠀⠀⠀⠀⠈⣾⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⡇⠁
+//              ⠀⠀⠀⠀⠀⠀⠀⠀⣇⡏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⡇⠀
+//              ⠀⠀⠀⠀⠀⠀⠀⠰⢸⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣷⠁
+//              ⠀⠀⠀⠀⠀⠀⠀⠄⣿⠀⠀⠀⠀⠀⣀⣤⡴⠶⠶⠶⠶⢦⣄⡀⠀⠀⠀⠀⠀⠀⠀⣿⠀
+//              ⠀⠀⠀⢀⡀⠀⢠⢱⣿⠀⠀⠀⠀⢸⡟⡑⠈⠁⠀⠀⠈⠐⠽⣷⠀⠀⠀⠀⠀⠀⠀⣿⠀
+//              ⢀⠀⣪⣵⢮⣭⣥⣾⡇⠀⠀⠀⠀⠸⡇⠃⠀⠀⠀⠀⠀⠀⡒⣿⠀⠀⠀⠀⠀⠀⠀⣏⠀
+//              ⠀⣾⠁⠀⠀⠀⠀⠉⠀⠀⠀⠀⠀⠀⣿⢸⠀⠀⠀⣀⣀⠀⣱⡏⠀⠀⠀⠀⠀⠀⠀⡿⠘
+//              ⠐⠼⢷⣄⡀⠀⠀⠀⠀⣀⣀⣠⣴⠾⠋⠄⠠⢴⣬⠶⠶⠒⠿⠇⠀⠀⠀⠀⠀⠀⠀⡇⡇
+//              ⠀⠈⠀⠭⠙⢻⠿⡛⠛⠋⠭⠩⠕⠈⠀⠀⡄⣿⡃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣸⢇⠁
+//              ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⠙⡳⢦⣄⣀⣀⣀⣀⣤⣤⡴⢾⡋⠅⠈⠀
+//              ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⠀⠚⠉⠩⠍⠓⠒⠀⠁⠀⠀⠀⠀
+// -------------------------------------------------------------------
 
 /**
  * Read the docs please about this very useful tool.
