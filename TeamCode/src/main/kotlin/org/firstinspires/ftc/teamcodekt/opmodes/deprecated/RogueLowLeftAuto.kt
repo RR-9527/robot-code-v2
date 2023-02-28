@@ -8,8 +8,6 @@ import ftc.rogue.blacksmith.units.GlobalUnits
 import org.firstinspires.ftc.teamcode.AutoData
 import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive
-import org.firstinspires.ftc.teamcodekt.components.LIFT_HIGH
-import org.firstinspires.ftc.teamcodekt.components.meta.createAutoBotComponents
 import org.firstinspires.ftc.teamcodekt.opmodes.auto.RogueBaseAuto
 import org.firstinspires.ftc.teamcodekt.util.CycleException
 
@@ -97,7 +95,7 @@ class RogueLowLeftAuto : RogueBaseAuto() {
                         bot.claw.openForIntakeNarrow()
                         bot.intake.enable()
                         bot.wrist.setToBackwardsPos()
-                        bot.arm.setToBackwardsPosButLikeSliiiightlyHigher()
+                        bot.arm.setToBackwardsPosButLikeSliiiightlyLower()
                     }
                     .waitTime(500)
 

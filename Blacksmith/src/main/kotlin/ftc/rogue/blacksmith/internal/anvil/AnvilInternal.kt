@@ -45,8 +45,6 @@ class AnvilInternal
 
     private val preforgedTrajectories = mutableMapOf<Any, Deferred<Any>>()
 
-    private lateinit var builtTrajectory: Any
-
     private fun enqueue(builderAction: () -> Unit) {
         builderDeque += builderAction
     }
@@ -58,15 +56,7 @@ class AnvilInternal
         driveProxy.followTrajectorySequence(trajectory)
     }
 
-    private fun getEndPose(): Pose2d {
-        if (!::builtTrajectory.isInitialized) {
-            throw IllegalStateException("No trajectory has been built yet")
-        }
-
-        return builtTrajectory.invokeMethodRethrowing("end")
-    }
-
-    fun getCurrentEndPose(): Pose2d {
+    private fun getCurrentEndPose(): Pose2d {
         flushDeque()
 
         val sequenceSegments = builderProxy.getSequenceSegments()
@@ -207,7 +197,8 @@ class AnvilInternal
     }
 
     fun `$doInReverse`() {
-        val thingToDoInReverse = builderDeque.removeLast()
+        val thingToDoInReverse = builderDeque.removeLastOrNull()
+            ?: throw IllegalStateException("Builder deque is empty, doInReverse does not work unless there is an action to pop.")
 
         __inReverse {
             enqueue(thingToDoInReverse)
@@ -292,21 +283,21 @@ class AnvilInternal
                 // Can't use '_addTemporalMarker' as that adds to the end of the deque
                 builderProxy.UNSTABLE_addTemporalMarkerOffset(0.0) {
                     val nextStartPose = config.startPoseSupplier?.invoke()
-                        ?: getEndPose()
+                        ?: getCurrentEndPose()
 
                     preforgedTrajectories[key] = builderScope.async { nextTrajectory( nextStartPose ).build() }
                 }
             }
         }
 
-        _addTemporalMarker(0.0) {
+        _addTemporalMarker(0) {
             if (!config.predicate()) return@_addTemporalMarker
-
-            val nextStartPose = config.startPoseSupplier?.invoke()
-                ?: getEndPose()
 
             val nextTrajectoryBuilt =
                 if (config.buildsSynchronously) {
+                    val nextStartPose = config.startPoseSupplier?.invoke()
+                        ?: getCurrentEndPose()
+
                     nextTrajectory(nextStartPose).build()
                 } else {
                     runBlocking { preforgedTrajectories[key]?.await() }!!
@@ -325,6 +316,6 @@ class AnvilInternal
     @Suppress("UNCHECKED_CAST")
     fun <T : Any> `$build`(): T {
         flushDeque()
-        return (builderProxy.build() as T).also { builtTrajectory = it }
+        return (builderProxy.build() as T)
     }
 }

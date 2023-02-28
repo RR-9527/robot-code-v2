@@ -24,7 +24,7 @@ class LiftTestingOp : RogueBaseTele() {
 
         driver.left_trigger.onRise(wrist::setToBackwardsPos)
 
-        driver.right_bumper.onRise(arm::setToBackwardsPosButLikeSliiiightlyHigher)
+        driver.right_bumper.onRise(arm::setToBackwardsPosButLikeSliiiightlyLower)
         driver.right_bumper.onFall(arm::setToRestingPos)
 
         driver.left_bumper.onRise(claw::openForIntakeWide)

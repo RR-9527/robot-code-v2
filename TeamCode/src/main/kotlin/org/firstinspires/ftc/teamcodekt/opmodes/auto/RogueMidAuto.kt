@@ -111,7 +111,7 @@ abstract class RogueMidAuto : RogueBaseAuto() {
         .addTemporalMarker(65) {
             bot.lift.targetHeight = liftOffsets[iterations]
             bot.wrist.setToBackwardsPos()
-            bot.arm.setToBackwardsPosButLikeSliiiightlyHigher()
+            bot.arm.setToBackwardsPosButLikeSliiiightlyLower()
         }
 
         .addTemporalMarker(205) {
@@ -120,7 +120,7 @@ abstract class RogueMidAuto : RogueBaseAuto() {
 
     private fun Anvil.fastIntakePrep(iterations: Int) = this
         .addTemporalMarker(65) {
-            bot.arm.setToBackwardsPosLastCycle()
+            bot.arm.setToBackwardsPosButLikeSliiiightlyLower()
             bot.wrist.setToBackwardsPos()
         }
 

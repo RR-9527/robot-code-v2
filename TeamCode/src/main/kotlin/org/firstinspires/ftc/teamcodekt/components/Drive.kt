@@ -16,12 +16,6 @@ import org.firstinspires.ftc.teamcodekt.components.meta.DeviceNames
 import java.util.*
 import kotlin.math.*
 
-@JvmField
-var tiltCorrectionMult = 0.01
-
-@JvmField
-var imuAngleUsed = 1 // or 0/1, not sure which one it is... will have to test.
-
 class Drivetrain {
     private val frontLeft  = hwMap<DcMotorEx>(DeviceNames.DRIVE_FL).apply { direction = Direction.REVERSE }
     private val frontRight = hwMap<DcMotorEx>(DeviceNames.DRIVE_FR)
@@ -36,22 +30,18 @@ class Drivetrain {
     }
 
     fun drive(gamepad: Gamepad, powerMulti: Double) {
-            driveRC(gamepad, powerMulti)
+        driveRC(gamepad, powerMulti)
     }
 
     private fun driveRC(gamepad: Gamepad, powerMulti: Double) {
-        var (x, y, r) = gamepad.getDriveSticks()
-        r *= .9f
-
-//        mTelemetry.addData("x corection", (tiltCorrectionMult * Imu.angles[imuAngleUsed]).withDeadzone<Float>(.25))
+        val (x, y, _r) = gamepad.getDriveSticks()
+        val r = _r * .9f
 
         val theta = atan2(y, x)
         val power = hypot(x, y)
 
         val xComponent = power * cos(theta - PI / 4)
         val yComponent = power * sin(theta - PI / 4)
-
-//        xComponent += (tiltCorrectionMult * Imu.angles[imuAngleUsed]).withDeadzone<Float>(.25)
 
         val max = maxMagnitudeAbs<Double>(xComponent, yComponent, 1e-16)
 
@@ -73,12 +63,6 @@ class Drivetrain {
         withEachMotor {
             this.power = powers[it]
         }
-
-//        val (a, b, c) = Imu.angles
-//
-//        mTelemetry.addData("0rd angle", a)
-//        mTelemetry.addData("1nd angle", b)
-//        mTelemetry.addData("2st angle", c)
     }
 
     private fun DoubleArray.mapInPlace(transform: (Double) -> Double) = repeat(size) {

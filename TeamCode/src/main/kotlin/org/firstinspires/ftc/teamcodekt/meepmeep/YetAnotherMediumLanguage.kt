@@ -59,8 +59,6 @@ fun mainTraj(drive: DriveShim) =
         .apply {
             resetBot()
 
-            setPoseEstimateInTemporalMarker(internal.getCurrentEndPose())
-
             when (1) {
                 1 -> {
                     strafeRight(14)

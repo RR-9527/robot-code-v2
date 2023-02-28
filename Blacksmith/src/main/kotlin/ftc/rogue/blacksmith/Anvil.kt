@@ -117,9 +117,9 @@ class Anvil
         }
     }
 
-//    @PublishedApi
+    @PublishedApi
     @get:JvmSynthetic
-    val internal = AnvilInternal(this, drive, startPose)
+    internal val internal = AnvilInternal(this, drive, startPose)
 
     // -- Direct path mappings (Basic) --
 

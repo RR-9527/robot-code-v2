@@ -83,7 +83,7 @@ class RogueRightAuto : RogueBaseAuto() {
         .addTemporalMarker(185) {
             bot.lift.targetHeight = liftOffsets[iterations]
             bot.wrist.setToBackwardsPos()
-            bot.arm.setToBackwardsPosButLikeSliiiightlyHigher()
+            bot.arm.setToBackwardsPosButLikeSliiiightlyLower()
         }
 
         .addTemporalMarker(325) {

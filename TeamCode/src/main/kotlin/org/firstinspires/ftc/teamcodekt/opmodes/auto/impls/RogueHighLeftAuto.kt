@@ -149,7 +149,7 @@ class RogueHighLeftAuto : RogueBaseAuto() {
                 }
             }
             bot.wrist.setToBackwardsPos()
-            bot.arm.setToBackwardsPosButLikeSliiiightlyHigher()
+            bot.arm.setToBackwardsPosButLikeSliiiightlyLower()
         }
 
         .addTemporalMarker(325) {
@@ -161,7 +161,7 @@ class RogueHighLeftAuto : RogueBaseAuto() {
         .addTemporalMarker(185) {
             bot.lift.targetHeight = liftOffsets[iterations]
 
-            bot.arm.setToBackwardsPosLastCycle()
+            bot.arm.setToBackwardsPosButLikeSliiiightlyLower()
             bot.wrist.setToBackwardsPos()
 
             bot.claw.openForIntakeNarrow()

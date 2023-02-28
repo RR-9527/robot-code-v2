@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcodekt.components.meta.DeviceNames
 class Wrist {
     private val wristServo = SimpleServo(hwMap, DeviceNames.WRIST_SERVO, 0.0, 180.0)
 
-    var wristPosition = 0.0
+    private var wristPosition = 0.0
 
     fun setToBackwardsPos() {
         wristPosition = WRIST_BACKWARDS

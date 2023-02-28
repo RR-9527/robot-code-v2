@@ -114,6 +114,9 @@ abstract class BlackOp : LinearOpMode() {
 
     /**
      * [READ DOCS FOR THIS (click me)](https://blacksmithftc.vercel.app/black-op/create-on-go-kt)
+     *
+     * Functionally the same as the below, just allows you to pass in a single lambda without
+     * forcing it to be in a parenthesized argument list.
      */
     protected inline fun <reified T : Any> createOnGo(noinline arg: () -> Any) =
         CreateOnGoInternal<T>(*arrayOf(arg)) // Needs array spread or type checker errors
