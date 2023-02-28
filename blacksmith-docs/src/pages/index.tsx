@@ -34,6 +34,7 @@ function SiteMetadata() {
       <meta content='/img/logo/blacksmith-logo-square.png' property='og:image'/>
       <meta content='#c1eab6' data-react-helmet='true' name='theme-color'/>
       <meta content='summary_large_image' name='twitter:card'/>
+      <meta content="3NpXFPjNctCz2ea2e4Y__LY7BOJ85uvuawo0X_QhznI" name="google-site-verification" />
     </Head>
   )
 }
