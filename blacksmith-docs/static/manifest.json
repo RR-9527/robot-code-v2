@@ -1,0 +1,21 @@
+{
+  "short_name": "Blacksmith",
+  "theme_color": "#c1eab6",
+  "background_color": "#424242",
+  "display": "standalone",
+  "scope": "/",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "img/logo/blacksmith-logo.svg",
+      "type": "image/svg+xml",
+      "sizes": "137x150"
+    },
+    {
+      "src": "img/logo/blacksmith-logo-square.png",
+      "sizes": "554x554",
+      "type": "image/png"
+    }
+  ],
+  "description": "An intuitive framework for FTC software development"
+}
