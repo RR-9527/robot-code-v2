@@ -14,12 +14,12 @@ const val HTML = """
     <html>
         <head>
             <title>Old Page</title>
-         <meta charset="UTF-8" />
-         <meta http-equiv="refresh" content="3; URL="$REDIRECT_URL" />
-       </head>
-       <body>
-         <p>This page has been moved. If you are not redirected within 3 seconds, click <a href="$REDIRECT_URL">here</a> to go to the HubSpot homepage.</p>
-       </body>
+            <meta charset="UTF-8" />
+            <meta http-equiv="refresh" content="0; URL=$REDIRECT_URL" />
+        </head>
+        <body>
+            <p>This page has been moved. If you are not redirected, click <a href="$REDIRECT_URL">here</a> to go to the Blacksmith landing page.</p>
+        </body>
     </html>
 """
 
@@ -31,7 +31,7 @@ fun registerDocs(context: Context, manager: WebHandlerManager) {
     val commands = listOf("/blacksmith", "/blacksmith/", "/blacksmithftc", "/blacksmithftc/")
 
     with(manager) {
-        commands.forEach(::registerUrl)
+        commands.forEach(::registerEndpoint)
     }
 }
 
@@ -39,7 +39,7 @@ val statusOk = NanoHTTPD.Response.Status.OK
 val mimeHtml = NanoHTTPD.MIME_HTML
 
 // TODO: See if the FixedLengthResponse can be reused
-fun WebHandlerManager.registerUrl(command: String) =
-    register(command) { _ ->
+fun WebHandlerManager.registerEndpoint(endpoint: String) =
+    register(endpoint) { _ ->
         NanoHTTPD.newFixedLengthResponse(statusOk, mimeHtml, HTML)
     }

@@ -47,6 +47,10 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
+      metadata: [
+        { name: 'keywords', content: 'ftc, programming, framework, library' },
+        { name: 'description', content: 'An intuitive framework for rapid FTC software development' },
+      ],
       colorMode: {
         defaultMode: 'dark',
       },
