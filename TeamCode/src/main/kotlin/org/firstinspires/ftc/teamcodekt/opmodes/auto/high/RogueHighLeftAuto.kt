@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcodekt.opmodes.auto.impls
+package org.firstinspires.ftc.teamcodekt.opmodes.auto.high
 
 import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous

@@ -1,4 +1,4 @@
-@file:Suppress("HasPlatformType")
+@file:Suppress("HasPlatformType", "UNNECESSARY_NOT_NULL_ASSERTION")
 
 package ftc.rogue.blacksmith
 
@@ -52,7 +52,8 @@ abstract class BlackOp : LinearOpMode() {
         injectEvalOnGoFields()
 
         Scheduler.emit(STARTING_MSG)
-        go()
+
+        go!!!!!!!!!!!!!!!!
     }
 
     companion object {
@@ -126,4 +127,7 @@ abstract class BlackOp : LinearOpMode() {
      */
     protected inline fun <reified T : Any> createOnGo(vararg args: () -> Any) =
         CreateOnGoInternal<T>(*args)
+
+    // Shh
+    private val go get() = go()
 }

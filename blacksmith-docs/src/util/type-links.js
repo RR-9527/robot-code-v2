@@ -8,4 +8,5 @@ export const TypeLinks = {
   TIME_UNIT: '../etc/units/time',
   ANGLE_UNIT: '../etc/units/angle',
   DISTANCE_UNIT: '../etc/units/distance',
+  OBJECT: 'https://www.geeksforgeeks.org/object-class-in-java/',
 }

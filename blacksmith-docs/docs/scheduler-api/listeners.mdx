@@ -15,14 +15,18 @@ Listeners are always executed in the order that they are [hooked](#the-concept-o
 they're hooked may be important.
 :::
 
+:::warning
+Keep in mind these and nearly everything else in this Scheduler API section only run while the
+Scheduler itself is running.
+:::
+
 ## Overview
 
 *okay, now that that's out of the way...*
 
 Listeners... the pièce de résistance of the Scheduler API!
 
-Like 9-year-olds may subscribe to Mr. Beast to watch the latest $100,000 boys vs girls last to leave cheeseburger
-challenge when it comes out, we can also subscribe to events with the Listener to do things when the event occurs!
+They allow you to tersely subscribe to events to do something when said event happens.
 
 If we were to strip all the fancy abstraction off of a listener that's been [hooked](#the-concept-of-hooking)
 to the Scheduler, we would end up with something like this:
@@ -100,14 +104,15 @@ For example, let's say we want to alert our driver when the lift is too high, an
 </Tabs>
 
 :::tip
-`onRise`, `onFall`, `whileHigh`, and `whileLow` all return the same Listener object, so you can chain them together as
-seen above, instead of explicitly stating the object name every time.
+`onRise`, `onFall`, `whileHigh`, and `whileLow` all return the same Listener object, so you can
+chain them together as seen above, instead of explicitly stating the object name every time.
 :::
 
-Every time the Scheduler loops, it'll evaluate the passed in lambda, and fire all the events subscribed to the
-corresponding state.
+Every time the Scheduler loops, it'll evaluate the passed in lambda, and fire all the events
+subscribed to the corresponding state.
 
-You might have noticed the `onRise` and `onFall`, and may be a little confused right now... Well here's a diagram to help:
+You might have noticed the `onRise` and `onFall`, and may be a little confused right now...
+Well here's a signal diagram to help:
 
 ![Listener Diagram](/img/diagrams/signal-edge.svg)
 

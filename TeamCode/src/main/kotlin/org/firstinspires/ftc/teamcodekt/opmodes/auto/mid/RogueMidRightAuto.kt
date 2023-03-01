@@ -1,14 +1,9 @@
-package org.firstinspires.ftc.teamcodekt.opmodes.auto.impls
+package org.firstinspires.ftc.teamcodekt.opmodes.auto.mid
 
 import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import ftc.rogue.blacksmith.Anvil
 import ftc.rogue.blacksmith.units.GlobalUnits
-import ftc.rogue.blacksmith.util.toRad
-import org.firstinspires.ftc.teamcode.AutoData
-import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants
-import org.firstinspires.ftc.teamcodekt.opmodes.auto.RogueBaseAuto
-import org.firstinspires.ftc.teamcodekt.opmodes.auto.RogueMidAuto
 import org.firstinspires.ftc.teamcodekt.util.CycleException
 
 @Autonomous

@@ -42,7 +42,7 @@ abstract class RogueBaseAuto : BlackOp() {
         signalID = bot.camera.waitForStartWithVision(this) ?: 2
 
         Scheduler.debug(opmode = this) {
-            bot.updateBaseComponents(false)
+            bot.updateBaseComponents(useLiftDeadzone = false)
             bot.drive.update()
             mTelemetry.addLine("Pole offset: x->${poleOffset.x}, y->${poleOffset.y}")
             mTelemetry.addData("Loop time", loopTime)
@@ -50,7 +50,12 @@ abstract class RogueBaseAuto : BlackOp() {
         }
     }
 
+    protected lateinit var whichPole: String
+
     private fun readPoleOffset() {
+        if (!::whichPole.isInitialized)
+            return
+
         val driver = ReforgedGamepad(gamepad1)
 
         var x = 0.0
@@ -66,8 +71,10 @@ abstract class RogueBaseAuto : BlackOp() {
             val yf = (if (y > 0) "+" else "-") + "%4.2f".format(y.absoluteValue)
 
             telemetry.addLine("""
+                ${whichPole.uppercase()} POLE OFFSET:
+                
                 ↑
-                | y = $yf ; ← — → x = $xf 
+                | y = $yf : ← — → x = $xf 
                 ↓
             """.trimIndent())
 

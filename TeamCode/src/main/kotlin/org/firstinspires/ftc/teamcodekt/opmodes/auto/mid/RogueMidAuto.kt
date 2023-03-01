@@ -1,12 +1,17 @@
-package org.firstinspires.ftc.teamcodekt.opmodes.auto
+package org.firstinspires.ftc.teamcodekt.opmodes.auto.mid
 
 import com.acmerobotics.roadrunner.geometry.Pose2d
 import ftc.rogue.blacksmith.Anvil
 import ftc.rogue.blacksmith.util.toRad
 import org.firstinspires.ftc.teamcode.AutoData
 import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants
+import org.firstinspires.ftc.teamcodekt.opmodes.auto.RogueBaseAuto
 
 abstract class RogueMidAuto : RogueBaseAuto() {
+    init {
+        whichPole = "Mid"
+    }
+
     override fun mainTraj(startPose: Pose2d) =
         Anvil.forgeTrajectory(bot.drive, startPose)
             .initialSetup()

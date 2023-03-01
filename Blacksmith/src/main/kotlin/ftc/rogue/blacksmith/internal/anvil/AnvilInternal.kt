@@ -209,9 +209,10 @@ class AnvilInternal
 
     @Suppress("UNCHECKED_CAST")
     fun <T> _withRawBuilder(builder: Consumer<T>) = enqueue {
-        (builderProxy.internalBuilder as T).let {
-            builder.consume(it)
-        }
+        (builderProxy.internalBuilder as T)
+            .let {
+                builder.consume(it)
+            }
     }
 
     fun doTimes(times: Int, pathsToDo: AnvilCycle) {

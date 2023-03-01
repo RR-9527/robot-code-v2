@@ -85,14 +85,20 @@ class Lift {
     }
 
     fun update(useDeadzone: Boolean) {
-        if (!useDeadzone || abs(targetHeight - liftHeight) > 3) {
-            val correction = liftNormalPID.calculate(liftHeight.toDouble(), targetHeight.toDouble())
+        val inDeadzone = !useDeadzone || abs(targetHeight - liftHeight) > 3
+
+        if (inDeadzone) {
+            val liftHeight   = liftHeight.toDouble()
+            val targetHeight = targetHeight.toDouble()
+
+            val correction = liftNormalPID.calculate(liftHeight, targetHeight)
             val filteredCorrection = liftFilter.filter(correction)
+
             drivenCorrection = filteredCorrection
             liftMotor.power = filteredCorrection
         } else {
-            liftMotor.power = 0.0
             drivenCorrection = 0.0
+            liftMotor.power = 0.0
         }
     }
 

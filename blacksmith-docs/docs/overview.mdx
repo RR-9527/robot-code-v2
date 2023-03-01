@@ -11,7 +11,7 @@ import TabItem from '@theme/TabItem';
 
 ## Overview
 
-The Blacksmith Library is a collection of tools and such for FTC, which focuses on both readability, *and* brevity,
+The Blacksmith Library is a collection of tools and utilities for FTC, which focuses on both readability, *and* brevity,
 aiming to be as intuitive as possible. It allows you to program more declaratively and worry less about common logic
 that serve only to distract you and add more potential points of failure.
 
@@ -136,8 +136,8 @@ public class CoolTeleOp extends BlackOp {
     }
 
     private void describeControls() {
-        codriver.a.onRise(() -> claw.intake()); // Simple and easy to read
-        codriver.a.onFall(() -> claw.close()); // Complexity is abstracted away
+        codriver.a.onRise(claw::intake); // Simple and easy to read
+        codriver.a.onFall(claw::close); // Complexity is abstracted away
     }
 
     private ReforgedGamepad makeGamepad2() {  // Basic example of @CreateOnGo/@EvalOnGo

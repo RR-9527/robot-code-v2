@@ -26,4 +26,3 @@ fun interface AnvilCycle {
 fun AnvilCycle.consume(instance: Anvil, iteration: Int) {
     instance.doCycle(iteration)
 }
-

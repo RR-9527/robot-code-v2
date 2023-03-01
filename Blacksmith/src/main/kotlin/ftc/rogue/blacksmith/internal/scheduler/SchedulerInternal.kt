@@ -16,7 +16,7 @@ internal class SchedulerInternal {
     var beforeEach = Runnable {}
 
     fun launch(opmode: LinearOpMode, afterEach: Runnable) {
-        Scheduler.emit(Scheduler.STARTING_MSG)
+        emit(Scheduler.STARTING_MSG)
 
         while (opmode.opModeIsActive() && !opmode.isStopRequested) {
             updateListenersSet()
@@ -33,7 +33,7 @@ internal class SchedulerInternal {
     }
 
     inline fun launchManually(condition: () -> Boolean, afterEach: Runnable = Runnable {}) {
-        Scheduler.emit(Scheduler.STARTING_MSG)
+        emit(Scheduler.STARTING_MSG)
 
         while (condition()) {
             updateListenersSet()
@@ -60,17 +60,25 @@ internal class SchedulerInternal {
         }
     }
 
-    fun nuke() {
+    fun nuke(toNuke: Array<out Nuke>) {
         updateListenersSet()
 
-        listeners.forEach {
-            it.destroy()
+        val shouldNukeAll =  Nuke.All in toNuke
+
+        if (shouldNukeAll || Nuke.Listeners in toNuke) {
+            listeners.forEach {
+                it.destroy()
+            }
+            listeners.clear()
         }
-        listeners.clear()
 
-        messages.clear()
+        if (shouldNukeAll || Nuke.Messages in toNuke) {
+            messages.clear()
+        }
 
-        beforeEach = Runnable {}
+        if (shouldNukeAll || Nuke.BeforeEach in toNuke) {
+            beforeEach = Runnable {}
+        }
     }
 
     private val messages = mutableMapOf<Any, MutableList<Runnable>>()

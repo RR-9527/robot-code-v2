@@ -4,6 +4,7 @@ import com.outoftheboxrobotics.photoncore.PhotonCore;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcodekt.components.Claw;
 import org.firstinspires.ftc.teamcodekt.components.Imu;
 import org.firstinspires.ftc.teamcodekt.components.meta.BotComponentsKt;
 import org.firstinspires.ftc.teamcodekt.components.meta.TeleOpBotComponents;
