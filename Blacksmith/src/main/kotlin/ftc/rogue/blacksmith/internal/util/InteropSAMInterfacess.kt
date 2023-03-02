@@ -1,7 +1,10 @@
 package ftc.rogue.blacksmith.internal.util
 
+import com.qualcomm.robotcore.util.ElapsedTime
 import ftc.rogue.blacksmith.Anvil
 import ftc.rogue.blacksmith.internal.anvil.AnvilRunConfig
+
+typealias MotionModel = (Double, ElapsedTime) -> Double
 
 fun interface AnvilRunConfigBuilder {
     fun AnvilRunConfig.build()

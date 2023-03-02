@@ -8,7 +8,7 @@ import kotlin.math.sign
 class RogueCompOp : RogueBaseTele() {
     private fun describeDriverControls() = with(driver) {
         right_trigger(deadzone = .2).whileHigh {
-            powerMulti = 0.3825 * (driver.right_trigger() pow .825)
+            powerMulti = 0.5925
         }
 
         left_trigger.whileHigh {

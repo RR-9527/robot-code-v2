@@ -30,6 +30,9 @@ abstract class RogueBaseTele : BlackOp() {
 
         describeControls()
 
+        Imu.init(this)
+        Imu.start()
+
         Scheduler.beforeEach {
             powerMulti = 1.0
             PhotonCore.CONTROL_HUB.clearBulkCache()

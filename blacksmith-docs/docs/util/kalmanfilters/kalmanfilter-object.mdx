@@ -42,6 +42,7 @@ To tune these, first look at a graph of the system output on FTCDashboard. You c
   ```kotlin
   mTelemetry.addData("System state", system.state)
   ```
+
 </TabItem>
 </Tabs>
 
@@ -72,7 +73,7 @@ Here's how to implement one:
 
   ```kotlin
   val systemKF = KalmanFilter(R, Q)
-  system.setState(systemKF.filter(system.state))
+  system.state = systemKF.filter(system.state)
   ```
 
 </TabItem>
@@ -91,20 +92,19 @@ You can apply this approach to all your mechanisms to improve the accuracy and d
 <TabItem value="java" label="Java">
 
   ```java
-double correction = liftNormalPID.calculate(liftHeight, targetHeight);
-double filteredCorrection = liftFilter.filter(liftMotor.power + correction);
-liftMotor.set(filteredCorrection);
+  double correction = liftNormalPID.calculate(liftHeight, targetHeight);
+  double filteredCorrection = liftFilter.filter(liftMotor.power + correction);
+  liftMotor.setPower(filteredCorrection);
   ```
 
 </TabItem>
 <TabItem value="kt" label="Kotlin">
 
   ```kotlin
-val correction = liftNormalPID.calculate(liftHeight, targetHeight)
-val filteredCorrection = liftFilter.filter(liftMotor.power + correction)
-liftMotor.power = filteredCorrection
+  val correction = liftNormalPID.calculate(liftHeight, targetHeight)
+  val filteredCorrection = liftFilter.filter(liftMotor.power + correction)
+  liftMotor.power = filteredCorrection
   ```
 
 </TabItem>
 </Tabs>
-
