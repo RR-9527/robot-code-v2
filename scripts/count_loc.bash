@@ -3,6 +3,7 @@ cd "$parent_path"/..
 
 find \
  './Blacksmith/src' \
+ './ASymbolProcessor/src' \
  './blacksmith-docs/docs' \
  './blacksmith-docs/src' \
  './scripts' \

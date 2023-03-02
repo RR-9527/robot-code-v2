@@ -2,22 +2,26 @@
 
 package ftc.rogue.asp
 
-import com.google.devtools.ksp.KspExperimental
-import com.google.devtools.ksp.getAnnotationsByType
 import com.google.devtools.ksp.processing.Dependencies
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.processing.SymbolProcessorEnvironment
 import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSClassDeclaration
-import com.google.devtools.ksp.symbol.KSFile
-import com.google.devtools.ksp.symbol.KSPropertyDeclaration
 import com.google.devtools.ksp.validate
+import ftc.rogue.asp.annotations.Component
+import ftc.rogue.asp.models.Clazz
+import ftc.rogue.asp.models.Val
 import java.io.File
-import kotlin.reflect.KClass
 
 class TargetProcessor(private val env: SymbolProcessorEnvironment) : SymbolProcessor {
+    var invoked = false
+
     override fun process(resolver: Resolver): List<KSAnnotated> {
+        if (invoked) {
+            return emptyList()
+        }
+
         val classes = resolver.getHwComponentClasses()
 
         if (!classes.iterator().hasNext())
@@ -26,6 +30,8 @@ class TargetProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
         classes.forEach { clazz ->
             generateFile(clazz)
         }
+
+        invoked = true
 
         return classes
             .filterNot { it.validate() }
@@ -37,15 +43,14 @@ class TargetProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
         val valsSB = StringBuilder()
         val methodsSB = StringBuilder()
 
-        clazz.vals.forEach { value ->
-            processVal(value, clazz, valsSB, methodsSB)
-        }
+        clazz.vals
+            .filterNotNull()
+            .forEach { value ->
+                processVal(value, clazz, valsSB, methodsSB)
+            }
 
         val outFile = env.codeGenerator.createNewFile(
-            Dependencies(
-                aggregating = true,
-                clazz.file,
-            ),
+            Dependencies(aggregating = false, clazz.file),
             clazz.pakig,
             clazz.fileName,
         )
@@ -54,19 +59,37 @@ class TargetProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
             .bufferedReader()
             .readLines()
 
-        var currentLine = 0
+        var currentLine = -1
 
         val imports = buildString {
-            while ("@HwComponent" !in lines[currentLine] && currentLine < lines.size){
-                append(lines[currentLine++])
+            while ("object" !in lines[++currentLine] && currentLine < lines.size) {
+                val trimmedLine = lines[currentLine].trimStart()
+
+                if (trimmedLine.startsWith("@Com"))
+                    continue
+
+                if (trimmedLine.startsWith("//"))
+                    continue
+
+                append(lines[currentLine])
                 append("\n")
             }
             delete(length - 1, length)
         }
 
+        currentLine -= 1
+
         val clazzString = buildString {
             while (++currentLine < lines.size) {
-                if ("const val" in lines[currentLine])
+                val trimmedLine = lines[currentLine].trimStart()
+
+                if (trimmedLine.startsWith("const val"))
+                    continue
+
+                if (trimmedLine.startsWith("@Set"))
+                    continue
+
+                if (trimmedLine.startsWith("//"))
                     continue
 
                 append(lines[currentLine])
@@ -74,24 +97,27 @@ class TargetProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
             }
         }
 
-        val newClazzHeader = "class ${clazz.newName} {"
+        val oldClassHeader = "object ${clazz.simpleName} {"
+        val newClassHeader = "class ${clazz.newName} {"
 
-        val (clazzStart, clazzEnd) = arrayOf(
-            clazzString
-                .substringBeforeLast("}")
-                .replace("object ${clazz.simpleName} {", newClazzHeader)
-                .let {
-                    newClazzHeader + "\n\t" + it.substringAfter(newClazzHeader).trimStart(' ', '\n')
-                },
-            "}\n"
-        )
+        val clazzStart = clazzString
+            .substringBeforeLast("}")
+            .replace(oldClassHeader, newClassHeader)
+            .let {
+                newClassHeader + "\n\t" + it.substringAfter(newClassHeader).trimStart(' ', '\n')
+            }
+
+        val clazzEnd = "}\n"
 
         valsSB.delete(0, 1)
         valsSB.append("\n")
 
         methodsSB.delete(methodsSB.length - 1, methodsSB.length)
 
+        val atConfig = "@file:com.acmerobotics.dashboard.config.Config\n\n"
+
         val outString =
+            atConfig   +
             imports    +
             valsSB     +
             clazzStart +
@@ -102,55 +128,48 @@ class TargetProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
     }
 
     private fun processVal(
-        value: KSPropertyDeclaration,
+        value: Val,
         clazz: Clazz,
         valsSB: StringBuilder,
         methodsSB: StringBuilder
     ) {
-        val fullTargetName = value.simpleName.asString()
-
-        if (!fullTargetName.isTargetVariable && !fullTargetName.isConfigVariable)
-            return
-
-        val targetName = fullTargetName.substring(1)
-
         valsSB.append("""
             
-           @JvmField
-           var $targetName = ${value.qualifiedName?.asString()}
-           
-           """.trimIndent())
+            @JvmField
+            var ${value.name} = ${value.value}
+            
+            """.trimIndent())
 
-        if (!fullTargetName.isTargetVariable)
+        if (!value.isTarget)
             return
 
-        val methodName = targetVarToMethodName(clazz, targetName)
-        val targetProperty = clazz.annot.targetProperty
+        val methodName = targetVarToMethodName(clazz, value)
+        val targetName = clazz.annot.targetProperty
 
         methodsSB.append("""
             
-                fun $methodName() {
-                    $targetProperty = $targetName
-                }
-           
-           """.replaceIndent("\t"))
+            fun $methodName() {
+                $targetName = ${value.name}
+            }
+            
+            """.replaceIndent("\t"))
     }
 
-    private val String.isTargetVariable
-        get() = length >= 2 && startsWith("t") && this[1].isUpperCase()
-
-    private val String.isConfigVariable
-        get() = length >= 2 && startsWith("c") && this[1].isUpperCase()
-
-    private fun targetVarToMethodName(clazz: Clazz, varName: String): String {
+    private fun targetVarToMethodName(clazz: Clazz, value: Val): String {
         val methodFormat = clazz.annot.methodFormat
         val removeClassNameFromMethodName = clazz.annot.removeClassNameFromMethodName
 
+        val customMethodName = value.methodName
+
+        if (customMethodName != null) {
+            return customMethodName
+        }
+
         val newVarName =
             if (removeClassNameFromMethodName) {
-                varName.replace(clazz.newName, "", ignoreCase = true)
+                value.name.replace(clazz.newName, "", ignoreCase = true)
             } else {
-                varName
+                value.name
             }
 
         return methodFormat
@@ -159,7 +178,7 @@ class TargetProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
     }
 
     private fun Resolver.getHwComponentClasses(): Sequence<KSClassDeclaration> {
-        val clazzName = HwComponent::class.qualifiedName!!
+        val clazzName = Component::class.qualifiedName!!
         val symbols = getSymbolsWithAnnotation(clazzName)
         return symbols.filterIsInstance<KSClassDeclaration>()
     }

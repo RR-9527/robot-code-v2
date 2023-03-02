@@ -50,7 +50,7 @@ class RogueLowLeftAuto : RogueBaseAuto() {
             }
             .addTemporalMarker(450) {
                 bot.wrist.setToBackwardsPos()
-                bot.arm.setToRestingPos()
+                bot.arm.goToRest()
             }
             .waitTime(350)
             .back(14)
@@ -121,7 +121,7 @@ class RogueLowLeftAuto : RogueBaseAuto() {
             }
             .addTemporalMarker(250) {
                 bot.lift.goToZero()
-                bot.arm.setToRestingPos()
+                bot.arm.goToRest()
                 bot.wrist.setToBackwardsPos()
             }
             .waitTime(500)
@@ -159,7 +159,7 @@ class RogueLowLeftAuto : RogueBaseAuto() {
 
     private fun Anvil.resetBot() = this
         .addTemporalMarker {
-            bot.arm.setToRestingPos()
+            bot.arm.goToRest()
             bot.wrist.setToRestingPos()
             bot.lift.goToZero()
             bot.claw.close()

@@ -35,6 +35,8 @@ abstract class RogueBaseTele : BlackOp() {
             PhotonCore.CONTROL_HUB.clearBulkCache()
         }
 
+        waitForStart()
+
         Scheduler.debug(opmode = this) {
             bot.drivetrain.drive(driver.gamepad, powerMulti)
             bot.updateBaseComponents(useLiftDeadzone = true)

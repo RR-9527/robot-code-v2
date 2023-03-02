@@ -137,7 +137,7 @@ abstract class RogueMidAuto : RogueBaseAuto() {
 
     protected fun Anvil.resetBot() = this
         .addTemporalMarker {
-            bot.arm.setToRestingPos()
+            bot.arm.goToRest()
             bot.wrist.setToRestingPos()
             bot.lift.goToZero()
             bot.claw.close()

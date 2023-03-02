@@ -45,7 +45,7 @@ class ConeUnflipperChain(val bot: TeleOpBotComponents) : Chain {
             isRunning = false
 
             bot.wrist.setToRestingPos()
-            bot.arm.setToRestingPos()
+            bot.arm.goToRest()
             bot.lift.goToZero()
         }
 
@@ -63,7 +63,7 @@ class ConeUnflipperChain(val bot: TeleOpBotComponents) : Chain {
 
             after(250).milliseconds {
                 bot.wrist.setToRestingPos()
-                bot.arm.setToRestingPos()
+                bot.arm.goToRest()
                 bot.lift.goToZero()
             }
         }

@@ -189,7 +189,7 @@ class RogueHighLeftAuto : RogueBaseAuto() {
 
     private fun Anvil.resetBot() = this
         .addTemporalMarker {
-            bot.arm.setToRestingPos()
+            bot.arm.goToRest()
             bot.wrist.setToRestingPos()
             bot.lift.goToZero()
             bot.claw.close()

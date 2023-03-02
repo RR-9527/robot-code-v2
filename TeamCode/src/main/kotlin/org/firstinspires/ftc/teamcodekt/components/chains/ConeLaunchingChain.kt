@@ -42,7 +42,7 @@ class ConeLaunchingChain(val bot: TeleOpBotComponents) : CancellableChain {
 
     private fun finish() {
         bot.claw.close()
-        bot.arm.setToRestingPos()
+        bot.arm.goToRest()
         bot.wrist.setToRestingPos()
         bot.intake.disable()
 

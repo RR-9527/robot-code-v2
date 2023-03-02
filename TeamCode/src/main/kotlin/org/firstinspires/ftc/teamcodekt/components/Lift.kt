@@ -17,9 +17,9 @@ import kotlin.math.abs
 // Too many fields...
 
 @JvmField var LIFT_ZERO = 0
-@JvmField var LIFT_LOW  = 270
-@JvmField var LIFT_MID  = 533
-@JvmField var LIFT_HIGH = 750
+@JvmField var LIFT_LOW  = 240
+@JvmField var LIFT_MID  = 495
+@JvmField var LIFT_HIGH = 710
 
 @JvmField var ANGLED_LIFT_LOW  = 210
 @JvmField var ANGLED_LIFT_MID  = 340

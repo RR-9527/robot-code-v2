@@ -39,7 +39,7 @@ class ReverseDepositChain(val bot: TeleOpBotComponents) : CancellableChain {
 
     private fun finish() {
         bot.claw.close()
-        bot.arm.setToRestingPos()
+        bot.arm.goToRest()
 
         isCancelled = false
 
