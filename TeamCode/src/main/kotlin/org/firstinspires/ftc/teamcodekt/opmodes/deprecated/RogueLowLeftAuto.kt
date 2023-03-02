@@ -95,7 +95,7 @@ class RogueLowLeftAuto : RogueBaseAuto() {
                         bot.claw.openForIntakeNarrow()
                         bot.intake.enable()
                         bot.wrist.setToBackwardsPos()
-                        bot.arm.setToBackwardsPosButLikeSliiiightlyLower()
+                        bot.arm.setToBackwardsLowerPos()
                     }
                     .waitTime(500)
 

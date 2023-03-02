@@ -5,8 +5,6 @@ package org.firstinspires.ftc.teamcodekt.components.chains
 import ftc.rogue.blacksmith.chains.CancellableChain
 import ftc.rogue.blacksmith.listeners.Listener
 import ftc.rogue.blacksmith.listeners.after
-import org.firstinspires.ftc.teamcodekt.components.LIFT_LOW
-import org.firstinspires.ftc.teamcodekt.components.LIFT_MID
 import org.firstinspires.ftc.teamcodekt.components.meta.TeleOpBotComponents
 
 class RegularDepositChain(val bot: TeleOpBotComponents) : CancellableChain {

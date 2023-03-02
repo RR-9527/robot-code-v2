@@ -2,6 +2,8 @@
 
 package ftc.rogue.asp
 
+import com.google.devtools.ksp.KspExperimental
+import com.google.devtools.ksp.getAnnotationsByType
 import com.google.devtools.ksp.processing.Dependencies
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.processing.SymbolProcessor
@@ -11,91 +13,154 @@ import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSFile
 import com.google.devtools.ksp.symbol.KSPropertyDeclaration
 import com.google.devtools.ksp.validate
+import java.io.File
 import kotlin.reflect.KClass
 
 class TargetProcessor(private val env: SymbolProcessorEnvironment) : SymbolProcessor {
     override fun process(resolver: Resolver): List<KSAnnotated> {
-        val files = resolver.findAnnotations(env, HwComponentFile::class)
+        val classes = resolver.getHwComponentClasses()
 
-        val fileVals = files.toList().map { file ->
-            file to file
-                .declarations
-                .filterIsInstance<KSPropertyDeclaration>()
-                .toList()
-        }.toMap()
-
-        if (fileVals.isEmpty())
+        if (!classes.iterator().hasNext())
             return emptyList()
 
-        fileVals.forEach { (file, vals) ->
-            generateFile(env, file, vals)
+        classes.forEach { clazz ->
+            generateFile(clazz)
         }
 
-        return fileVals
-            .keys
+        return classes
             .filterNot { it.validate() }
             .toList()
     }
 
-    private fun generateFile(
-        env: SymbolProcessorEnvironment,
-        file: KSFile,
-        vals: List<KSPropertyDeclaration>
-    ) {
-        val pakage = file.packageName.asString()
-        val fileName = file.fileName.substringAfterLast(".") + "Generated"
+    private fun generateFile(_clazz: KSClassDeclaration) {
+        val clazz = Clazz.from(_clazz)
+        val valsSB = StringBuilder()
+        val methodsSB = StringBuilder()
 
-        val fileText = buildString {
-            append("""
-                @file:com.acmerobotics.dashboard.config.Config
+        clazz.vals.forEach { value ->
+            processVal(value, clazz, valsSB, methodsSB)
+        }
 
-                package $pakage
+        val outFile = env.codeGenerator.createNewFile(
+            Dependencies(
+                aggregating = true,
+                clazz.file,
+            ),
+            clazz.pakig,
+            clazz.fileName,
+        )
 
-            """.trimIndent())
+        val lines = File(clazz.file.filePath)
+            .bufferedReader()
+            .readLines()
 
-            vals.forEach { value ->
-                val simpleName = value.simpleName.asString()
+        var currentLine = 0
 
-                val methodName = "goTo" + simpleName
-                    .lowercase()
-                    .substringAfter("t_")
-                    .replace("_(\\w)".toRegex()) {
-                        it.groupValues[1].uppercase()
-                    }
-                    .capitalize()
+        val imports = buildString {
+            while ("@HwComponent" !in lines[currentLine] && currentLine < lines.size){
+                append(lines[currentLine++])
+                append("\n")
+            }
+            delete(length - 1, length)
+        }
 
-                if (simpleName.startsWith("t_")) {
-                    append("""
+        val clazzString = buildString {
+            while (++currentLine < lines.size) {
+                if ("const val" in lines[currentLine])
+                    continue
 
-                    @JvmField var ${simpleName.substringAfter("t_")} = ${value.qualifiedName?.asString()}
-                    
-                    // $methodName
-
-                    """.trimIndent())
-                }
+                append(lines[currentLine])
+                append("\n")
             }
         }
 
-        val sourceFiles = vals.mapNotNull { it.containingFile }
+        val newClazzHeader = "class ${clazz.newName} {"
 
-        val outFile = this.env.codeGenerator.createNewFile(
-            Dependencies(
-                aggregating = false,
-                *sourceFiles.toList().toTypedArray(),
-            ),
-            pakage,
-            fileName,
+        val (clazzStart, clazzEnd) = arrayOf(
+            clazzString
+                .substringBeforeLast("}")
+                .replace("object ${clazz.simpleName} {", newClazzHeader)
+                .let {
+                    newClazzHeader + "\n\t" + it.substringAfter(newClazzHeader).trimStart(' ', '\n')
+                },
+            "}\n"
         )
 
-        outFile.write(fileText.toByteArray())
+        valsSB.delete(0, 1)
+        valsSB.append("\n")
+
+        methodsSB.delete(methodsSB.length - 1, methodsSB.length)
+
+        val outString =
+            imports    +
+            valsSB     +
+            clazzStart +
+            methodsSB  +
+            clazzEnd
+
+        outFile.write(outString.toByteArray())
     }
 
-    private fun Resolver.findAnnotations(env: SymbolProcessorEnvironment, kClass: KClass<*>): Sequence<KSFile> {
-        val clazzName = kClass.qualifiedName!!
+    private fun processVal(
+        value: KSPropertyDeclaration,
+        clazz: Clazz,
+        valsSB: StringBuilder,
+        methodsSB: StringBuilder
+    ) {
+        val fullTargetName = value.simpleName.asString()
 
+        if (!fullTargetName.isTargetVariable && !fullTargetName.isConfigVariable)
+            return
+
+        val targetName = fullTargetName.substring(1)
+
+        valsSB.append("""
+            
+           @JvmField
+           var $targetName = ${value.qualifiedName?.asString()}
+           
+           """.trimIndent())
+
+        if (!fullTargetName.isTargetVariable)
+            return
+
+        val methodName = targetVarToMethodName(clazz, targetName)
+        val targetProperty = clazz.annot.targetProperty
+
+        methodsSB.append("""
+            
+                fun $methodName() {
+                    $targetProperty = $targetName
+                }
+           
+           """.replaceIndent("\t"))
+    }
+
+    private val String.isTargetVariable
+        get() = length >= 2 && startsWith("t") && this[1].isUpperCase()
+
+    private val String.isConfigVariable
+        get() = length >= 2 && startsWith("c") && this[1].isUpperCase()
+
+    private fun targetVarToMethodName(clazz: Clazz, varName: String): String {
+        val methodFormat = clazz.annot.methodFormat
+        val removeClassNameFromMethodName = clazz.annot.removeClassNameFromMethodName
+
+        val newVarName =
+            if (removeClassNameFromMethodName) {
+                varName.replace(clazz.newName, "", ignoreCase = true)
+            } else {
+                varName
+            }
+
+        return methodFormat
+            .replace("*", newVarName)
+            .replaceFirstChar(Char::lowercase)
+    }
+
+    private fun Resolver.getHwComponentClasses(): Sequence<KSClassDeclaration> {
+        val clazzName = HwComponent::class.qualifiedName!!
         val symbols = getSymbolsWithAnnotation(clazzName)
-
         return symbols.filterIsInstance<KSClassDeclaration>()
-            .map { it.containingFile!! }
     }
 }
