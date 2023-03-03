@@ -29,4 +29,5 @@ public class AutoData {
     public static double LOW_INTAKE_3 = 20;
     public static double LOW_INTAKE_4 = 20;
     public static double LOW_INTAKE_5 = 20;
+
 }

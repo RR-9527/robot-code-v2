@@ -9,12 +9,19 @@ import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction
 import com.qualcomm.robotcore.hardware.Gamepad
 import ftc.rogue.blacksmith.BlackOp.Companion.hwMap
+import ftc.rogue.blacksmith.BlackOp.Companion.mTelemetry
 import ftc.rogue.blacksmith.util.kt.invoke
 import ftc.rogue.blacksmith.util.kt.maxMagnitudeAbs
 import ftc.rogue.blacksmith.util.kt.pow
 import org.firstinspires.ftc.teamcodekt.components.meta.DeviceNames
-import java.util.*
 import kotlin.math.*
+
+@JvmField
+var tipCorrection = true
+@JvmField
+var tipMult = 7.0
+@JvmField
+var tipDeadzone = 0.05
 
 class Drivetrain {
     private val frontLeft  = hwMap<DcMotorEx>(DeviceNames.DRIVE_FL).apply { direction = Direction.REVERSE }
@@ -35,13 +42,36 @@ class Drivetrain {
 
     private fun driveRC(gamepad: Gamepad, powerMulti: Double) {
         val (x, y, _r) = gamepad.getDriveSticks()
+
+        var (a, b, c) = Imu.angles
+        b += PI.toFloat() / 2
+
+        // Angle a is strafe tip correction
+        // Angle b is forward/back tip correction however its positive in both directions - negative b = strafe right, add a deadzone
+
+
+        mTelemetry.addData("Angle a",a)
+        mTelemetry.addData("Angle b",b)
+
         val r = _r * .9f
 
         val theta = atan2(y, x)
         val power = hypot(x, y)
 
-        val xComponent = power * cos(theta - PI / 4)
-        val yComponent = power * sin(theta - PI / 4)
+        var xComponent = power * cos(theta - PI / 4)
+        var yComponent = power * sin(theta - PI / 4)
+
+        if(tipCorrection){
+
+            // Strafe correction
+            if(abs(b) > tipDeadzone) {
+                xComponent += tipMult * b
+                yComponent -= tipMult * b
+            }
+        }
+
+        mTelemetry.addData("X component: ", xComponent);
+        mTelemetry.addData("Y component: ", yComponent);
 
         val max = maxMagnitudeAbs<Double>(xComponent, yComponent, 1e-16)
 

@@ -24,6 +24,11 @@ abstract class RogueBaseAuto : BlackOp() {
     protected abstract val startPose: Pose2d
     protected abstract fun mainTraj(startPose: Pose2d): Anvil
 
+    protected var doBeforeInit: () -> Unit = {}
+    protected var doDuringInit: () -> Unit = {}
+
+    protected var aprilTagDetection = true
+
     protected var poleOffset = Vector2d()
         private set
 
@@ -39,7 +44,14 @@ abstract class RogueBaseAuto : BlackOp() {
         val startTraj = mainTraj(startPose)
         Anvil.startAutoWith(startTraj).onSchedulerLaunch()
 
-        signalID = bot.camera.waitForStartWithVision(this) ?: 2
+        doBeforeInit()
+        while (!opModeIsActive()){
+            doDuringInit()
+            if(aprilTagDetection)
+                signalID = bot.camera.stageDetection(this) ?: 2
+        }
+
+
 
         Scheduler.debug(opmode = this) {
             bot.updateBaseComponents(useLiftDeadzone = false)

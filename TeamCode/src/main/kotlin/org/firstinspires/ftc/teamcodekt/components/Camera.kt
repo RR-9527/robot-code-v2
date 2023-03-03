@@ -7,19 +7,22 @@ import com.acmerobotics.dashboard.config.Config
 import com.arcrobotics.ftclib.hardware.SimpleServo
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import ftc.rogue.blacksmith.BlackOp
+import ftc.rogue.blacksmith.BlackOp.Companion.mTelemetry
 import ftc.rogue.blacksmith.util.kt.invoke
 import org.firstinspires.ftc.teamcode.R
 import org.firstinspires.ftc.teamcode.pipelines.AprilTagDetectionPipeline
-import org.firstinspires.ftc.teamcode.pipelines.BasePoleDetector
+import org.firstinspires.ftc.teamcode.pipelines.TapeDetector
 import org.firstinspires.ftc.teamcodekt.components.meta.DeviceNames
 import org.openftc.easyopencv.OpenCvCamera
 import org.openftc.easyopencv.OpenCvCameraFactory
 import org.openftc.easyopencv.OpenCvCameraRotation
 import org.openftc.easyopencv.OpenCvPipeline
-import kotlin.properties.Delegates
 
 @JvmField
 var CAM_FORWARDS = 56.5
+
+@JvmField
+var CAM_LOOKDOWN = 30.0
 
 class Camera {
     private val camServo = SimpleServo(BlackOp.hwMap, DeviceNames.CAM_SERVO, 0.0, 180.0)
@@ -29,9 +32,14 @@ class Camera {
     private val camera: OpenCvCamera
 
     val aprilTagDetectionPipeline = AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy)
+    val tapeDetectorPipeline = TapeDetector(mTelemetry)
 
     fun lookForwards() {
         targetAngle = CAM_FORWARDS
+    }
+
+    fun lookDown() {
+        targetAngle = CAM_LOOKDOWN
     }
 
     fun update() {
@@ -48,7 +56,7 @@ class Camera {
             R.id.cameraMonitorViewId,
         )
 
-        camera.setPipeline(aprilTagDetectionPipeline)
+        camera.setPipeline(tapeDetectorPipeline)
 
         camera.openCameraDeviceAsync(object : OpenCvCamera.AsyncCameraOpenListener {
             override fun onOpened() {
@@ -61,41 +69,42 @@ class Camera {
         })
     }
 
-    fun waitForStartWithVision(opmode: LinearOpMode): Int? {
-        targetAngle = CAM_FORWARDS
-        update()
+    fun stageDetection(opmode: LinearOpMode): Int? {
 
-        val telemetry = BlackOp.mTelemetry
+
+        // TODO: CHANGE THIS BACK TO REGULAR APRILTAG DETECTION FOR AUTOS!
+
+//        targetAngle = CAM_FORWARDS
+//        update()
+//
 
         var numFramesWithoutDetection = 0
         var lastIntID: Int? = null
 
-        while (!opmode.opModeIsActive()) {
-            val detections = aprilTagDetectionPipeline.detectionsUpdate
+        val detections = aprilTagDetectionPipeline.detectionsUpdate
 
-            telemetry.addData("FPS", camera.fps)
-            telemetry.addData("Overhead ms", camera.overheadTimeMs)
-            telemetry.addData("Pipeline ms", camera.pipelineTimeMs)
+        mTelemetry.addData("FPS", camera.fps)
+        mTelemetry.addData("Overhead ms", camera.overheadTimeMs)
+        mTelemetry.addData("Pipeline ms", camera.pipelineTimeMs)
 
-            if (detections.size == 0) {
-                numFramesWithoutDetection++
+        if (detections.size == 0) {
+            numFramesWithoutDetection++
 
-                if (numFramesWithoutDetection >= THRESHOLD_NUM_FRAMES_NO_DETECTION_BEFORE_LOW_DECIMATION) {
-                    aprilTagDetectionPipeline.setDecimation(DECIMATION_LOW)
-                }
-            } else {
-                numFramesWithoutDetection = 0
+            if (numFramesWithoutDetection >= THRESHOLD_NUM_FRAMES_NO_DETECTION_BEFORE_LOW_DECIMATION) {
+                aprilTagDetectionPipeline.setDecimation(DECIMATION_LOW)
+            }
+        } else {
+            numFramesWithoutDetection = 0
 
-                if (detections[0].pose.z < THRESHOLD_HIGH_DECIMATION_RANGE_METERS) {
-                    aprilTagDetectionPipeline.setDecimation(DECIMATION_HIGH)
-                }
-
-                lastIntID = detections.last().id
-                telemetry.addLine("\nDetected tag ID=$lastIntID")
+            if (detections[0].pose.z < THRESHOLD_HIGH_DECIMATION_RANGE_METERS) {
+                aprilTagDetectionPipeline.setDecimation(DECIMATION_HIGH)
             }
 
-            telemetry.update()
+            lastIntID = detections.last().id
+            mTelemetry.addLine("\nDetected tag ID=$lastIntID")
         }
+
+        mTelemetry.update()
 
         return lastIntID.takeIf { it in 1..3 }
     }
