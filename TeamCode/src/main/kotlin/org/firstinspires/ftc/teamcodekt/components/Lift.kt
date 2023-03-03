@@ -8,6 +8,7 @@ import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import ftc.rogue.blacksmith.BlackOp
 import ftc.rogue.blacksmith.BlackOp.Companion.hwMap
+import ftc.rogue.blacksmith.BlackOp.Companion.mTelemetry
 import ftc.rogue.blacksmith.util.kt.clamp
 import ftc.rogue.blacksmith.util.kt.invoke
 import org.firstinspires.ftc.teamcodekt.components.meta.DeviceNames
@@ -110,8 +111,8 @@ class Lift {
         get() = -liftEncoder.currentPosition
 
     fun printLiftTelem() {
-        BlackOp.mTelemetry.addData("Current lift height:", liftHeight)
-        BlackOp.mTelemetry.addData("Lift target height:", targetHeight)
-        BlackOp.mTelemetry.addData("Driven motor power:", drivenCorrection)
+        mTelemetry.addData("Current lift height:", liftHeight)
+        mTelemetry.addData("Lift target height:", targetHeight)
+        mTelemetry.addData("Driven motor power:", drivenCorrection)
     }
 }

@@ -70,8 +70,6 @@ class Camera {
     }
 
     fun stageDetection(opmode: LinearOpMode): Int? {
-
-
         // TODO: CHANGE THIS BACK TO REGULAR APRILTAG DETECTION FOR AUTOS!
 
 //        targetAngle = CAM_FORWARDS

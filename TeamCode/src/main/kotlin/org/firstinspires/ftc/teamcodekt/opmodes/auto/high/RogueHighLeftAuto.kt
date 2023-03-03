@@ -7,6 +7,7 @@ import ftc.rogue.blacksmith.Anvil
 import ftc.rogue.blacksmith.units.GlobalUnits
 import ftc.rogue.blacksmith.util.toRad
 import org.firstinspires.ftc.teamcode.AutoData
+import org.firstinspires.ftc.teamcode.AutoData.liftOffsets
 import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants
 import org.firstinspires.ftc.teamcodekt.opmodes.auto.RogueBaseAuto
 import org.firstinspires.ftc.teamcodekt.util.CycleException
@@ -177,7 +178,9 @@ class RogueHighLeftAuto : RogueBaseAuto() {
                     lineToLinearHeading(-92.5, -21, 90)
                     lineToLinearHeading(-150, -16, 90)
                 }
-                2 -> lineToLinearHeading(-92.5, -21, 90)
+                2 -> {
+                    lineToLinearHeading(-92.5, -21, 90)
+                }
                 3 -> {
                     lineToLinearHeading(-92.5, -21, 90)
                     lineToLinearHeading(-30, -16, 90)

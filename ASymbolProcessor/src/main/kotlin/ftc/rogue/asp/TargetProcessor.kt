@@ -10,8 +10,9 @@ import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.validate
 import ftc.rogue.asp.annotations.Component
+import ftc.rogue.asp.etc.GenerationException
 import ftc.rogue.asp.models.Clazz
-import ftc.rogue.asp.models.Val
+import ftc.rogue.asp.models.Var
 import java.io.File
 
 class TargetProcessor(private val env: SymbolProcessorEnvironment) : SymbolProcessor {
@@ -27,8 +28,12 @@ class TargetProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
         if (!classes.iterator().hasNext())
             return emptyList()
 
-        classes.forEach { clazz ->
-            generateFile(clazz)
+        try {
+            classes.forEach { clazz ->
+                generateFile(clazz)
+            }
+        } catch (e: GenerationException) {
+            env.logger.error(e.localizedMessage)
         }
 
         invoked = true
@@ -43,7 +48,7 @@ class TargetProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
         val valsSB = StringBuilder()
         val methodsSB = StringBuilder()
 
-        clazz.vals
+        clazz.vars
             .filterNotNull()
             .forEach { value ->
                 processVal(value, clazz, valsSB, methodsSB)
@@ -109,7 +114,6 @@ class TargetProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
 
         val clazzEnd = "}\n"
 
-        valsSB.delete(0, 1)
         valsSB.append("\n")
 
         methodsSB.delete(methodsSB.length - 1, methodsSB.length)
@@ -128,7 +132,7 @@ class TargetProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
     }
 
     private fun processVal(
-        value: Val,
+        value: Var,
         clazz: Clazz,
         valsSB: StringBuilder,
         methodsSB: StringBuilder
@@ -155,7 +159,7 @@ class TargetProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
             """.replaceIndent("\t"))
     }
 
-    private fun targetVarToMethodName(clazz: Clazz, value: Val): String {
+    private fun targetVarToMethodName(clazz: Clazz, value: Var): String {
         val methodFormat = clazz.annot.methodFormat
         val removeClassNameFromMethodName = clazz.annot.removeClassNameFromMethodName
 

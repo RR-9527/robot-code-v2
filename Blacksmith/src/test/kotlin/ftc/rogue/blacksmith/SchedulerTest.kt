@@ -1,14 +1,12 @@
 package ftc.rogue.blacksmith
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
+import ftc.rogue.blacksmith.internal.scheduler.Listeners
 import ftc.rogue.blacksmith.listeners.Listener
 import io.mockk.every
 import io.mockk.mockk
+import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
-import org.junit.jupiter.api.assertDoesNotThrow
 import kotlin.test.assertTrue
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -106,6 +104,35 @@ internal class SchedulerTest {
             assertTrue("numHookedListeners == 3") { numHookedListeners == 3 }
             assertTrue("numUniqueMessageSubs == 1") { numUniqueMessageSubs == 1 }
             isStopped = true
+        }
+    }
+
+    @Test
+    fun `scheduler nuke works (enough)`() {
+        for (i in 0 until 3) {
+            Listener { true }.hook()
+        }
+
+        Scheduler.on(0) {}
+
+        Scheduler.nuke(Listeners)
+
+        Scheduler.debug(linearOpMode) {
+            assertTrue("numHookedListeners == 0") { numHookedListeners == 0 }
+            assertTrue("numUniqueMessageSubs == 1") { numUniqueMessageSubs == 1 }
+            isStopped = true
+        }
+
+        isStopped = false
+        Scheduler.nuke()
+
+        Scheduler.debug(linearOpMode) {
+            assertTrue("numUniqueMessageSubs == 0") { numUniqueMessageSubs == 0 }
+            isStopped = true
+        }
+
+        assertThrows<IllegalArgumentException> {
+            Scheduler.nuke(29)
         }
     }
 }

@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import ftc.rogue.blacksmith.Anvil
 import ftc.rogue.blacksmith.units.GlobalUnits
 import org.firstinspires.ftc.teamcode.AutoData
+import org.firstinspires.ftc.teamcode.AutoData.liftOffsets
 import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive
 import org.firstinspires.ftc.teamcodekt.opmodes.auto.RogueBaseAuto
@@ -170,9 +171,15 @@ class RogueLowLeftAuto : RogueBaseAuto() {
             resetBot()
 
             when (signalID) {
-                1 -> lineToLinearHeading(-160, -33, -90)
-                2 -> lineToLinearHeading(-95.5, -24, -90)
-                3 -> lineToLinearHeading(-30, -34, -90)
+                1 -> {
+                    lineToLinearHeading(-160, -33, -90)
+                }
+                2 -> {
+                    lineToLinearHeading(-95.5, -24, -90)
+                }
+                3 -> {
+                    lineToLinearHeading(-30, -34, -90)
+                }
             }
 
             this

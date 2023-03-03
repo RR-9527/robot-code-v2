@@ -1,11 +1,13 @@
 package ftc.rogue.blacksmith
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
-import ftc.rogue.blacksmith.internal.scheduler.Nuke
+import ftc.rogue.blacksmith.internal.scheduler.All
 import ftc.rogue.blacksmith.internal.scheduler.SchedulerDebugInfo
 import ftc.rogue.blacksmith.internal.scheduler.SchedulerInternal
 import ftc.rogue.blacksmith.internal.util.Consumer
-import ftc.rogue.blacksmith.listeners.*
+import ftc.rogue.blacksmith.listeners.Listener
+import ftc.rogue.blacksmith.listeners.ReforgedGamepad
+import ftc.rogue.blacksmith.listeners.Timer
 
 /**
  * [**LINK TO OFFICIAL DOCS (click on me) (please read) (I like cars)**](https://blacksmithftc.vercel.app/scheduler-api/overview)
@@ -172,7 +174,7 @@ object Scheduler {
      * [Link to method docs](https://blacksmithftc.vercel.app/scheduler-api/scheduler#schedulernuke)
      */
     @JvmStatic
-    fun nuke(vararg toNuke: Nuke = arrayOf(Nuke.All)) {
+    fun nuke(toNuke: Int = All) {
         internal.nuke(toNuke)
     }
 

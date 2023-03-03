@@ -4,6 +4,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d
 import ftc.rogue.blacksmith.Anvil
 import ftc.rogue.blacksmith.util.toRad
 import org.firstinspires.ftc.teamcode.AutoData
+import org.firstinspires.ftc.teamcode.AutoData.liftOffsets
 import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants
 import org.firstinspires.ftc.teamcodekt.opmodes.auto.RogueBaseAuto
 

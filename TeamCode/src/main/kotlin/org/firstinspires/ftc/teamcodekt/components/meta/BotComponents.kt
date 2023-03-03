@@ -7,18 +7,17 @@ import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive
 import org.firstinspires.ftc.teamcodekt.components.*
 
 abstract class BaseBotComponents {
-    abstract val claw: Claw
-    abstract val intake: Intake
-    abstract val arm: Arm
-    abstract val wrist: Wrist
-    abstract val lift: Lift
+    val claw   = Claw()
+    val intake = Intake()
+    val arm    = Arm()
+    val wrist  = Wrist()
+    val lift   = Lift()
 
-    fun updateBaseComponents(useLiftDeadzone: Boolean) {
+    open fun updateComponents(useLiftDeadzone: Boolean) {
         claw.update()
         arm.update()
         wrist.update()
         lift.update(useLiftDeadzone)
-        lift.printLiftTelem()
     }
 }
 
@@ -26,40 +25,26 @@ fun createTeleOpBotComponents() =
     TeleOpBotComponents(
         hwMap(DeviceNames.COLOR_SENSOR),
         Drivetrain(),
-        Claw(),
-        Intake(),
-        Arm(),
-        Wrist(),
-        Lift()
     )
 
 data class TeleOpBotComponents(
     val rcs: RevColorSensorV3,
     val drivetrain: Drivetrain,
-    override val claw: Claw,
-    override val intake: Intake,
-    override val arm: Arm,
-    override val wrist: Wrist,
-    override val lift: Lift,
 ) : BaseBotComponents()
 
 fun createAutoBotComponents() =
     AutoBotComponents(
         SampleMecanumDrive(hwMap),
         Camera(),
-        Claw(),
-        Intake(),
-        Arm(),
-        Wrist(),
-        Lift(),
     )
 
 data class AutoBotComponents(
     val drive: SampleMecanumDrive,
     val camera: Camera,
-    override val claw: Claw,
-    override val intake: Intake,
-    override val arm: Arm,
-    override val wrist: Wrist,
-    override val lift: Lift,
-) : BaseBotComponents()
+) : BaseBotComponents() {
+    override fun updateComponents(useLiftDeadzone: Boolean) {
+        super.updateComponents(useLiftDeadzone)
+        camera.update()
+        drive.update()
+    }
+}

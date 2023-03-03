@@ -367,7 +367,7 @@ Clears and unhooks all of the listeners, clears all of the messages, clears the 
 Basically just a hard reset. But with a cooler name. Thanks GHCup.
 
 Optionally, if you want to only nuke specific parts of the Scheduler, you can pass in `Nuke.Listeners`,
-`Nuke.Messages`, or `Nuke.BeforeEach` (you can pass in multiple)
+`Nuke.Messages`, or `Nuke.BeforeEach` (you can pass in multiple by or-ing them together)
 
 <Tabs groupId="programming-language">
 <TabItem value="java" label="Java">
@@ -381,7 +381,7 @@ Optionally, if you want to only nuke specific parts of the Scheduler, you can pa
 
       Scheduler.on("message", () -> ...)
 
-      Scheduler.nuke()
+      Scheduler.nuke() // Nukes everything
 
       // Scheduler.beforeEach == () -> {}
       // Scheduler.listeners.size == 0
@@ -389,7 +389,7 @@ Optionally, if you want to only nuke specific parts of the Scheduler, you can pa
 
       Scheduler.nuke(Nuke.Listeners) // Only nukes the listeners
 
-      Scheduler.nuke(Nuke.Listeners, Nuke.BeforeEach) // Nukes everything besides messages
+      Scheduler.nuke(Nuke.Listeners | Nuke.BeforeEach) // Nukes everything besides messages
   }
   ```
 
@@ -404,15 +404,15 @@ Optionally, if you want to only nuke specific parts of the Scheduler, you can pa
 
       Scheduler.on("message") {}
 
-      Scheduler.nuke()
+      Scheduler.nuke() // Nukes everything
 
       // Scheduler.beforeEach == () -> {}
       // Scheduler.listeners.size == 0
       // Scheduler.messages.size == 0
 
-      Scheduler.nuke(Nuke.Listeners) // Only nukes the listeners
+      Scheduler.nuke(Listeners) // Only nukes the listeners
 
-      Scheduler.nuke(Nuke.Listeners, Nuke.BeforeEach) // Nukes everything besides messages
+      Scheduler.nuke(Listeners or BeforeEach) // Nukes everything besides messages
   }
   ```
 

@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import ftc.rogue.blacksmith.Anvil
 import ftc.rogue.blacksmith.units.GlobalUnits
 import org.firstinspires.ftc.teamcode.AutoData
+import org.firstinspires.ftc.teamcode.AutoData.liftOffsets
 import org.firstinspires.ftc.teamcodekt.opmodes.auto.RogueBaseAuto
 
 @Disabled
@@ -92,7 +93,7 @@ class RogueRightAuto : RogueBaseAuto() {
 
     private fun Anvil.fastIntakePrep(iterations: Int) = this
         .addTemporalMarker(185) {
-            bot.lift.targetHeight  = liftOffsets[iterations]
+            bot.lift.targetHeight = liftOffsets[iterations]
 
             bot.arm.setToBackwardsPos()
             bot.wrist.setToBackwardsPos()

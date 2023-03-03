@@ -18,6 +18,14 @@ public class AutoData {
     public static int AUTO_INTAKE_LIFT_HEIGHT_4 = 48;
     public static int AUTO_INTAKE_LIFT_HEIGHT_5 = 0;
 
+    public static final int[] liftOffsets = {
+        AUTO_INTAKE_LIFT_HEIGHT_1,
+        AUTO_INTAKE_LIFT_HEIGHT_2,
+        AUTO_INTAKE_LIFT_HEIGHT_3,
+        AUTO_INTAKE_LIFT_HEIGHT_4,
+        AUTO_INTAKE_LIFT_HEIGHT_5
+    };
+
     public static double LOW_DEPOSIT_1 = 20;
     public static double LOW_DEPOSIT_2 = 20;
     public static double LOW_DEPOSIT_3 = 20;
@@ -29,5 +37,4 @@ public class AutoData {
     public static double LOW_INTAKE_3 = 20;
     public static double LOW_INTAKE_4 = 20;
     public static double LOW_INTAKE_5 = 20;
-
 }

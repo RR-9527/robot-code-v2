@@ -8,10 +8,10 @@ import com.outoftheboxrobotics.photoncore.PhotonCore
 import ftc.rogue.blacksmith.Anvil
 import ftc.rogue.blacksmith.BlackOp
 import ftc.rogue.blacksmith.Scheduler
+import ftc.rogue.blacksmith.internal.scheduler.Listeners
 import ftc.rogue.blacksmith.listeners.ReforgedGamepad
 import ftc.rogue.blacksmith.units.DistanceUnit
 import ftc.rogue.blacksmith.util.toCm
-import org.firstinspires.ftc.teamcode.AutoData
 import org.firstinspires.ftc.teamcodekt.components.*
 import org.firstinspires.ftc.teamcodekt.components.meta.createAutoBotComponents
 import kotlin.math.absoluteValue
@@ -23,11 +23,6 @@ abstract class RogueBaseAuto : BlackOp() {
 
     protected abstract val startPose: Pose2d
     protected abstract fun mainTraj(startPose: Pose2d): Anvil
-
-    protected var doBeforeInit: () -> Unit = {}
-    protected var doDuringInit: () -> Unit = {}
-
-    protected var aprilTagDetection = true
 
     protected var poleOffset = Vector2d()
         private set
@@ -44,18 +39,14 @@ abstract class RogueBaseAuto : BlackOp() {
         val startTraj = mainTraj(startPose)
         Anvil.startAutoWith(startTraj).onSchedulerLaunch()
 
-        doBeforeInit()
-        while (!opModeIsActive()){
-            doDuringInit()
-            if(aprilTagDetection)
-                signalID = bot.camera.stageDetection(this) ?: 2
+        while (!opModeIsActive()) {
+            signalID = bot.camera.stageDetection(this) ?: 2
         }
 
-
-
         Scheduler.debug(opmode = this) {
-            bot.updateBaseComponents(useLiftDeadzone = false)
-            bot.drive.update()
+            bot.updateComponents(useLiftDeadzone = false)
+
+            bot.lift.printLiftTelem()
             mTelemetry.addLine("Pole offset: x->${poleOffset.x}, y->${poleOffset.y}")
             mTelemetry.addData("Loop time", loopTime)
             mTelemetry.update()
@@ -82,21 +73,16 @@ abstract class RogueBaseAuto : BlackOp() {
             val xf = (if (x > 0) "+" else "-") + "%4.2f".format(x.absoluteValue)
             val yf = (if (y > 0) "+" else "-") + "%4.2f".format(y.absoluteValue)
 
-            telemetry.addLine("""
+            quickLog("""
                 ${whichPole.uppercase()} POLE OFFSET:
                 
                 ↑
                 | y = $yf : ← — → x = $xf 
                 ↓
             """.trimIndent())
-
-            telemetry.update()
         }
 
-        driver.dpad_right.destroy()
-        driver.dpad_left .destroy()
-        driver.dpad_up   .destroy()
-        driver.dpad_down .destroy()
+        Scheduler.nuke(Listeners)
 
         poleOffset = Vector2d(x.toCm(DistanceUnit.INCHES), y.toCm(DistanceUnit.INCHES))
     }
@@ -104,14 +90,5 @@ abstract class RogueBaseAuto : BlackOp() {
     companion object {
         const val NUM_CYCLES = 5
         const val LAST_CYCLE = NUM_CYCLES - 1
-
-        @JvmStatic
-        protected val liftOffsets = intArrayOf(
-            AutoData.AUTO_INTAKE_LIFT_HEIGHT_1,
-            AutoData.AUTO_INTAKE_LIFT_HEIGHT_2,
-            AutoData.AUTO_INTAKE_LIFT_HEIGHT_3,
-            AutoData.AUTO_INTAKE_LIFT_HEIGHT_4,
-            AutoData.AUTO_INTAKE_LIFT_HEIGHT_5,
-        )
     }
 }

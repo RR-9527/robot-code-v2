@@ -4,7 +4,6 @@ import com.outoftheboxrobotics.photoncore.PhotonCore;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcodekt.components.Claw;
 import org.firstinspires.ftc.teamcodekt.components.Imu;
 import org.firstinspires.ftc.teamcodekt.components.meta.BotComponentsKt;
 import org.firstinspires.ftc.teamcodekt.components.meta.TeleOpBotComponents;
@@ -46,7 +45,7 @@ public class JavaBlacksmithTesting extends BlackOp {
 
         Scheduler.debug(this, (info) -> {
             bot.getDrivetrain().drive(driver.getGamepad(), powerMulti);
-            bot.updateBaseComponents(true);
+            bot.updateComponents(true);
 
             mTelemetry().addData("Hi isn't null?", hi != null);
             mTelemetry().addData("Loop times",  info.getLoopTime());

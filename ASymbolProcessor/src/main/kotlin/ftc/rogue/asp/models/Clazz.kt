@@ -11,7 +11,7 @@ class Clazz(
     val simpleName: String,
     val pakig: String,
     val fileName: String,
-    val vals: List<Val?>,
+    val vars: List<Var?>,
     val annot: Component,
     val file: KSFile,
 ) {
@@ -24,7 +24,7 @@ class Clazz(
             file       = clazz.containingFile!!,
             fileName   = clazz.simpleName.asString().replace("Component", "") + "Generated",
             annot      = clazz.getAnnotationsByType(Component::class).first(),
-            vals       = clazz.getAllProperties().toList().map(Val::from)
+            vars       = clazz.getAllProperties().toList().map(Var::from)
         )
     }
 }

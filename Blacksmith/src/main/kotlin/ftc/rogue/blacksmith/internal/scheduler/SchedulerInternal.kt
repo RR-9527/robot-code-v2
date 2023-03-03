@@ -60,23 +60,25 @@ internal class SchedulerInternal {
         }
     }
 
-    fun nuke(toNuke: Array<out Nuke>) {
+    fun nuke(toNuke: Int) {
         updateListenersSet()
 
-        val shouldNukeAll =  Nuke.All in toNuke
+        if (toNuke and All.inv() > 0) {
+            throw IllegalArgumentException("Bitflag uses number that isn't Listener, Messages, BeforeEach, nor All (1, 2, 4, or 7)")
+        }
 
-        if (shouldNukeAll || Nuke.Listeners in toNuke) {
+        if (toNuke and Listeners == Listeners) {
             listeners.forEach {
                 it.destroy()
             }
             listeners.clear()
         }
 
-        if (shouldNukeAll || Nuke.Messages in toNuke) {
+        if (toNuke and Messages == Messages) {
             messages.clear()
         }
 
-        if (shouldNukeAll || Nuke.BeforeEach in toNuke) {
+        if (toNuke and BeforeEach == BeforeEach) {
             beforeEach = Runnable {}
         }
     }

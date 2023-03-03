@@ -11,20 +11,9 @@ import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants
 import org.firstinspires.ftc.teamcodekt.opmodes.auto.RogueBaseAuto
 import org.firstinspires.ftc.teamcodekt.util.CycleException
 
-
 @Autonomous
 class TapeDetectorAuto : RogueBaseAuto() {
-
-    init {
-        aprilTagDetection = false
-    }
-
     override val startPose = GlobalUnits.pos(-91, -163, 90)
-
-    // KAVIN:  I want to be able to do this
-//    override fun doDuringInit(){
-//
-//    }
 
     override fun mainTraj(startPose: Pose2d) =
         Anvil.forgeTrajectory(bot.drive, startPose)

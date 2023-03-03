@@ -64,7 +64,9 @@ fun mainTraj(drive: DriveShim) =
                     strafeRight(14)
                     splineToSplineHeading(30, -27, 90, 180)
                 }
-                2 -> lineToLinearHeading(-92.5, -21, 90)
+                2 -> {
+                    lineToLinearHeading(-92.5, -21, 90)
+                }
                 3 -> {
                     lineToLinearHeading(-30, -16, 0)
                     turn(90)
