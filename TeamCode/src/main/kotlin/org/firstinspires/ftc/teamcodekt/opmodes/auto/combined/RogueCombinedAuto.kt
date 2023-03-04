@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcodekt.opmodes.auto.mid
+package org.firstinspires.ftc.teamcodekt.opmodes.auto.combined
 
 import com.acmerobotics.roadrunner.geometry.Pose2d
 import ftc.rogue.blacksmith.Anvil
@@ -8,9 +8,9 @@ import org.firstinspires.ftc.teamcode.AutoData.liftOffsets
 import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants
 import org.firstinspires.ftc.teamcodekt.opmodes.auto.RogueBaseAuto
 
-abstract class RogueMidAuto : RogueBaseAuto() {
+abstract class RogueCombinedAuto : RogueBaseAuto() {
     init {
-        whichPole = "Mid"
+        whichPole = "South high"
     }
 
     override fun mainTraj(startPose: Pose2d) =
@@ -47,8 +47,6 @@ abstract class RogueMidAuto : RogueBaseAuto() {
     abstract fun parkTraj(startPose: Pose2d): Anvil
 
     private fun Anvil.initialSetup() = this
-        .setVelConstraint(44, 250.toRad(), DriveConstants.TRACK_WIDTH)
-
         .addTemporalMarker {
             bot.lift.goToMid()
             bot.claw.close()
@@ -62,7 +60,7 @@ abstract class RogueMidAuto : RogueBaseAuto() {
         }
 
         .addTemporalMarker(125) {
-            bot.lift.goToMid()
+            bot.lift.goToHigh()
         }
 
         .addTemporalMarker(280) {
@@ -83,7 +81,7 @@ abstract class RogueMidAuto : RogueBaseAuto() {
 
         .addTemporalMarker(75) {
             bot.arm.setToForwardsPos()
-            bot.lift.goToMid()
+            bot.lift.goToHigh()
         }
 
         .addTemporalMarker(100) {
@@ -94,22 +92,28 @@ abstract class RogueMidAuto : RogueBaseAuto() {
 
     private fun Anvil.initialDeposit() = this
         .addTemporalMarker(-165) {
-            bot.lift.targetHeight -= AutoData.DEPOSIT_DROP_AMOUNT
-            bot.arm.setToForwardsPos()
+            bot.arm.targetAngle = 155.0
         }
 
         .addTemporalMarker(-20) {
             bot.claw.openForDeposit()
         }
 
+        .addTemporalMarker(100) {
+            bot.arm.setToForwardsPos()
+        }
+
     private fun Anvil.deposit() = this.apply {
         addTemporalMarker(-165) {
-            bot.lift.targetHeight -= AutoData.DEPOSIT_DROP_AMOUNT
-            bot.arm.setToForwardsPos()
+            bot.arm.targetAngle = 155.0
         }
 
         addTemporalMarker(-25) {
             bot.claw.openForDeposit()
+        }
+
+        addTemporalMarker(-100) {
+            bot.arm.setToForwardsPos()
         }
     }
 

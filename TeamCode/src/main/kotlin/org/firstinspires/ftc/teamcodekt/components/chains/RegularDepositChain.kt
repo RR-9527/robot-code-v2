@@ -22,10 +22,10 @@ class RegularDepositChain(val bot: TeleOpBotComponents) : CancellableChain {
                 return@onFall
             }
 
-            bot.lift.targetHeight = (bot.lift.targetHeight - 20).coerceAtLeast(LIFT_LOW)
+            bot.lift.targetHeight = (bot.lift.targetHeight - 100).coerceAtLeast(LIFT_LOW)
 
             bot.claw.openForDeposit()
-            bot.arm.targetAngle = 158.0
+            bot.arm.targetAngle = 165.0
 
             after(400).milliseconds {
                 finish()

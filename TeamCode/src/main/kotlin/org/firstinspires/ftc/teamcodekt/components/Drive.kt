@@ -43,15 +43,15 @@ class Drivetrain {
     private fun driveRC(gamepad: Gamepad, powerMulti: Double) {
         val (x, y, _r) = gamepad.getDriveSticks()
 
-        var (a, b, c) = Imu.angles
-        b += PI.toFloat() / 2
+//        var (a, b, c) = Imu.angles
+//        b += PI.toFloat() / 2
 
         // Angle a is strafe tip correction
         // Angle b is forward/back tip correction however its positive in both directions - negative b = strafe right, add a deadzone
 
 
-        mTelemetry.addData("Angle a",a)
-        mTelemetry.addData("Angle b",b)
+//        mTelemetry.addData("Angle a",a)
+//        mTelemetry.addData("Angle b",b)
 
         val r = _r * .9f
 
@@ -61,15 +61,15 @@ class Drivetrain {
         var xComponent = power * cos(theta - PI / 4)
         var yComponent = power * sin(theta - PI / 4)
 
-        if(tipCorrection){
-
-            // Strafe correction
-            if(abs(b) > tipDeadzone) {
-                xComponent += tipMult * b
-                yComponent -= tipMult * b
-            }
-        }
-
+//        if(tipCorrection){
+//
+//             Strafe correction
+//            if(abs(b) > tipDeadzone) {
+//                xComponent += tipMult * b
+//                yComponent -= tipMult * b
+//            }
+//        }
+//
         mTelemetry.addData("X component: ", xComponent);
         mTelemetry.addData("Y component: ", yComponent);
 

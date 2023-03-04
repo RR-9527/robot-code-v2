@@ -23,7 +23,7 @@ class ReverseDepositChain(val bot: TeleOpBotComponents) : CancellableChain {
 
             bot.claw.openForDeposit()
 
-            after(300).milliseconds {
+            after(370).milliseconds {
                 finish()
             }
 
@@ -40,7 +40,8 @@ class ReverseDepositChain(val bot: TeleOpBotComponents) : CancellableChain {
     private fun finish() {
         bot.claw.close()
         bot.arm.goToRest()
-
+        bot.lift.clippedHeight += 100
+        
         isCancelled = false
 
         after(100).milliseconds {
