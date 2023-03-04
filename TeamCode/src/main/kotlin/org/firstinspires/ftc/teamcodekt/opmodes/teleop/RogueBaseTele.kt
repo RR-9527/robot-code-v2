@@ -40,7 +40,7 @@ abstract class RogueBaseTele : BlackOp() {
 
         waitForStart()
 
-        Scheduler.debug(opmode = this) {
+        Scheduler.debug({ opModeIsActive() && !isStopRequested }) {
             bot.drivetrain.drive(driver.gamepad, powerMulti)
             bot.updateComponents(useLiftDeadzone = true)
 

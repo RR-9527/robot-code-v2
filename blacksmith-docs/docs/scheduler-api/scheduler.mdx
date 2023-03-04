@@ -9,7 +9,8 @@ import TabItem from '@theme/TabItem';
 
 # The Scheduler itself
 
-🚪 The `Scheduler` is our **entry point** into the API- it's our Wardrobe, our Doors of Durin, our *Ellis Island*.
+🚪 The `Scheduler` is our **entry point** into the API- it's our Wardrobe, our Doors of Durin,
+our *Ellis Island*.
 
 We saw some basic usage in the [Overview](./overview), but now let's really get into it.
 
@@ -17,7 +18,8 @@ We saw some basic usage in the [Overview](./overview), but now let's really get 
 
 ### Scheduler.launch 🚀🚀🚀
 
-`Scheduler.launch` is what starts the entire Scheduler system, and internally hosts the loop that drives our OpModes.
+`Scheduler.launch` is what starts the entire Scheduler system, and internally hosts the loop that
+drives our OpModes.
 
 <SchedulerLaunchParamList/>
 
@@ -120,7 +122,55 @@ returns false.
 
 Has all the same functionality of `Scheduler.launch()`
 
-TODO: document this more thoroughly
+<ParamsList params={[
+  {
+    name: 'condition',
+    type: '() -> Boolean',
+    desc: 'The lambda to evaluate at the start of every loop to determine when to stop looping',
+  }
+]}/>
+
+<Tabs groupId="programming-language">
+<TabItem value="java" label="Java">
+
+  ```java
+  @Override
+  public void runOpMode() throws InterruptedException {
+      // Using int[] b/c of Java's effectively final thing
+      final int[] counter = { 1 };
+
+      // Could just pass it in directly too if you want
+      Function0<Boolean> condition = () -> counter[0] <= 3;
+
+      Scheduler.launchManually(condition, () -> { // Prints '123' then stops
+          System.out.print(counter[0]);
+          counter[0]++;
+      });
+
+      // Eqiv. to Scheduler.launch
+      Scheduler.launchManually(() -> opModeIsActive() && !isStopRequested());
+  }
+  ```
+
+</TabItem>
+<TabItem value="kt" label="Kotlin">
+
+  ```kotlin
+  override fun runOpMode() {
+      var counter = 1
+
+      Scheduler.launchManually({ counter <= 3 }) { // Prints '123' then stops
+          print(counter)
+          counter++
+      }
+
+      // Eqiv. to Scheduler.launch
+      Scheduler.launchManually({ opModeIsActive() && !isStopRequested })
+  }
+  ```
+
+</TabItem>
+</Tabs>
 
 ### Scheduler.beforeEach
 
@@ -178,6 +228,9 @@ Runs a block of code *before* all the Listeners and the `afterEach` block (the o
 
 Utility method for to help benchmark performance or debug Scheduler-related issues
 
+It's also like `Scheduler.launchManually` in that you need to explicitly pass in the loop condition
+(scroll up if you need to read the documentation for that method for this to make sense)
+
 The 'afterEach' block now takes in a SchedulerDebugInfo that contains some debug information. The
 class definition is as follows:
 
@@ -219,11 +272,11 @@ Keep in mind Blacksmith may internally subscribe to a few messages or something 
 
       waitForStart();
 
-      Scheduler.debug(this, (info) -> {
-          telemetry.addData("LoopTime (ms)", info.getLoopTime())
-          telemetry.addData("Number of hooked listeners", info.getNumHookedListeners())
-          telemetry.addData("Number of (unique) msg subscribers", info.getNumUniqueMessageSubs())
-          telemetry.update()
+      Scheduler.debug(() -> opModeIsActive() && !isStopRequested(), info -> {
+          telemetry.addData("LoopTime (ms)", info.getLoopTime());
+          telemetry.addData("Number of hooked listeners", info.getNumHookedListeners());
+          telemetry.addData("Number of (unique) msg subscribers", info.getNumUniqueMessageSubs());
+          telemetry.update();
       });
   }
   ```
@@ -237,10 +290,11 @@ Keep in mind Blacksmith may internally subscribe to a few messages or something 
 
       waitForStart()
 
-      Scheduler.debug(this) {
-          telemetry.addData("LoopTime (ms)", it.loopTime)
-          telemetry.addData("Number of hooked listeners", it.numHookedListeners)
-          telemetry.addData("Number of (unique) msg subscribers", it.numUniqueMessageSubs)
+      // Lambda w/ receiver ofc
+      Scheduler.debug({ opModeIsActive() && !isStopRequested }) {
+          telemetry.addData("LoopTime (ms)", loopTime)
+          telemetry.addData("Number of hooked listeners", numHookedListeners)
+          telemetry.addData("Number of (unique) msg subscribers", numUniqueMessageSubs)
           telemetry.update()
       }
   }
@@ -367,7 +421,7 @@ Clears and unhooks all of the listeners, clears all of the messages, clears the 
 Basically just a hard reset. But with a cooler name. Thanks GHCup.
 
 Optionally, if you want to only nuke specific parts of the Scheduler, you can pass in `Nuke.Listeners`,
-`Nuke.Messages`, or `Nuke.BeforeEach` (you can pass in multiple by or-ing them together)
+`Nuke.Messages`, or `Nuke.BeforeEach` (you can pass in multiple as well since it's varargs)
 
 <Tabs groupId="programming-language">
 <TabItem value="java" label="Java">
@@ -389,7 +443,8 @@ Optionally, if you want to only nuke specific parts of the Scheduler, you can pa
 
       Scheduler.nuke(Nuke.Listeners) // Only nukes the listeners
 
-      Scheduler.nuke(Nuke.Listeners | Nuke.BeforeEach) // Nukes everything besides messages
+      // (also you can static import for readability)
+      Scheduler.nuke(Listeners, BeforeEach) // Nukes everything besides messages
   }
   ```
 
@@ -412,7 +467,7 @@ Optionally, if you want to only nuke specific parts of the Scheduler, you can pa
 
       Scheduler.nuke(Listeners) // Only nukes the listeners
 
-      Scheduler.nuke(Listeners or BeforeEach) // Nukes everything besides messages
+      Scheduler.nuke(Listeners, BeforeEach) // Nukes everything besides messages
   }
   ```
 
@@ -422,7 +477,7 @@ Optionally, if you want to only nuke specific parts of the Scheduler, you can pa
 <ParamsList params={[
   {
     name: 'toNuke',
-    type: 'vararg Nuke',
+    type: 'vararg NukeFlag',
     desc: 'What parts of the Scheduler to nuke (hard reset). Defaults to nuking everything.',
     defaultsTo: 'Nuke.All',
   },

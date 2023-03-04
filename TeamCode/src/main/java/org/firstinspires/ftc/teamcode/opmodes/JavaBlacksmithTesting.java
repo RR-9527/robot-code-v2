@@ -16,10 +16,10 @@ import ftc.rogue.blacksmith.listeners.ReforgedGamepad;
 
 @TeleOp
 public class JavaBlacksmithTesting extends BlackOp {
-    @EvalOnGo(method = "makeReforgedGamepad1")
+    @EvalOnGo(method = "getReforgedGamepad1")
     private ReforgedGamepad driver;
 
-    @EvalOnGo(method = "makeReforgedGamepad2")
+    @EvalOnGo(method = "getReforgedGamepad2")
     private ReforgedGamepad codriver;
 
     @EvalOnGo(method = "createTeleOpBotComponents", clazz = BotComponentsKt.class)
@@ -43,7 +43,7 @@ public class JavaBlacksmithTesting extends BlackOp {
         driver.dpad_up.onRise(bot.getLift()::goToHigh);
         driver.dpad_down.onRise(bot.getLift()::goToLow);
 
-        Scheduler.debug(this, (info) -> {
+        Scheduler.debug(() -> opModeIsActive() && !isStopRequested(), (info) -> {
             bot.getDrivetrain().drive(driver.getGamepad(), powerMulti);
             bot.updateComponents(true);
 
@@ -53,13 +53,5 @@ public class JavaBlacksmithTesting extends BlackOp {
             mTelemetry().addData("# msg subs",  info.getNumUniqueMessageSubs());
             mTelemetry().update();
         });
-    }
-
-    private ReforgedGamepad makeReforgedGamepad1() {
-        return new ReforgedGamepad(gamepad1);
-    }
-
-    private ReforgedGamepad makeReforgedGamepad2() {
-        return new ReforgedGamepad(gamepad2);
     }
 }

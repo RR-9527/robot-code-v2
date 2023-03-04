@@ -11,14 +11,15 @@ import TabItem from '@theme/TabItem';
 # Pulsars
 
 :::warning
-A pulsar's resolution is tied to the performance of the Scheduler loop. If there's a heavy computation involved,
-the pulsar may not fire at the exact time it was scheduled for.
+A pulsar's resolution is tied to the performance of the Scheduler loop. If there's a heavy
+computation involved, the pulsar may not fire at the exact time it was scheduled for.
 
 For example, if you have a pulsar set to go off in 50ms intervals, but the loop is busy for an extra
 50ms, the pulsar will fire up to 100ms after it was scheduled.
 
-This is not meant for very precise timing. But then again, without multithreading (which I don't reallly recommend for
-most cases), it's not really possible to get a higher resolution timer anyways. **It's good enough for most use cases.**
+This is not meant for very precise timing. But then again, without multithreading (which I don't
+reallly recommend for most cases), it's not really possible to get a higher resolution timer
+anyways. **It's good enough for most use cases.**
 :::
 
 :::info
@@ -27,8 +28,8 @@ also doesn't work unless Scheduler is running.
 
 ## Overview
 
-Pulsars are akin to timers, except they're like timers on a loop, where they 'pulse' every 'x' time units.
-You can use one to do something every, say, 100ms.
+Pulsars are akin to timers, except they're like timers on a loop, where they 'pulse' every 'x' time
+units. You can use one to do something every, say, 100ms.
 
 ## Pulsar methods
 

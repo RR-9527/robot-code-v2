@@ -11,20 +11,17 @@ import ftc.rogue.blacksmith.listeners.Listener
 
 @PublishedApi
 internal class SchedulerInternal {
-    val listeners = mutableSetOf<Listener>()
+    @PublishedApi
+    @get:JvmSynthetic
+    internal val listeners = mutableSetOf<Listener>()
 
-    var beforeEach = Runnable {}
+    @PublishedApi
+    @get:JvmSynthetic
+    @set:JvmSynthetic
+    internal var beforeEach = Runnable {}
 
     fun launch(opmode: LinearOpMode, afterEach: Runnable) {
-        emit(Scheduler.STARTING_MSG)
-
-        while (opmode.opModeIsActive() && !opmode.isStopRequested) {
-            updateListenersSet()
-
-            beforeEach.run()
-            tick()
-            afterEach.run()
-        }
+        launchManually({ opmode.opModeIsActive() && !opmode.isStopRequested }, afterEach)
     }
 
     fun launchOnStart(opmode: LinearOpMode, afterEach: Runnable) {
@@ -32,7 +29,7 @@ internal class SchedulerInternal {
         launch(opmode, afterEach)
     }
 
-    inline fun launchManually(condition: () -> Boolean, afterEach: Runnable = Runnable {}) {
+    inline fun launchManually(condition: () -> Boolean, afterEach: Runnable) {
         emit(Scheduler.STARTING_MSG)
 
         while (condition()) {
@@ -44,10 +41,10 @@ internal class SchedulerInternal {
         }
     }
 
-    fun debug(opmode: LinearOpMode, afterEach: Consumer<SchedulerDebugInfo>) {
+    inline fun debug(condition: () -> Boolean, afterEach: Consumer<SchedulerDebugInfo>) {
         val elapsedTime = ElapsedTime()
 
-        launch(opmode) {
+        launchManually(condition) {
             val time = elapsedTime.milliseconds()
 
             elapsedTime.reset()
@@ -60,30 +57,34 @@ internal class SchedulerInternal {
         }
     }
 
-    fun nuke(toNuke: Int) {
+    fun nuke(toNuke: Array<out NukeFlag>) {
         updateListenersSet()
 
-        if (toNuke and All.inv() > 0) {
+        val nukeFlag = toNuke.reduce(NukeFlag::or)
+
+        if ((nukeFlag and !All).flag > 0) {
             throw IllegalArgumentException("Bitflag uses number that isn't Listener, Messages, BeforeEach, nor All (1, 2, 4, or 7)")
         }
 
-        if (toNuke and Listeners == Listeners) {
+        if (nukeFlag and Listeners == Listeners) {
             listeners.forEach {
                 it.destroy()
             }
             listeners.clear()
         }
 
-        if (toNuke and Messages == Messages) {
+        if (nukeFlag and Messages == Messages) {
             messages.clear()
         }
 
-        if (toNuke and BeforeEach == BeforeEach) {
+        if (nukeFlag and BeforeEach == BeforeEach) {
             beforeEach = Runnable {}
         }
     }
 
-    private val messages = mutableMapOf<Any, MutableList<Runnable>>()
+    @PublishedApi
+    @get:JvmSynthetic
+    internal val messages = mutableMapOf<Any, MutableList<Runnable>>()
 
     fun on(message: Any, callback: Runnable) {
         messages.getOrPut(message, ::ArrayList) += callback

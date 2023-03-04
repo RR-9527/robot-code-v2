@@ -2,6 +2,7 @@ package ftc.rogue.blacksmith
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import ftc.rogue.blacksmith.internal.scheduler.All
+import ftc.rogue.blacksmith.internal.scheduler.NukeFlag
 import ftc.rogue.blacksmith.internal.scheduler.SchedulerDebugInfo
 import ftc.rogue.blacksmith.internal.scheduler.SchedulerInternal
 import ftc.rogue.blacksmith.internal.util.Consumer
@@ -150,8 +151,8 @@ object Scheduler {
      * [Link to method docs](https://blacksmithftc.vercel.app/scheduler-api/scheduler#schedulerdebug)
      */
     @JvmStatic
-    fun debug(opmode: LinearOpMode, afterEach: Consumer<SchedulerDebugInfo>) {
-        internal.debug(opmode, afterEach)
+    inline fun debug(condition: () -> Boolean, afterEach: Consumer<SchedulerDebugInfo>) {
+        internal.debug(condition, afterEach)
     }
 
     /**
@@ -174,14 +175,15 @@ object Scheduler {
      * [Link to method docs](https://blacksmithftc.vercel.app/scheduler-api/scheduler#schedulernuke)
      */
     @JvmStatic
-    fun nuke(toNuke: Int = All) {
+    @JvmOverloads
+    fun nuke(vararg toNuke: NukeFlag = arrayOf(All)) {
         internal.nuke(toNuke)
     }
 
     // -- INTERNAL --
 
-    @JvmSynthetic
     @PublishedApi
+    @get:JvmSynthetic
     internal val internal = SchedulerInternal()
 
     @JvmSynthetic

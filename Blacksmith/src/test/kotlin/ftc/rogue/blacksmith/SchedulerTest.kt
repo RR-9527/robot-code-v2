@@ -2,6 +2,8 @@ package ftc.rogue.blacksmith
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import ftc.rogue.blacksmith.internal.scheduler.Listeners
+import ftc.rogue.blacksmith.internal.scheduler.Messages
+import ftc.rogue.blacksmith.internal.scheduler.NukeFlag
 import ftc.rogue.blacksmith.listeners.Listener
 import io.mockk.every
 import io.mockk.mockk
@@ -99,7 +101,7 @@ internal class SchedulerTest {
             Scheduler.on(0) {}
         }
 
-        Scheduler.debug(linearOpMode) {
+        Scheduler.debug({ !isStopped }) {
             assertTrue("time > 0") { loopTime > 0 }
             assertTrue("numHookedListeners == 3") { numHookedListeners == 3 }
             assertTrue("numUniqueMessageSubs == 1") { numUniqueMessageSubs == 1 }
@@ -108,31 +110,43 @@ internal class SchedulerTest {
     }
 
     @Test
-    fun `scheduler nuke works (enough)`() {
+    fun `scheduler nuke works (enough) #1`() {
         for (i in 0 until 3) {
             Listener { true }.hook()
         }
 
         Scheduler.on(0) {}
 
-        Scheduler.nuke(Listeners)
+        Scheduler.nuke(Listeners, Messages)
 
-        Scheduler.debug(linearOpMode) {
+        Scheduler.debug({ !isStopped }) {
             assertTrue("numHookedListeners == 0") { numHookedListeners == 0 }
-            assertTrue("numUniqueMessageSubs == 1") { numUniqueMessageSubs == 1 }
-            isStopped = true
-        }
-
-        isStopped = false
-        Scheduler.nuke()
-
-        Scheduler.debug(linearOpMode) {
             assertTrue("numUniqueMessageSubs == 0") { numUniqueMessageSubs == 0 }
             isStopped = true
         }
+    }
 
-        assertThrows<IllegalArgumentException> {
-            Scheduler.nuke(29)
+    @Test
+    fun `scheduler nuke works (enough) #2`() {
+        for (i in 0 until 3) {
+            Listener { true }.hook()
         }
+
+        Scheduler.on(0) {}
+
+        Scheduler.nuke()
+
+        Scheduler.debug({ !isStopped }) {
+            assertTrue("numHookedListeners == 0") { numHookedListeners == 0 }
+            assertTrue("numUniqueMessageSubs == 0") { numUniqueMessageSubs == 0 }
+            isStopped = true
+        }
+    }
+
+    @Test
+    fun `scheduler nuke works (enough) #3`() {
+       assertThrows<IllegalArgumentException> {
+           Scheduler.nuke(NukeFlag(29))
+       }
     }
 }

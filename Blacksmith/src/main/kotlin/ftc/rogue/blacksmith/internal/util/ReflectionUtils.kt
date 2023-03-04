@@ -76,7 +76,14 @@ internal fun <T> Any.invokeMethodRethrowingI(name: String, vararg params: Any): 
     }
 }
 
-fun Class<*>.getDeclaredFieldsAnnotatedWith(annotation: Class<out Annotation>): List<Field> {
+internal fun Class<*>.getFieldsAnnotatedWith(annotation: Class<out Annotation>): List<Field> {
+    return this.fields
+        .filter {
+            it.isAnnotationPresent(annotation)
+        }
+}
+
+internal fun Class<*>.getDeclaredFieldsAnnotatedWith(annotation: Class<out Annotation>): List<Field> {
     return this.declaredFields
         .filter {
             it.isAnnotationPresent(annotation)

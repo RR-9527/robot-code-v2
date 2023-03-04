@@ -20,14 +20,18 @@ Yeahhh okay, that's not as helpful as I thought. Anyway...
 
 ## The Scheduler is a glorified loop
 
-The Scheduler model is a loop that runs until the OpMode is stopped, and this loop is made up of a few different parts.
+The Scheduler model is a loop that runs until the OpMode is stopped, and this loop is made up of a
+few different parts.
 
 ### Listeners👂
 
-👀 This is the juicy bit, these are the backbone of the Scheduler API. Or wait, are they more like limbs? Anyways, they run *after* `beforeEach` and *before* `afterEach` (🤯)
+👀 This is the juicy bit, these are the backbone of the Scheduler API. Or wait, are they more like
+limbs since they're what actually do things? Whatever, anyways, they run *after* `beforeEach` and
+*before* `afterEach` (🤯)
 
-Listeners are objects which hold a condition which hook to and are updated every cycle of the Scheduler. They can be
-subscribed to to perform certain actions when certain events are in certain states.
+Listeners are objects which hold a condition which hook to and are updated every cycle of the
+Scheduler. They can be subscribed to to perform certain actions when certain events are in certain
+states.
 
 yeah I know that was a mouthful, so here's a more practical example:
 
@@ -70,22 +74,24 @@ yeah I know that was a mouthful, so here's a more practical example:
 </Tabs>
 
 :::tip
-Because the above 4 methods return the Listener instance, it can actually [chain](https://stackoverflow.com/questions/2872222/how-to-do-method-chaining-in-java-o-m1-m2-m3-m4) these methods together, so you can
-actually do something like this:
+Because the above 4 methods return the Listener instance, it can actually
+[chain](https://stackoverflow.com/questions/2872222/how-to-do-method-chaining-in-java-o-m1-m2-m3-m4)
+these methods together, so you can actually do something like this:
 ```java
 listener.onRise(() -> ...)
         .onFall(() -> ...);
 ```
 :::
 
-**Note:** This is a very rough overview of the Listener concept; if you're confused or want more information, check out
-the [Listeners](./listeners) page.
+**Note:** This is a very rough overview of the Listener concept; if you're confused or want more
+information, check out the [Listeners](./listeners) page.
 
-We created a Listener which checks if the `a` button was pressed, and then we subscribed to a few sub-conditions, i.e.
-`onRise`, `onFall`, `whileHigh`, and `whileLow`.
+We created a Listener which checks if the `a` button was pressed, and then we subscribed to a few
+sub-conditions, i.e. `onRise`, `onFall`, `whileHigh`, and `whileLow`.
 
-The `onRise` and `onFall` refer to rising and falling edge states (was *just* pressed and was *just* released), and the
-`whileHigh` and `whileLow` refer to the high and low states (is being held and is not being touched).
+The `onRise` and `onFall` refer to rising and falling edge states (was *just* pressed and was
+*just* released), and the `whileHigh` and `whileLow` refer to the high and low states (is being held
+and is not being touched).
 
 Again, the Listener is being updated every loop of the Scheduler, and is functionally equivalent to:
 
@@ -145,15 +151,15 @@ Again, the Listener is being updated every loop of the Scheduler, and is functio
 
 This is a block of code which runs at the very start of every loop.
 
-I myself just use it to reset variables that need to be reset every loop, but you can use it for whatever you want I
-guess lol.
+I myself just use it to reset variables that need to be reset every loop, but you can use it for
+whatever you want I guess lol.
 
 You can find an example of how to use this right [here](./scheduler#schedulerbeforeeach).
 
 ### afterEach
 
-This is `beforeEach`'s evil twin. It runs at the very end of every loop. It's very useful for actions that you
-want to run every loop, like PIDs, driving, or telemetry.
+This is `beforeEach`'s evil twin. It runs at the very end of every loop. It's very useful for
+actions that you want to run every loop, like PIDs, driving, or telemetry.
 
 Example [here](./scheduler#schedulerlaunch-).
 

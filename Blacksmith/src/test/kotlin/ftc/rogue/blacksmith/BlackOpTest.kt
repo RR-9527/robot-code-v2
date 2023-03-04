@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.assertTrue
 
-class BlackOpTest {
+class BlackOpTest : BlackOpTestSuper() {
     @JvmField
     @CreateOnGo
     var hi1: Teast? = null
@@ -29,15 +29,6 @@ class BlackOpTest {
         assertTrue { hi1 == Teast() }
     }
 
-    data class Teast(val hwMap: HardwareMap? = null) {
-        companion object {
-            @JvmStatic
-            fun getTeacH(): Teast {
-                return Teast()
-            }
-        }
-    }
-
     @JvmField
     @EvalOnGo("getTeast")
     var bye1: Teast? = null
@@ -47,19 +38,24 @@ class BlackOpTest {
     var bye2: Teast? = null
 
     @JvmField
-    @EvalOnGo("getNotTeast")
+    @EvalOnGo("getInheritedTest")
     var bye3: Teast? = null
+
+    @JvmField
+    @EvalOnGo("getNotTeast")
+    var bye4: Teast? = null
 
     @Test
     fun `@EvalOnGo concept works`() {
-        // Should throw IllegalArgumentException since it's trying to assign a String to a Teast
+        // Should throw CreationException since it's trying to assign a String to a Teast
         assertThrows<CreationException> {
             injectEvalOnGoFields()
         }
 
         assertTrue("bye1") { bye1 == Teast() }
         assertTrue("bye2") { bye2 == Teast() }
-        assertTrue("bye3") { bye3 == null }
+        assertTrue("bye3") { bye3 == Teast() }
+        assertTrue("bye4") { bye4 == null }
     }
 
     private fun getTeast(): Teast {
@@ -68,5 +64,20 @@ class BlackOpTest {
 
     private fun getNotTeast(): String {
         return "nope"
+    }
+}
+
+open class BlackOpTestSuper {
+    fun getInheritedTest(): Teast {
+        return Teast()
+    }
+}
+
+data class Teast(val hwMap: HardwareMap? = null) {
+    companion object {
+        @JvmStatic
+        fun getTeacH(): Teast {
+            return Teast()
+        }
     }
 }

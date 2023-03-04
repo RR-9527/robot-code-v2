@@ -6,6 +6,7 @@ import ftc.rogue.blacksmith.annotations.CreateOnGo
 import ftc.rogue.blacksmith.annotations.EvalOnGo
 import ftc.rogue.blacksmith.internal.util.getDeclaredFieldsAnnotatedWith
 import ftc.rogue.blacksmith.internal.util.getDeclaredMethod
+import ftc.rogue.blacksmith.internal.util.getFieldsAnnotatedWith
 import java.lang.reflect.Method
 
 @JvmSynthetic
@@ -55,9 +56,17 @@ internal fun Any.injectEvalOnGoFields() = this::class.java
 
         try {
             method = if (methodClazz == ClassThatTheAnnotationIsIn::class) {
-                this::class.java.getDeclaredMethod(methodName)
+                try {
+                    this::class.java.getDeclaredMethod(methodName)
+                } catch (e: NoSuchMethodException) {
+                    this::class.java.getMethod(methodName)
+                }
             } else {
-                methodClazz.java.getDeclaredMethod(methodName)
+                try {
+                    methodClazz.java.getDeclaredMethod(methodName)
+                } catch (e: NoSuchMethodException) {
+                    methodClazz.java.getMethod(methodName)
+                }
             }
 
             val returnValue = method.let {
@@ -68,7 +77,7 @@ internal fun Any.injectEvalOnGoFields() = this::class.java
             field.isAccessible = true
             field.set(this, returnValue)
         } catch (e: NoSuchMethodException) {
-            throw CreationException("No method $methodName() exists for @EvalOnGo. Are you sure there's a version with no args?")
+            throw CreationException("No method $methodName() exists for @EvalOnGo. Are you sure there's a version with no args, or if it's in a superclass, are you sure the method is public?")
         } catch (e: IllegalArgumentException) {
             throw CreationException("""
                 $methodName() doesn't return the correct type for '${field.name}' (for @EvalOnGo)

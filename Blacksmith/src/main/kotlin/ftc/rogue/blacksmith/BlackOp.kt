@@ -5,11 +5,13 @@ package ftc.rogue.blacksmith
 import com.acmerobotics.dashboard.FtcDashboard
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
+import com.qualcomm.robotcore.hardware.Gamepad
 import com.qualcomm.robotcore.hardware.HardwareMap
 import ftc.rogue.blacksmith.internal.blackop.CreateOnGoInternal
 import ftc.rogue.blacksmith.internal.blackop.injectCreateOnGoFields
 import ftc.rogue.blacksmith.internal.blackop.injectEvalOnGoFields
 import ftc.rogue.blacksmith.internal.util.NotNull
+import ftc.rogue.blacksmith.listeners.ReforgedGamepad
 
 /**
  * [**LINK TO OFFICIAL DOCS (click on me) (please read) (I like cars)**](https://blacksmithftc.vercel.app/black-op/overview)
@@ -102,6 +104,14 @@ abstract class BlackOp : LinearOpMode() {
          * });
          */
         const val STARTING_MSG = 3248023743480398723L
+    }
+
+    fun getReforgedGamepad1(): ReforgedGamepad {
+        return ReforgedGamepad(gamepad1)
+    }
+
+    fun getReforgedGamepad2(): ReforgedGamepad {
+        return ReforgedGamepad(gamepad1)
     }
 
     // -- KOTLIN ONLY BELOW (Check out @CreateOnGo and @EvalOnGo for Java) --

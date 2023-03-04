@@ -43,7 +43,7 @@ abstract class RogueBaseAuto : BlackOp() {
             signalID = bot.camera.stageDetection(this) ?: 2
         }
 
-        Scheduler.debug(opmode = this) {
+        Scheduler.debug({ opModeIsActive() && !isStopRequested }) {
             bot.updateComponents(useLiftDeadzone = false)
 
             bot.lift.printLiftTelem()
