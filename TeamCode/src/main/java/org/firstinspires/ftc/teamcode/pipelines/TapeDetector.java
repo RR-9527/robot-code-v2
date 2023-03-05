@@ -12,8 +12,6 @@ import org.openftc.easyopencv.OpenCvPipeline;
 
 import java.util.ArrayList;
 
-import ftc.rogue.blacksmith.util.MU;
-
 /**
  * Class to apply a canny edge detector in an EasyOpenCV pipeline.
  */
@@ -25,8 +23,8 @@ public class TapeDetector extends OpenCvPipeline {
     public static int houghThresh = 50;
     public static int minLineLen = 200;
     public static int maxLineGap = 15;
-    public static int xDist = 50;
-    public static int yDist = 200;
+    public static int minYDist = 200;
+    public static int maxXDist = 50;
 
     public double tapeCenter = -1;
     public double lagTime = -1;
@@ -40,8 +38,8 @@ public class TapeDetector extends OpenCvPipeline {
 
 
     // Simple frame size in pixels determined empirically through Mat.rows() and Mat.cols().
-    private static int frameWidth = 1280;
-    private static int frameHeight = 760;
+    private final static int frameWidth = 1280;
+    private final static int frameHeight = 760;
 
 
 
@@ -63,8 +61,6 @@ public class TapeDetector extends OpenCvPipeline {
      */
     public TapeDetector(Telemetry telemetry) {
         this.telemetry = telemetry;
-        frameWidth = -1;
-        frameHeight = -1;
         timer = new ElapsedTime();
     }
 
@@ -98,13 +94,10 @@ public class TapeDetector extends OpenCvPipeline {
         procLagTime = afterProc-beforeProc;
 
 
-
-
-        // Draw the lines
         ArrayList<double[]> lines = new ArrayList<>();
         for (int x = 0; x < linesP.rows(); x++) {
             double[] l = linesP.get(x, 0);
-            if(Math.abs(l[3]-l[1]) > yDist && Math.abs(l[2]-l[0]) < xDist) {
+            if(Math.abs(l[3]-l[1]) > maxXDist && Math.abs(l[2]-l[0]) < minYDist) {
                 lines.add(l);
             }
         }
@@ -112,9 +105,9 @@ public class TapeDetector extends OpenCvPipeline {
         double[] allX = new double[lines.size()*2];
         int insertIdx = 0;
         for(double[] line: lines){
-            allX[insertIdx] = line[1];
+            allX[insertIdx] = line[0];
             insertIdx++;
-            allX[insertIdx] = line[3];
+            allX[insertIdx] = line[2];
             insertIdx++;
         }
 
@@ -143,12 +136,12 @@ public class TapeDetector extends OpenCvPipeline {
 
         // Temporary, just for line visualization
         for(double[] l: lines)
-            if((l[3]+l[1])/2 < pixels)
+            if((l[2]+l[0])/2 < biasedAverage)
                 Imgproc.line(src, new Point(l[0], l[1]), new Point(l[2], l[3]), new Scalar(255, 0, 0), 3, Imgproc.LINE_AA, 0);
             else
                 Imgproc.line(src, new Point(l[0], l[1]), new Point(l[2], l[3]), new Scalar(0, 255, 0), 3, Imgproc.LINE_AA, 0);
 
-        tapeCenter = pixels;
+        tapeCenter = 60*(pixels/frameWidth)-30;
 
 //        telemetry.addData("Estimated pixel position", avg);
 //        src.release();
