@@ -13,12 +13,12 @@ import org.firstinspires.ftc.teamcodekt.util.CycleException
 
 @Autonomous
 class TapeDetectorAuto : RogueBaseAuto() {
-    override val startPose = GlobalUnits.pos(-91, -163, 90)
+    override val startPose = GlobalUnits.pos(0,0, 0)
 
     override fun mainTraj(startPose: Pose2d) =
         Anvil.forgeTrajectory(bot.drive, startPose)
             .setVelConstraint(40, 250.toRad(), DriveConstants.TRACK_WIDTH)
-            .forward(0.5)
+            .splineTo(0, 1, 0);
 
     private fun Anvil.resetBot() = this
         .addTemporalMarker {

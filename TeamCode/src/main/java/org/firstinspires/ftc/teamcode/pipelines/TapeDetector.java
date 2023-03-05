@@ -25,8 +25,12 @@ public class TapeDetector extends OpenCvPipeline {
     public static int maxLineGap = 15;
     public static int minYDist = 200;
     public static int maxXDist = 50;
+    public static double focalWidth = 1428.837;
 
-    public double tapeCenter = -1;
+    public double tapeAngle = -1;
+    public double tapeDist = -1;
+    public double correction = -1;
+
     public double lagTime = -1;
     public double procLagTime = -1;
 
@@ -141,7 +145,9 @@ public class TapeDetector extends OpenCvPipeline {
             else
                 Imgproc.line(src, new Point(l[0], l[1]), new Point(l[2], l[3]), new Scalar(0, 255, 0), 3, Imgproc.LINE_AA, 0);
 
-        tapeCenter = 60*(pixels/frameWidth)-30;
+        tapeAngle = 60*(pixels/frameWidth)-30;
+        tapeDist = 4.6*focalWidth/(rightAvg-leftAvg);
+        correction = Math.sin(tapeAngle)*tapeDist;
 
 //        telemetry.addData("Estimated pixel position", avg);
 //        src.release();

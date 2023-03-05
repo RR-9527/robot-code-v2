@@ -46,7 +46,8 @@ abstract class RogueBaseAuto : BlackOp() {
         bot.camera.lookDown()
 
         while (!opModeIsActive()) {
-            mTelemetry.addData("Tape center:", pipeline.tapeCenter)
+            mTelemetry.addData("Tape angle:", pipeline.tapeAngle)
+            mTelemetry.addData("Tape correction:", pipeline.correction)
             mTelemetry.addData("Tape lag:", pipeline.lagTime)
             mTelemetry.addData("Tape proc lag:", pipeline.procLagTime)
             mTelemetry.update()
