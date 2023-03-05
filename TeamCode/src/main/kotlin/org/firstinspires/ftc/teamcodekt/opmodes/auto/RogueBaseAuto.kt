@@ -12,6 +12,7 @@ import ftc.rogue.blacksmith.internal.scheduler.Listeners
 import ftc.rogue.blacksmith.listeners.ReforgedGamepad
 import ftc.rogue.blacksmith.units.DistanceUnit
 import ftc.rogue.blacksmith.util.toCm
+import org.firstinspires.ftc.teamcode.pipelines.TapeDetector
 import org.firstinspires.ftc.teamcodekt.components.*
 import org.firstinspires.ftc.teamcodekt.components.meta.createAutoBotComponents
 import kotlin.math.absoluteValue
@@ -39,8 +40,17 @@ abstract class RogueBaseAuto : BlackOp() {
         val startTraj = mainTraj(startPose)
         Anvil.startAutoWith(startTraj).onSchedulerLaunch()
 
+        val pipeline = TapeDetector(telemetry)
+        bot.camera.setPipeline(pipeline)
+
+        bot.camera.lookDown()
+
         while (!opModeIsActive()) {
-            signalID = bot.camera.stageDetection(this) ?: 2
+            mTelemetry.addData("Tape center:", pipeline.tapeCenter)
+            mTelemetry.addData("Tape lag:", pipeline.lagTime)
+            mTelemetry.addData("Tape proc lag:", pipeline.procLagTime)
+            mTelemetry.update()
+//            signalID = bot.camera.stageDetection(this) ?: 2
         }
 
         Scheduler.debug({ opModeIsActive() && !isStopRequested }) {

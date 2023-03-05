@@ -32,7 +32,7 @@ class Camera {
     private val camera: OpenCvCamera
 
     val aprilTagDetectionPipeline = AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy)
-    val tapeDetectorPipeline = TapeDetector(mTelemetry)
+//    val tapeDetectorPipeline = TapeDetector(mTelemetry)
 
     fun lookForwards() {
         targetAngle = CAM_FORWARDS
@@ -56,7 +56,7 @@ class Camera {
             R.id.cameraMonitorViewId,
         )
 
-        camera.setPipeline(tapeDetectorPipeline)
+//        camera.setPipeline(aprilTagDetectionPipeline)
 
         camera.openCameraDeviceAsync(object : OpenCvCamera.AsyncCameraOpenListener {
             override fun onOpened() {
@@ -70,11 +70,6 @@ class Camera {
     }
 
     fun stageDetection(opmode: LinearOpMode): Int? {
-        // TODO: CHANGE THIS BACK TO REGULAR APRILTAG DETECTION FOR AUTOS!
-
-//        targetAngle = CAM_FORWARDS
-//        update()
-//
 
         var numFramesWithoutDetection = 0
         var lastIntID: Int? = null
