@@ -4,15 +4,18 @@ import com.outoftheboxrobotics.photoncore.PhotonCore;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcodekt.components.Imu;
 import org.firstinspires.ftc.teamcodekt.components.meta.BotComponentsKt;
 import org.firstinspires.ftc.teamcodekt.components.meta.TeleOpBotComponents;
 
+import ftc.rogue.blacksmith.Anvil;
 import ftc.rogue.blacksmith.BlackOp;
 import ftc.rogue.blacksmith.Scheduler;
 import ftc.rogue.blacksmith.annotations.CreateOnGo;
 import ftc.rogue.blacksmith.annotations.EvalOnGo;
 import ftc.rogue.blacksmith.listeners.ReforgedGamepad;
+import kotlin.jvm.functions.Function0;
 
 @TeleOp
 public class JavaBlacksmithTesting extends BlackOp {
@@ -43,7 +46,9 @@ public class JavaBlacksmithTesting extends BlackOp {
         driver.dpad_up.onRise(bot.getLift()::goToHigh);
         driver.dpad_down.onRise(bot.getLift()::goToLow);
 
-        Scheduler.debug(() -> opModeIsActive() && !isStopRequested(), (info) -> {
+        Function0<Boolean> opmodeIsActive = () -> opModeIsActive() && !isStopRequested();
+
+        Scheduler.debug(opmodeIsActive, (info) -> {
             bot.getDrivetrain().drive(driver.getGamepad(), powerMulti);
             bot.updateComponents(true);
 

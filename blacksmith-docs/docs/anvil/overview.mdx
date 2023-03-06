@@ -59,10 +59,12 @@ that provides a *much* nicer API, providing utilities to heavily speed up both y
       public void go() {
           Anvil startTraj = mainTraj(startPose);
 
+          // Easy way to set up the auto declaratively
           Anvil
               .startAutoWith(startTraj)
               .onSchedulerLaunch();
 
+          // Using Scheduler to make life even easier
           Scheduler.launchOnStart(this, () -> {
               drive.update();
               bot.update();
@@ -83,11 +85,12 @@ that provides a *much* nicer API, providing utilities to heavily speed up both y
       @Override
       protected Anvil mainTraj(Pose2d startPose) {
           return Anvil.forgeTrajectory(drive, startPose)
-              .forward(10)
+              .forward(10) // You can use any unit you want with GlobalUnits!
               .addTemporalMarker(100, () -> {
                   /* Do something */
               })
               .back(10)
+              // parkTraj is implicitly make in a background thread
               .thenRun(this::parkTraj);
       }
 
@@ -112,10 +115,12 @@ that provides a *much* nicer API, providing utilities to heavily speed up both y
       override fun go() {
           val startTraj = mainTraj(startPose)
 
+          // Easy way to set up the auto declaratively
           Anvil
               .startAutoWith(startTraj)
               .onSchedulerLaunch()
 
+          // Using Scheduler to make life even easier
           Scheduler.launchOnStart(opmode = this) {
               drive.update()
               bot.update()
@@ -133,11 +138,12 @@ that provides a *much* nicer API, providing utilities to heavily speed up both y
 
       override fun mainTraj(Pose2d startPose) =
           Anvil.forgeTrajectory(drive, startPose)
-              .forward(10)
+              .forward(10) // You can use any unit you want with GlobalUnits!
               .addTemporalMarker(100) {
                   /* Do something */
               }
               .back(10)
+              // parkTraj is implicitly make in a background thread
               .thenRun(::parkTraj);
 
       fun parkTraj(Pose2d startPose) =
@@ -147,6 +153,13 @@ that provides a *much* nicer API, providing utilities to heavily speed up both y
 
 </TabItem>
 </Tabs>
+
+## Usage with MeepMeep
+
+Anvil is *pretty* compatable with MeepMeep, I'd say the majority of Anvil methods work with MeepMeep
+(it works perfectly fine for me). You just have to [build the TrajectorySequence manually](./creating-and-running#just-building-a-trajectorysequence)
+
+Also just pass in the DriveShim like normal instead of a SampleMecanumDrive
 
 ## Confused?
 

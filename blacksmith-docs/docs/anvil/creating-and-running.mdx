@@ -543,12 +543,37 @@ Just
 
   val ts = myFirstTrajectoryCreated.build<TrajectorySequence>()
   ```
-  **Make sure you're passing in the right class, or it will throw a ClassCastException at runtime**
 
 </TabItem>
 </Tabs>
 
 You notice how you have to pass in the `<TrajectorySequence>`? Yeah, that's mandatory, don't
-forget it.
+forget it. It tells the compiler exactly what class the TrajectorySequence actually is.
+
+**Make sure you're passing in the right class, or it will throw a ClassCastException at runtime**
+
+## Getting the raw TrajectorySequenceBuilder
+
+You can get the raw TrajectorySequenceBuilder like so:
+
+<Tabs groupId="programming-language">
+<TabItem value="java" label="Java">
+
+  ```java
+  TrajectorySequenceBuilder builder = myAnvil.<TrajectorySequenceBuilder>getRawBuilder()
+  ```
+
+</TabItem>
+<TabItem value="kt" label="Kotlin">
+
+  ```kotlin
+  val builder = myAnvil.getRawBuilder<TrajectorySequenceBuilder>()
+  ```
+
+</TabItem>
+</Tabs>
+
+You notice how you have to pass in the `<TrajectorySequenceBuilder>`? Yeah, that's mandatory, don't
+forget it. It tells the compiler exactly what class the TrajectorySequenceBuilder actually is.
 
 **Make sure you're passing in the right class, or it will throw a ClassCastException at runtime**

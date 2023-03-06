@@ -59,12 +59,10 @@ class AnvilInternal
     private fun getCurrentEndPose(): Pose2d {
         flushDeque()
 
-        val sequenceSegments = builderProxy.getSequenceSegments()
-
-        val last = sequenceSegments
+        return builderProxy
+            .getSequenceSegments()
             .last()
-
-        return last.invokeMethod("getEndPose")
+            .invokeMethod("getEndPose")
     }
 
     // -- Direct path mappings (Basic) --
@@ -215,6 +213,12 @@ class AnvilInternal
             }
     }
 
+    @Suppress("UNCHECKED_CAST")
+    fun <T> `$getRawBuilder`(): T {
+        flushDeque()
+        return builderProxy.internalBuilder as T
+    }
+
     fun doTimes(times: Int, pathsToDo: AnvilCycle) {
         repeat(times) { iteration ->
             pathsToDo.consume(instance, iteration)
@@ -317,6 +321,6 @@ class AnvilInternal
     @Suppress("UNCHECKED_CAST")
     fun <T : Any> `$build`(): T {
         flushDeque()
-        return (builderProxy.build() as T)
+        return builderProxy.build() as T
     }
 }

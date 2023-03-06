@@ -1,0 +1,159 @@
+---
+sidebar_position: 9
+---
+
+# How Anvil works
+
+:::info
+You don't need to read this, it's just if anyone's curious roughly how anvil works behind the scenes
+and why it works the way it does. It could help you understand Anvil's quirks and abilities better
+though.
+:::
+
+## Reflection
+
+```kotlin
+// Anvil uses a lot of reflection behind the scenes to interact with the
+// SampleMecanumDrive and the TrajectorySequenceBuilder, since they're
+// copy-pasted into the client's own codebase rather than a concrete API
+// that can easily be worked with.
+
+// Because of this, Anvil can be finicky at times, and less type safe than
+// one would hope. But at the same it, it arguably makes Anvil even more
+// powerful as well, allowing it to work with any class that simply defines
+// the required methods- for example, it worked perfect fine with MeepMeep with
+// absolutely no modification. But anyways, I digress
+```
+
+## Stack-oriented
+
+```kotlin
+// When you do something like 'anvil.forwards(10)', you might expect that
+// to immediately apply .forwards(10.toInches) to the underlying
+// TrajectorySequenceBuilder
+
+// But yeah no, what actually happens is that Anvil defines a stack that
+// holds all of the desired actions, and only applies the actions when
+// the stack is flushed.
+
+// So when you do the following...
+
+anvil
+    .forwards(10)
+    .inReverse {
+        splineTo(20, 20, 180)
+    }
+
+// ...this is what it would look like (if the stack was a visual thing):
+
+/* Top of stack */
+3. setReversed(false)
+2. splineTo(20.toInches(), 20.toInches(), 180.toRadians())
+1. setReversed(true)
+0. forwards(10.toInches())
+/* Bottom of stack */
+
+// Now I know I said it's a stack, but it's actually a deque (a double-ended queue)
+// and when a method like .build() or something else which flushes the deque is
+// called, the deque is flushed as if it were a normal queue, applying the
+// operators in sequential order onto the TrajectorySequenceBuilder
+
+// This form of architecture allows for a more powerful method of manipulating
+// TrajectorySequenceBuilders, since it allows you to easily undo an operation,
+// or modify an existing one.
+
+// For example, if I do 'anvil.forwards(10)', this is what the stack would be like:
+
+1. forwards(10.toInches())
+0. whatever
+/* Bottom of stack */
+
+// Now, I could call a method like .doInReverse(), which would pop the stack:
+
+--> forwards(10.toInches())
+
+0. whatever
+/* Bottom of stack */
+
+// then take that action and surround it by a couple of calls
+// to trajseqbuilder.setReversed(true/false)
+
+3. setReversed(false)
+2. forwards(10.toInches())
+1. setReversed(true)
+0. whatever
+/* Bottom of stack */
+
+// Again, this is just an example, but, to summarize, it allows for things like
+anvil.whatever().forwards(10).doInReverse()
+
+// Now, in the Java world, it's not *as* useful, but it's quite nice for Kotlin where
+// most things are expressions and not statements, and you may want to do something
+// like so
+
+when {
+    n == 0 -> splineTo(a, b, c)
+    n == 1 -> splineTo(i, j, k)
+    else   -> splineTo(x, y, z)
+}.doInReverse()
+
+// If we used inReverse{} here, it'd create another layer of nesting which just
+// isn't as clean
+
+// All in all, I'm not using the stack manipulation a ton right now, but it sets
+// up the framework for future modifications to make Anvil even more powerful. It
+// also helps w/ the background trajectory generation
+
+// that being said I probably won't use it a ton since it can be a bit finicky for
+// people who doesn't really know how Anvil works
+```
+
+## Background Trajectory generation
+
+```kotlin
+// As you may know, Anvil implicitly generates your trajectories in a
+// background thread unless explicitly told otherwise via the Anvil config
+// object.
+
+// To do this, it just uses coroutines to start building the trajectory as soon
+// as the trajectory building it starts to run via a temporal marker
+
+private val builderScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
+
+// Then, when it's finally time for the building trajectory to be run, Anvil
+// just waits for it to finish building then runs it. Ideally, the trajectory
+// has already finished building, but if it's not, the running trajectory may
+// stall for a tiny bit.
+
+/* A simplified version of the thenRun method */
+fun thenRun(nextTrajectory: (Pose2d) -> Anvil) {
+    flushDeque()
+
+    // Generates a new key for every trajectory so that multiple
+    // trajectories can be generated at the same time and retrieved
+    // later
+    val key = Object()
+
+    builderDeque.addFirst {
+        // Can't use '_addTemporalMarker' as that adds to the end of the deque
+        builderProxy.UNSTABLE_addTemporalMarkerOffset(0.0) {
+            val nextStartPose = getCurrentEndPose()
+
+            // Starts building it
+            preforgedTrajectories[key] = builderScope.async {
+                nextTrajectory( nextStartPose ).build()
+            }
+        }
+    }
+
+    // _addTemporalMarker() is an internal Anvil method to add a temporal marker
+    // to the deque
+    _addTemporalMarker(0) {
+        // Waits for trajectory to finish building
+        // (Should already be done)
+        val nextTrajectoryBuilt = runBlocking { preforgedTrajectories[key]?.await() }!!
+
+        run( nextTrajectoryBuilt )
+    }
+}
+```

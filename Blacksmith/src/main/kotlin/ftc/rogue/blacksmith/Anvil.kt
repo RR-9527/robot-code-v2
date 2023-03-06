@@ -335,6 +335,13 @@ class Anvil
     }
 
     /**
+     * [READ DOCS FOR THIS (click me)](https://blacksmithftc.vercel.app/anvil/custom-mappings#anvilgetrawbuilder)
+     */
+    fun <T> getRawBuilder(): T {
+        return internal.`$getRawBuilder`()
+    }
+
+    /**
      * [Link to method docs](https://blacksmithftc.vercel.app/anvil/custom-mappings#anvildotimes)
      */
     fun doTimes(times: Int, pathsToDo: AnvilCycle) = tap {

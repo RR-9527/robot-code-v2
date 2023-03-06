@@ -1,0 +1,31 @@
+---
+sidebar_position: 8
+---
+
+# Usage without SampleMecanumDrive
+
+If you still want to use Anvil without SampleMecanumDrive (or MeepMeep's DriveShim), you can just
+define your own class that implements `DriveProxy`, which is an interface that contains all of
+the methods Anvil may call from the normal SampleMecanumDrive.
+
+Again, keep in mind you can pass in the MeepMeep DriveShim directly if you want, though I'm not 100%
+sure of all of the normal methods work on it- at least the ones I use do.
+
+```java
+// Example using RR Quickstart's SampleTankDrive
+
+class MyTankDrive implements DriveProxy {
+    SampleTankDrive myTankDrive = //...;
+
+    public void followTrajectorySequenceAsync(Object seq) {
+        // Notice the necessary casting
+        myTankDrive.followTrajectorySequenceAsync((TrajectorySequence) seq);
+    }
+
+    // other necessary methods...
+
+    public TrajectoryVelocityConstraint getVelocityConstraint(...) {
+        return SampleTankDrive.getVelocityConstraint(...);
+    }
+}
+```

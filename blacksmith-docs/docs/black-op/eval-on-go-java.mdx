@@ -45,12 +45,8 @@ With `@EvalOnGo`, you can simply do this instead:
 private MyArmClass myArm; // (Sadly doesn't work with final variables D:)
 ```
 
-Yep, that's it. Of course, there is one small teeny weeny itsy-bitsy caveat though:
-
-The specific method type MUST have a <ins>no-args version</ins>, or it _will_ error.
-
-Also, make sure you type in the method name exactly and that it returns the correct type (it can return
-a subclass), or it will error as well.
+Yep, that's it. Of course there are some rules though I'll list at the end, read the rest first
+though.
 
 ```java
 public class MyOp extends BlackOp {
@@ -115,3 +111,18 @@ class MyArmClass {
     }
 }
 ```
+
+Rules for @EvalOnGo
+
+1. @EvalOnGo can work with any public or private function in the class itself (or the class passed in),
+*or* it works with any *public* function in the superclass of the class given.
+
+2. The given function *must* have a no-args version or it *will* error.
+
+3. The return type of the function must be the same type (or a subtype) as the variable being set
+by @EvalOnGo
+
+4. @EvalOnGo won't work with final variables
+
+5. Make sure the function spelling is correct, like double, quadruple check. All @EvalOnGo errors
+will only be at runtime.
