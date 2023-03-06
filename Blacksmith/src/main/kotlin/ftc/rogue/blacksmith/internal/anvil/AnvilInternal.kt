@@ -12,12 +12,12 @@ import ftc.rogue.blacksmith.internal.*
 import ftc.rogue.blacksmith.internal.proxies._SampleMecanumDrive
 import ftc.rogue.blacksmith.internal.proxies._TrajectorySequenceBuilder
 import ftc.rogue.blacksmith.internal.util.*
-import ftc.rogue.blacksmith.internal.util.invokeMethodRethrowing
 import ftc.rogue.blacksmith.units.GlobalUnits
 import ftc.rogue.blacksmith.util.toIn
 import ftc.rogue.blacksmith.util.toRad
 import ftc.rogue.blacksmith.util.toSec
 import kotlinx.coroutines.*
+import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * **PREFIXES:**
@@ -194,12 +194,24 @@ class AnvilInternal
         _setReversed(false)
     }
 
-    fun `$doInReverse`() {
-        val thingToDoInReverse = builderDeque.removeLastOrNull()
-            ?: throw IllegalStateException("Builder deque is empty, doInReverse does not work unless there is an action to pop.")
+    fun `$doInReverse`(num: Int, numPopped: AtomicInteger) {
+        if (num < 0) {
+            throw IllegalArgumentException("Can not pop a negative amount of things off of a stack")
+        }
+
+        if (builderDeque.isEmpty()) {
+            throw IllegalStateException("Builder deque is empty, doInReverse does not work unless there is an action to pop.")
+        }
+
+        val thingsToDoInReverse = (0 until num)
+            .mapNotNull {
+                builderDeque.removeLastOrNull()
+            }
+
+        numPopped.set(thingsToDoInReverse.size)
 
         __inReverse {
-            enqueue(thingToDoInReverse)
+            thingsToDoInReverse.reversed().forEach(::enqueue)
         }
     }
 

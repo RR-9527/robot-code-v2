@@ -32,9 +32,9 @@ fun main() {
         .start()
 }
 
-val startPose = GlobalUnits.pos(-91, -163, 90)
+private val startPose = GlobalUnits.pos(-91, -163, 90)
 
-fun mainTraj(drive: DriveShim) =
+private fun mainTraj(drive: DriveShim) =
     Anvil.forgeTrajectory(drive, startPose)
         .initialGoToDeposit()
         .initialDeposit()

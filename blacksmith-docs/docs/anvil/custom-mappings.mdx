@@ -268,18 +268,33 @@ Usage example- (**Note that you need to pass in the class in the <\>s**)
   {
     type: 'T',
     desc: 'The TrajectorySequenceBuilder class',
-    isGeneric: true,
+    isGeneric: 'true',
   },
   {
     name: 'builder',
     type: '(T) -> Unit',
-    desc: 'The lambda that accepts and modifies the raw TrajectorySequenceBuilder'
+    desc: 'The lambda that accepts and modifies the raw TrajectorySequenceBuilder',
   }
 ]}/>
 
 ## anvil.doInReverse()
 
-Pops the last thing off the builder deque and reverses it. Can be finicky, maybe don't use if you
-don't understand the basics of how Anvil works under the hood.
+Pops the last thing(s) off the builder deque and reverses it. Can be finicky, please don't use if you
+don't understand the basics of how Anvil works under the hood or you may shoot yourself in the foot.
+
+<ParamsList params={[
+  {
+    name: 'numThingsToPop'
+    type: 'Int',
+    desc: 'max # of things to pop, if size of deque < n, it pops the entire deque',
+    defaultsTo: '1',
+  },
+  {
+    name: 'numThingsPopped',
+    type: 'AtomicInteger',
+    desc: 'You can optionally pass in an AtomicInteger that'll be set to the # of things popped if really you want to know for whatever reason',
+    defaultsTo: 'new AtomicInteger()'',
+  }
+]}/>
 
 TODO: write page about how anvil works under the hood

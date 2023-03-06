@@ -17,6 +17,7 @@ import ftc.rogue.blacksmith.internal.util.AnvilRunConfigBuilder
 import ftc.rogue.blacksmith.internal.util.Consumer
 import ftc.rogue.blacksmith.util.*
 import kotlinx.coroutines.*
+import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * [**LINK TO OFFICIAL DOCS (click on me) (please read) (I like cars)**](https://blacksmithftc.vercel.app/anvil/overview)
@@ -316,8 +317,9 @@ class Anvil
      * (probably don't use this lol unless you understand how anvil works which you don't. Easy to
      * shoot yourself in the foot)
      */
-    fun doInReverse() = tap {
-        internal.`$doInReverse`()
+    @JvmOverloads
+    fun doInReverse(num: Int = 1, numPopped: AtomicInteger = AtomicInteger()) = tap {
+        internal.`$doInReverse`(num, numPopped)
     }
 
     /**

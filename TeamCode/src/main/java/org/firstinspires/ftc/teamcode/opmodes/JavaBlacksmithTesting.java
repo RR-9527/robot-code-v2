@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
+import com.noahbres.meepmeep.core.colorscheme.ColorManager;
 import com.outoftheboxrobotics.photoncore.PhotonCore;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -37,25 +38,13 @@ public class JavaBlacksmithTesting extends BlackOp {
     public void go() {
         PhotonCore.enable();
 
-        Imu.INSTANCE.init(this);
-
-        waitForStart();
-
         Scheduler.beforeEach(() -> powerMulti = 1.0);
 
         driver.dpad_up.onRise(bot.getLift()::goToHigh);
         driver.dpad_down.onRise(bot.getLift()::goToLow);
 
-        Function0<Boolean> opmodeIsActive = () -> opModeIsActive() && !isStopRequested();
-
-        Scheduler.debug(opmodeIsActive, (info) -> {
-            bot.getDrivetrain().drive(driver.getGamepad(), powerMulti);
-            bot.updateComponents(true);
-
+        Scheduler.launchOnStart(this, () -> {
             mTelemetry().addData("Hi isn't null?", hi != null);
-            mTelemetry().addData("Loop times",  info.getLoopTime());
-            mTelemetry().addData("# listeners", info.getNumHookedListeners());
-            mTelemetry().addData("# msg subs",  info.getNumUniqueMessageSubs());
             mTelemetry().update();
         });
     }
