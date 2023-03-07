@@ -9,14 +9,17 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation
 object Imu {
     private lateinit var imu: BNO055IMU
 
+    @Volatile
     @get:JvmStatic
     var angles = arrayOf<Float>()
         private set
 
+    @Volatile
     @get:JvmStatic
     var xRotationRate = 0f
         private set
 
+    @Volatile
     private var start = false
 
     fun start() {

@@ -2,10 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
 
-import ftc.rogue.blacksmith.annotations.CreateOnGo;
-import ftc.rogue.blacksmith.annotations.EvalOnGo;
-import ftc.rogue.blacksmith.internal.blackop.CreateOnGoJavaKt;
-
 // TODO: Find better file location for this
 
 @Config
