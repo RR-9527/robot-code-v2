@@ -88,4 +88,5 @@ internal fun Class<*>.getDeclaredFieldsAnnotatedWith(annotation: Class<out Annot
         .filter {
             it.isAnnotationPresent(annotation)
         }
+        .map { it.apply { isAccessible = true } }
 }

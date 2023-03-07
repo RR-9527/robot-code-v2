@@ -284,7 +284,7 @@ don't understand the basics of how Anvil works under the hood or you may shoot y
 
 <ParamsList params={[
   {
-    name: 'numThingsToPop'
+    name: 'numThingsToPop',
     type: 'Int',
     desc: 'max # of things to pop, if size of deque < n, it pops the entire deque',
     defaultsTo: '1',
@@ -292,8 +292,8 @@ don't understand the basics of how Anvil works under the hood or you may shoot y
   {
     name: 'numThingsPopped',
     type: 'AtomicInteger',
-    desc: 'You can optionally pass in an AtomicInteger that'll be set to the # of things popped if really you want to know for whatever reason',
-    defaultsTo: 'new AtomicInteger()'',
+    desc: 'You can optionally pass in an AtomicInteger that\'ll be set to the # of things popped if really you want to know for whatever reason',
+    defaultsTo: 'new AtomicInteger()',
   }
 ]}/>
 

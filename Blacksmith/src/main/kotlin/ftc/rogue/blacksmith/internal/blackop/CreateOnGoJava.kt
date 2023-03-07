@@ -30,7 +30,6 @@ internal fun Any.injectCreateOnGoFields() = this::class.java
                 }
             }
 
-            field.isAccessible = true
             field.set(this, instance)
         } catch(e: NoSuchMethodException) {
             val errorMsg = if (shouldPassHwMap) {
@@ -74,7 +73,6 @@ internal fun Any.injectEvalOnGoFields() = this::class.java
                 it.invoke(this)
             }
 
-            field.isAccessible = true
             field.set(this, returnValue)
         } catch (e: NoSuchMethodException) {
             throw CreationException("No method $methodName() exists for @EvalOnGo. Are you sure there's a version with no args, or if it's in a superclass, are you sure the method is public?")

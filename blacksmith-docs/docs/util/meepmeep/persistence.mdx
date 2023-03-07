@@ -1,5 +1,5 @@
 ---
-sidebar_position: 0
+sidebar_position: 1
 ---
 
 import Returns from '../../../src/components/Returns';
@@ -205,3 +205,16 @@ loading in a save file**
 
 </TabItem>
 </Tabs>
+
+## 'Shorthand' usage
+
+Since the other utilities use the `MeepMeepUtil` class, you can also create a persistence class from
+that too
+
+```java
+MeepMeepUtil utils = new MeepMeepUtil(meepMeep);
+
+// utils.persistence() takes in the same params the constructor does (except for the meepMeep)
+// you can now use this like normal
+MeepMeepPersistence persistence = utils.persistence();
+```

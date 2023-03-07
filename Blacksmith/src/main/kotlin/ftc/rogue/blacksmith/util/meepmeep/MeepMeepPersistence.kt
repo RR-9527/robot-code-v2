@@ -41,7 +41,7 @@ import java.util.concurrent.TimeUnit
 @Suppress("MemberVisibilityCanBePrivate")
 class MeepMeepPersistence @JvmOverloads constructor(
     private val meepMeep: MeepMeep,
-    val saveInterval: Long = 1000L,
+    val saveInterval: Long = 2000L,
     val defaultFilePath: String = "./meepmeep.properties",
 ) {
     /**

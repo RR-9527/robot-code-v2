@@ -1,0 +1,99 @@
+---
+sidebar_position: 3
+---
+
+import Returns from '../../../src/components/Returns';
+import { TypeLinks } from '../../../src/util/type-links';
+import ParamsList from '../../../src/components/ParamsList';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# BotShadowOnHover
+
+Have you ever wanted to figure out exactly what coordinates to position your bot in MeepMeep, but
+the only way you could do it was through eyeballing it roughly? Yeah, me neither. Anyways, here
+you go:
+
+![](/img/randomassets/mm_bothover.gif)
+
+Combined with [CustomMouseCoords](./custom-mouse-coords), you can easily see the coordinates of
+your bot at the desired position
+
+![](/img/randomassets/mm_bothover_fs.png)
+
+## Usage
+
+### Making it
+
+<Tabs groupId="programming-language">
+<TabItem value="java" label="Java">
+
+  ```java
+  // Create a 'MeepMeepUtil' object for usage with this and the other meepmeeputils
+  MeepMeepUtil utils = new MeepMeepUtil(meepMeep);
+
+  Entity botShadowOnHover = utils.botShadowOnHover(
+      12.0, /* width of your bot in inches */,
+      12.0, /* height of your bot in inches */,
+      colorScheme, /* (optional) bot ColorScheme, defaults to 'new ColorSchemeBlueLight()' */
+      opacity /* (optional) double between 0-1 defining the opacity of the bot (defaults to .3) */
+  );
+  ```
+
+</TabItem>
+<TabItem value="kt" label="Kotlin">
+
+  ```kotlin
+  // Create a 'MeepMeepUtil' object for usage with this and the other meepmeeputils
+  val utils = MeepMeepUtil(meepMeep);
+
+  val botShadowOnHover = utils.botShadowOnHover(
+      12.0, /* width of your bot in inches */,
+      12.0, /* height of your bot in inches */,
+      colorScheme, /* (optional) bot ColorScheme, defaults to 'new ColorSchemeBlueLight()' */
+      opacity, /* (optional) double between 0-1 defining the opacity of the bot (defaults to .3) */
+  )
+  ```
+
+</TabItem>
+</Tabs>
+
+### Implementing it
+
+<Tabs groupId="programming-language">
+<TabItem value="java" label="Java">
+
+  ```java
+  // When you go to set up your MeepMeep instance, just add it as an entity
+  meepMeep.setBackground(Background.FIELD_POWERPLAY_OFFICIAL)
+          .setDarkMode(true)
+          .whateverElse()
+          .addEntity(util.customMouseCoords()) // I recommend using it with this
+          // highlight-next-line
+          .addEntity(botShadowOnHover) /* There we go */
+          .start();
+  );
+  ```
+
+</TabItem>
+<TabItem value="kt" label="Kotlin">
+
+  ```kotlin
+  // When you go to set up your MeepMeep instance, just add it as an entity
+  meepMeep.setBackground(Background.FIELD_POWERPLAY_OFFICIAL)
+          .setDarkMode(true)
+          .whateverElse()
+          .addEntity(util.customMouseCoords()) // I recommend using it with this
+          // highlight-next-line
+          .addEntity(botShadowOnHover) /* There we go */
+          .start()
+  )
+  ```
+
+</TabItem>
+</Tabs>
+
+### Using it
+
+The bot will follow your cursor wherever it goes. You can rotate the bot w/ the scroll wheel.
+**Press shift to rotate the bot slowly**

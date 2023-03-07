@@ -1,0 +1,89 @@
+---
+sidebar_position: 2
+---
+
+import Returns from '../../../src/components/Returns';
+import { TypeLinks } from '../../../src/util/type-links';
+import ParamsList from '../../../src/components/ParamsList';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# CustomMouseCoords
+
+CustomMouseCoords allows you to view the field coordinates of your cursor in any unit you'd like.
+
+Combined with [BotShadowOnHover](./bot-hover), you can easily see the coordinates of your bot at
+the desired position as well.
+
+:::info
+You might be coming from the 'BotShadowOnHover' page and wondering why there's no heading in this
+image... it's because heading only shows up when BotShadowOnHover is enabled
+:::
+
+![](/img/randomassets/mm_customcoords.png)
+
+:::info
+The units shown default to your [GlobalUnits] configuration. If you want to use custom units
+just read on.
+:::
+
+## Usage
+
+### Basic
+
+<Tabs groupId="programming-language">
+<TabItem value="java" label="Java">
+
+  ```java
+  // Create a 'MeepMeepUtil' object for usage with this and the other meepmeeputils
+  MeepMeepUtil utils = new MeepMeepUtil(meepMeep);
+
+  // When you go to set up your MeepMeep instance, just add it as an entity
+  meepMeep.setBackground(Background.FIELD_POWERPLAY_OFFICIAL)
+          .setDarkMode(true)
+          .whateverElse()
+          // highlight-next-line
+          .addEntity(util.customMouseCoords()) /* There we go */
+          .start();
+  ```
+
+</TabItem>
+<TabItem value="kt" label="Kotlin">
+
+  ```kotlin
+  // Create a 'MeepMeepUtil' object for usage with this and the other meepmeeputils
+  val utils = MeepMeepUtil(meepMeep);
+
+  // When you go to set up your MeepMeep instance, just add it as an entity
+  meepMeep.setBackground(Background.FIELD_POWERPLAY_OFFICIAL)
+          .setDarkMode(true)
+          .whateverElse()
+          // highlight-next-line
+          .addEntity(util.customMouseCoords()) /* There we go */
+          .start()
+  )
+  ```
+
+</TabItem>
+</Tabs>
+
+
+### Custom units
+
+```java
+// When creating the customMouseCoords, you can just pass in whatever distance/angle units
+Entity customMouseCoords = util.customMouseCoords(
+    DistanceUnits.WHATEVER,
+    AngleUnits.WHATEVER
+);
+
+// Then just pass 'customMouseCoords' in as an entity
+meepMeep.setBackground(Background.FIELD_POWERPLAY_OFFICIAL)
+        .setDarkMode(true)
+        .whateverElse()
+        // highlight-next-line
+        .addEntity(customMouseCoords) /* There we go */
+        .start()
+
+// (AngleUnits is optional won't be used unless BotShadowOnHover is enabled)
+```
