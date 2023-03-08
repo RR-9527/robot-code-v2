@@ -83,6 +83,16 @@ Okay, so yes lots of nested functions here but all that's really going on is tha
 
 It's pretty simple, nothing too crazy here. Feel free to use `@Config` or `@ConfigKt` to tune these in dashboard easier, while looking at the plot of the system state.
 
+### Motion Models
+You can also specify a motion model as a lambda with an extra argument in the constructor, here's what the motion model takes in/puts out:
+
+```kotlin
+typealias MotionModel = (Double, ElapsedTime) -> Double
+```
+
+It takes in the system state as the first argument and the time since the Kalman Filter has started through the second element, and is used as the motion model inside the Kalman Filter. The default model is a simple linear one.
+For more information on motion models, look at the resources provided at the bottom of the page.
+
 ### Use Case Example:
 
 Below is some modified lift code from Power Play, in which a PIDF controller is determining the amount of correction to apply to the lift motor power in order to correct the error between `liftHeight` (the current system state) and `targetHeight`, but the new motor power including the correction is passed through a Kalman filter, that then sets the motor power to the filtered value.
@@ -108,3 +118,8 @@ You can apply this approach to all your mechanisms to improve the accuracy and d
 
 </TabItem>
 </Tabs>
+
+### More Resources:
+[https://engineeringmedia.com/controlblog/the-kalman-filter]
+
+[https://www.bzarg.com/p/how-a-kalman-filter-works-in-pictures/]
