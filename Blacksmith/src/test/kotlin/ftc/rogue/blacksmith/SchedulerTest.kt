@@ -36,7 +36,7 @@ internal class SchedulerTest {
             every { listener.tick() } answers { output += index + 1 }
         }
 
-        listeners.forEach(Scheduler::hookListener)
+        listeners.forEach(Scheduler::hook)
 
         Scheduler.beforeEach {
             output += "0"
@@ -55,13 +55,13 @@ internal class SchedulerTest {
         val listeners = Array(4) { mockk<Listener>(relaxed = true) }
 
         for (i in 0..2) {
-            Scheduler.hookListener(listeners[i])
+            Scheduler.hook(listeners[i])
         }
 
         assertDoesNotThrow {
             Scheduler.launch(linearOpMode) {
-                Scheduler.unhookListener(listeners[1])
-                Scheduler.hookListener(listeners[3])
+                Scheduler.unhook(listeners[1])
+                Scheduler.hook(listeners[3])
                 isStopped = true
             }
         }

@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcodekt.components.meta.DeviceNames
 @Component(targetProperty = "targetAngle", methodFormat = "setTo*Pos")
 object ArmComponent {
     const val tArmForwards = 138.75
-    const val tArmBackwards = 44.5
+    const val tArmBackwards = 42.0
 
     @SetMethodName("goToRest")
     const val tArmResting = 96.0

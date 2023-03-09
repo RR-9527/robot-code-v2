@@ -1,9 +1,7 @@
 package ftc.rogue.blacksmith
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
-import ftc.rogue.blacksmith.internal.scheduler.All
-import ftc.rogue.blacksmith.internal.scheduler.NukeFlag
-import ftc.rogue.blacksmith.internal.scheduler.SchedulerDebugInfo
+import ftc.rogue.blacksmith.internal.scheduler.*
 import ftc.rogue.blacksmith.internal.scheduler.SchedulerInternal
 import ftc.rogue.blacksmith.internal.util.Consumer
 import ftc.rogue.blacksmith.listeners.Listener
@@ -187,12 +185,12 @@ object Scheduler {
     internal val internal = SchedulerInternal()
 
     @JvmSynthetic
-    internal fun hookListener(listener: Listener) {
-        internal.hookListener(listener)
+    internal fun hook(schedulable: Schedulable) {
+        internal.hook(schedulable)
     }
 
     @JvmSynthetic
-    internal fun unhookListener(listener: Listener) {
-        internal.unhookListener(listener)
+    internal fun unhook(schedulable: Schedulable) {
+        internal.unhook(schedulable)
     }
 }

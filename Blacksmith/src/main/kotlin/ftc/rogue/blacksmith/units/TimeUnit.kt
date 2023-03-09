@@ -17,9 +17,9 @@ enum class TimeUnit(private val msConversionFactor: Double) {
     CENTURIES   (msConversionFactor = 3.154e+11),
     MILLENNIA   (msConversionFactor = 3.154e+12);
 
-    fun toSec(x: Number) = x.toDouble() * msConversionFactor.toInt() / 1000.0
+    fun toSec(x: Number) = x.toDouble() * msConversionFactor / 1000.0
 
-    fun toMs(x: Number) = x.toInt() * msConversionFactor.toInt()
+    fun toMs(x: Number) = (x.toDouble() * msConversionFactor).toInt()
 
     fun to(unit: TimeUnit, x: Number) = unit.toMs(x) / msConversionFactor
 }

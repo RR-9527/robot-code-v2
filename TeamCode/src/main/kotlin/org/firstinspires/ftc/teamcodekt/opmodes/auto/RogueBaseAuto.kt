@@ -32,8 +32,8 @@ abstract class RogueBaseAuto : BlackOp() {
         PhotonCore.experimental.setMaximumParallelCommands(8)
         PhotonCore.enable()
 
-        Imu.init(this)
-        Imu.start()
+//        Imu.init(this)
+//        Imu.start()
 
 //        readPoleOffset()
 

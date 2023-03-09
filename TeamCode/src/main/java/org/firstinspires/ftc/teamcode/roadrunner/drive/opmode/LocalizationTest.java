@@ -6,6 +6,12 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.roadrunner.drive.TwoWheelTrackingLocalizer;
+
+import ftc.rogue.blacksmith.BlackOp;
+import ftc.rogue.blacksmith.Scheduler;
+import ftc.rogue.blacksmith.annotations.EvalOnGo;
+import ftc.rogue.blacksmith.listeners.ReforgedGamepad;
 
 /**
  * This is a simple teleop routine for testing localization. Drive the robot around like a normal
@@ -15,22 +21,23 @@ import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
  * encoder localizer heading may be significantly off if the track width has not been tuned).
  */
 @TeleOp(group = "drive")
-public class LocalizationTest extends LinearOpMode {
+public class LocalizationTest extends BlackOp {
+    @EvalOnGo(method = "getReforgedGamepad1")
+    ReforgedGamepad driver;
+
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void go() {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        waitForStart();
-
-        while (!isStopRequested()) {
+        Scheduler.launchOnStart(this, () -> {
             drive.setWeightedDrivePower(
-                    new Pose2d(
-                            -gamepad1.left_stick_y,
-                            -gamepad1.left_stick_x,
-                            -gamepad1.right_stick_x
-                    )
+                new Pose2d(
+                    -gamepad1.left_stick_y,
+                    -gamepad1.left_stick_x,
+                    -gamepad1.right_stick_x
+                )
             );
 
             drive.update();
@@ -39,7 +46,15 @@ public class LocalizationTest extends LinearOpMode {
             telemetry.addData("x", poseEstimate.getX());
             telemetry.addData("y", poseEstimate.getY());
             telemetry.addData("heading", poseEstimate.getHeading());
+
+            telemetry.addLine("\n");
+
+            telemetry.addData("PARALLEL_X",      TwoWheelTrackingLocalizer.PARALLEL_X);
+            telemetry.addData("PERPENDICULAR_X", TwoWheelTrackingLocalizer.PERPENDICULAR_X);
+            telemetry.addData("PARALLEL_Y",      TwoWheelTrackingLocalizer.PARALLEL_Y);
+            telemetry.addData("PERPENDICULAR_Y", TwoWheelTrackingLocalizer.PERPENDICULAR_Y);
+
             telemetry.update();
-        }
+        });
     }
 }

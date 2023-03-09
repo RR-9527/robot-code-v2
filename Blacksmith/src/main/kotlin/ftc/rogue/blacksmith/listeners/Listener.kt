@@ -3,8 +3,8 @@
 package ftc.rogue.blacksmith.listeners
 
 import ftc.rogue.blacksmith.Scheduler
+import ftc.rogue.blacksmith.internal.scheduler.Schedulable
 import ftc.rogue.blacksmith.util.SignalEdgeDetector
-import ftc.rogue.blacksmith.util.runOnce
 
 /**
  * [Docs link](https://blacksmithftc.vercel.app/scheduler-api/listeners)
@@ -50,7 +50,7 @@ import ftc.rogue.blacksmith.util.runOnce
  * @see ReforgedGamepad
  * @see Timer
  */
-open class Listener(val condition: () -> Boolean) {
+open class Listener(val condition: () -> Boolean) : Schedulable {
     /**
      * The subscribed set of [actions][Runnable] that are performed when the given
      * condition's state matches the given [SignalTrigger][SignalTrigger].
@@ -70,7 +70,7 @@ open class Listener(val condition: () -> Boolean) {
      * @return This [Listener] instance.
      */
     fun onRise(callback: Runnable) = this.also {
-        hookIfNotHooked()
+        hook()
         actions[callback] = conditionSED::risingEdge
     }
 
@@ -80,7 +80,7 @@ open class Listener(val condition: () -> Boolean) {
      * @return This [Listener] instance.
      */
     fun onFall(callback: Runnable) = this.also {
-        hookIfNotHooked()
+        hook()
         actions[callback] = conditionSED::fallingEdge
     }
 
@@ -90,7 +90,7 @@ open class Listener(val condition: () -> Boolean) {
      * @return This [Listener] instance.
      */
     fun whileHigh(callback: Runnable) = this.also {
-        hookIfNotHooked()
+        hook()
         actions[callback] = conditionSED::isHigh
     }
 
@@ -100,7 +100,7 @@ open class Listener(val condition: () -> Boolean) {
      * @return This [Listener] instance.
      */
     fun whileLow(callback: Runnable) = this.also {
-        hookIfNotHooked()
+        hook()
         actions[callback] = conditionSED::isLow
     }
 
@@ -120,19 +120,10 @@ open class Listener(val condition: () -> Boolean) {
         whileLow(callback)
     }
 
-    fun hook() = hookIfNotHooked()
-
-    /**
-     * Hooks this listener to the [Scheduler] if it has not already been hooked.
-     */
-    private val hookIfNotHooked = runOnce {
-        Scheduler.hookListener(this)
-    }
-
     /**
      * Runs every tick to update the [conditionSED] and perform the subscribed actions.
      */
-    internal fun tick() {
+    override fun tick() {
         conditionSED.update()
 
         actions.forEach { (action, condition) ->
@@ -140,8 +131,8 @@ open class Listener(val condition: () -> Boolean) {
         }
     }
 
-    fun destroy() {
-        Scheduler.unhookListener(this)
+    override fun destroy() {
+        Scheduler.unhook(this)
         actions.clear()
     }
 

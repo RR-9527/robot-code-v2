@@ -7,13 +7,12 @@ import com.qualcomm.robotcore.util.ElapsedTime
 import ftc.rogue.blacksmith.Scheduler
 import ftc.rogue.blacksmith.internal.util.Consumer
 import ftc.rogue.blacksmith.internal.util.consume
-import ftc.rogue.blacksmith.listeners.Listener
 
 @PublishedApi
 internal class SchedulerInternal {
     @PublishedApi
     @get:JvmSynthetic
-    internal val listeners = mutableSetOf<Listener>()
+    internal val schedulables = mutableSetOf<Schedulable>()
 
     @PublishedApi
     @get:JvmSynthetic
@@ -50,7 +49,7 @@ internal class SchedulerInternal {
             elapsedTime.reset()
 
             val debugInfo = SchedulerDebugInfo(
-                time, listeners.size, messages.size
+                time, schedulables.size, messages.size
             )
 
             afterEach.consume(debugInfo)
@@ -67,10 +66,10 @@ internal class SchedulerInternal {
         }
 
         if (nukeFlag and Listeners == Listeners) {
-            listeners.forEach {
+            schedulables.forEach {
                 it.destroy()
             }
-            listeners.clear()
+            schedulables.clear()
         }
 
         if (nukeFlag and Messages == Messages) {
@@ -94,29 +93,29 @@ internal class SchedulerInternal {
         messages[message]?.forEach(Runnable::run)
     }
 
-    private val listenersToAdd = mutableSetOf<Listener>()
-    private val listenersToRemove = mutableSetOf<Listener>()
+    private val schedulablesToAdd = mutableSetOf<Schedulable>()
+    private val schedulablesToRemove = mutableSetOf<Schedulable>()
 
-    fun hookListener(listener: Listener) {
-        listenersToAdd += listener
+    fun hook(schedulable: Schedulable) {
+        schedulablesToAdd += schedulable
     }
 
-    fun unhookListener(listener: Listener) {
-        listenersToRemove += listener
+    fun unhook(schedulable: Schedulable) {
+        schedulablesToRemove += schedulable
     }
 
     @JvmSynthetic
     @PublishedApi
     internal fun updateListenersSet() {
-        listeners += listenersToAdd
-        listenersToAdd.clear()
-        listeners -= listenersToRemove
-        listenersToRemove.clear()
+        schedulables += schedulablesToAdd
+        schedulablesToAdd.clear()
+        schedulables -= schedulablesToRemove
+        schedulablesToRemove.clear()
     }
 
     @JvmSynthetic
     @PublishedApi
     internal fun tick() {
-        listeners.forEach(Listener::tick)
+        schedulables.forEach(Schedulable::tick)
     }
 }
