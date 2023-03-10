@@ -21,11 +21,13 @@ public class TapeDetector extends OpenCvPipeline {
     public static int cannyThresh1 =  39;
     public static int cannyThresh2 = 22;
     public static int houghThresh = 50;
-    public static int minLineLen = 200;
-    public static int maxLineGap = 15;
-    public static int minYDist = 200;
-    public static int maxXDist = 50;
+    public static double minLineLen = 200;
+    public static double maxLineGap = 15;
+    public static double minYDist = 200;
+    public static double maxXDist = 50;
     public static double focalWidth = 1428.837;
+
+    public final int[] initalTunedSize = {1280, 720};
 
     public double tapeAngle = -1;
     public double tapeDist = -1;
@@ -40,21 +42,17 @@ public class TapeDetector extends OpenCvPipeline {
     private final Telemetry telemetry;
 
 
-
     // Simple frame size in pixels determined empirically through Mat.rows() and Mat.cols().
-    private final static int frameWidth = 1280;
-    private final static int frameHeight = 760;
+    private static int frameWidth = -1;
+    private static int frameHeight = -1;
+
 
 
 
     private static final double FOV = 30; // Degrees here!
-    private static final double FOV_MULT;
+    private static double FOV_MULT;
 
     private final ElapsedTime timer;
-
-    static {
-        FOV_MULT = 2 * Math.tan(Math.toRadians(FOV)) / frameWidth;
-    }
 
     /**
      * Constructor to assign the telemetry object and actually have telemetry work.
@@ -76,6 +74,13 @@ public class TapeDetector extends OpenCvPipeline {
      */
     @Override
     public Mat processFrame(Mat img) {
+        if(frameWidth == -1 && frameHeight == -1){
+            FOV_MULT = 2 * Math.tan(Math.toRadians(FOV)) / frameWidth;
+            frameWidth = img.cols();
+            frameHeight = img.rows();
+            minLineLen = (initalTunedSize[0]*initalTunedSize[1]);
+        }
+
         return detection(img);
     }
 

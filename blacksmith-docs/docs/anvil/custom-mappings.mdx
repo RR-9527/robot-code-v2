@@ -297,4 +297,47 @@ don't understand the basics of how Anvil works under the hood or you may shoot y
   }
 ]}/>
 
-TODO: write page about how anvil works under the hood
+## anvil.execute()
+
+This is a very niche one, but it basically just allows you to access the raw TrajectorySequenceBuilder
+and use it directly there instead of interacting with it through Anvil.
+
+Directly using the raw TrajectorySequenceBuilder does not auto convert units for you or anything.
+It allows you to access methods that Anvil doesn't support as well.
+
+Usage example- (**Note that you need to pass in the class in the <\>s**)
+
+<Tabs groupId="programming-language">
+<TabItem value="java" label="Java">
+
+  ```java
+  Anvil mainTrajectory(Pose2d startPose) {
+      return Anvil.forgeTrajectory(drive, startPose)
+          .execute(this::goForwards)
+          .execute(this::awaitDeposit);
+  }
+
+  Anvil mainTrajectory(Pose2d startPose) {
+      return Anvil.forgeTrajectory(drive, startPose)
+          .execute(goForwards)
+          .execute(awaitDeposit);
+  }
+  ```
+
+</TabItem>
+<TabItem value="kt" label="Kotlin">
+
+  ```kotlin
+
+  ```
+
+</TabItem>
+</Tabs>
+
+<ParamsList params={[
+  {
+    name: 'toExecute',
+    type: '(Anvil) -> Anvil',
+    desc: 'The function that transforms the given Anvil',
+  },
+]}/>
