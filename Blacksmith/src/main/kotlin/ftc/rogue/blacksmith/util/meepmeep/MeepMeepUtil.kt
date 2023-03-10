@@ -26,8 +26,8 @@ class MeepMeepUtil(private val mm: MeepMeep) {
 
     @JvmOverloads
     fun botShadowOnHover(
-        width: Double,
-        height: Double,
+        width: Double, /* Inches */
+        height: Double, /* Inches */
         colorScheme: ColorScheme = ColorSchemeBlueLight(),
         opacity: Double = .3,
     ): Entity {

@@ -8,12 +8,14 @@ import ftc.rogue.blacksmith.units.GlobalUnits
 import ftc.rogue.blacksmith.units.TimeUnit
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 import testutil.roadrunner.drive.SampleMecanumDrive
 import testutil.roadrunner.trajectorysequence.TrajectorySequence
 import testutil.roadrunner.trajectorysequence.TrajectorySequenceBuilder
 import kotlin.math.PI
 
 // TODO: More thorough testing
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class AnvilTest {
     private val drive = SampleMecanumDrive(null)
 
@@ -23,6 +25,9 @@ internal class AnvilTest {
 
     @Test
     fun `roughly make sure Anvil's generated sequence is same as the actual builder`() {
+        fun toExecute(anvil: Anvil) = anvil
+            .forward(10)
+
         val expected = drive.trajectorySequenceBuilder(Pose2d())
             .forward(5.0)
             .turn(PI)
@@ -51,6 +56,7 @@ internal class AnvilTest {
             .setReversed(true)
             .forward(10.0)
             .setReversed(false)
+            .forward(10.0)
             .build()
 
         val actual = Anvil.forgeTrajectory(drive, Pose2d()) {
@@ -78,6 +84,7 @@ internal class AnvilTest {
                     .build()
             }
             forward(10).doInReverse()
+            execute(::toExecute)
         }.build<TrajectorySequence>()
 
         assertAll(

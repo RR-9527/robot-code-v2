@@ -4,63 +4,43 @@ import ftc.rogue.blacksmith.listeners.OnImpl
 import ftc.rogue.blacksmith.units.TimeUnit
 import ftc.rogue.blacksmith.util.SignalEdgeDetector
 
-class OnEvery(
-    val condition: () -> Boolean,
-) {
-    fun single(): OnEveryNth {
-        return nth(1)
-    }
-
-    fun other(): OnEveryNth {
-        return nth(2)
-    }
-
-    fun third(): OnEveryNth {
-        return nth(3)
-    }
-
-    fun nth(n: Int): OnEveryNth {
-        return OnEveryNth(condition, n)
-    }
-}
-
-class OnEveryNth(
+class OnTheNth(
     val condition: () -> Boolean,
     val n: Int,
 ) {
-    fun timeBeingTrue(): OnEveryTimeBeingX {
-        return OnEveryTimeBeingX(condition, n)
+    fun timeBeingTrue(): OnTheNthTimeBeingX {
+        return OnTheNthTimeBeingX(condition, n)
     }
 
-    fun timeBeingFalse(): OnEveryTimeBeingX {
-        return OnEveryTimeBeingX({ !condition() }, n)
+    fun timeBeingFalse(): OnTheNthTimeBeingX {
+        return OnTheNthTimeBeingX({ !condition() }, n)
     }
 
-    fun timeBecomingTrue(): OnEveryTimeBeingX {
+    fun timeBecomingTrue(): OnTheNthTimeBeingX {
         val sed = SignalEdgeDetector(condition)
-        return OnEveryTimeBeingX({ sed.update(); sed.risingEdge() }, n)
+        return OnTheNthTimeBeingX({ sed.update(); sed.risingEdge() }, n)
     }
 
-    fun timeBecomingFalse(): OnEveryTimeBeingX {
+    fun timeBecomingFalse(): OnTheNthTimeBeingX {
         val sed = SignalEdgeDetector(condition)
-        return OnEveryTimeBeingX({ sed.update(); sed.fallingEdge() }, n)
+        return OnTheNthTimeBeingX({ sed.update(); sed.fallingEdge() }, n)
     }
 }
 
-class OnEveryTimeBeingX(
+class OnTheNthTimeBeingX(
     val condition: () -> Boolean,
     val n: Int,
 ) {
-    fun extendFor(x: Int): OnEveryTimeBeingXDoYFor {
-        return OnEveryTimeBeingXDoYFor(condition, n, x)
+    fun extendFor(x: Int): OnTheNthTimeBeingXDoYFor {
+        return OnTheNthTimeBeingXDoYFor(condition, n, x)
     }
 
-    fun doUntil(extendCondition: (Boolean, Long) -> Boolean): OnEveryTimeBeingXDoExtraIterationsUntil {
-        return OnEveryTimeBeingXDoExtraIterationsUntil(condition, n, extendCondition)
+    fun doUntil(extendCondition: (Boolean, Long) -> Boolean): OnTheNthTimeBeingXDoExtraIterationsUntil {
+        return OnTheNthTimeBeingXDoExtraIterationsUntil(condition, n, extendCondition)
     }
 
     fun until(untilCondition: (Long) -> Boolean): OnImpl {
-        return OnImpl(condition, n, untilCondition = untilCondition)
+        return OnImpl(condition, n, untilCondition = untilCondition, nthTime = 1)
     }
 
     fun forever(): OnImpl {
@@ -68,20 +48,20 @@ class OnEveryTimeBeingX(
     }
 }
 
-class OnEveryTimeBeingXDoYFor(
+class OnTheNthTimeBeingXDoYFor(
     val condition: () -> Boolean,
     val n: Int,
     val x: Int,
 ) {
-    fun iterations(): OnEveryTimeBeingXDoYForZExtraIterations {
+    fun iterations(): OnTheNthTimeBeingXDoYForZExtraIterations {
         if (n < 0) {
             throw IllegalArgumentException("Can't extend for negative ($x) iterations")
         }
 
-        return OnEveryTimeBeingXDoYForZExtraIterations(condition, n, x)
+        return OnTheNthTimeBeingXDoYForZExtraIterations(condition, n, x)
     }
 
-    fun milliseconds(): OnEveryTimeBeingXDoYForZTime {
+    fun milliseconds(): OnTheNthTimeBeingXDoYForZTime {
         if (n < 0) {
             throw IllegalArgumentException("Can't extend for negative ($x) time")
         }
@@ -89,7 +69,7 @@ class OnEveryTimeBeingXDoYFor(
         return time(TimeUnit.MILLISECONDS)
     }
 
-    fun seconds(): OnEveryTimeBeingXDoYForZTime {
+    fun seconds(): OnTheNthTimeBeingXDoYForZTime {
         if (n < 0) {
             throw IllegalArgumentException("Can't extend for negative ($x) time")
         }
@@ -97,12 +77,12 @@ class OnEveryTimeBeingXDoYFor(
         return time(TimeUnit.SECONDS)
     }
 
-    fun time(unit: TimeUnit): OnEveryTimeBeingXDoYForZTime {
-        return OnEveryTimeBeingXDoYForZTime(condition, n, unit.toMs(x))
+    fun time(unit: TimeUnit): OnTheNthTimeBeingXDoYForZTime {
+        return OnTheNthTimeBeingXDoYForZTime(condition, n, unit.toMs(x))
     }
 }
 
-class OnEveryTimeBeingXDoYForZExtraIterations(
+class OnTheNthTimeBeingXDoYForZExtraIterations(
     val condition: () -> Boolean,
     val n: Int,
     val iterations: Int,
@@ -120,7 +100,7 @@ class OnEveryTimeBeingXDoYForZExtraIterations(
             curr - offset < iterations
         }
 
-        return OnImpl(condition, n, extendCondition, untilCondition)
+        return OnImpl(condition, n, extendCondition, nthTime = 1, untilCondition)
     }
 
     fun forever(): OnImpl {
@@ -128,7 +108,7 @@ class OnEveryTimeBeingXDoYForZExtraIterations(
     }
 }
 
-class OnEveryTimeBeingXDoYForZTime(
+class OnTheNthTimeBeingXDoYForZTime(
     val condition: () -> Boolean,
     val n: Int,
     val ms: Int,
@@ -146,7 +126,7 @@ class OnEveryTimeBeingXDoYForZTime(
             System.currentTimeMillis() - offset < ms
         }
 
-        return OnImpl(condition, n, extendCondition, untilCondition)
+        return OnImpl(condition, n, extendCondition, nthTime = 1, untilCondition)
     }
 
     fun forever(): OnImpl {
@@ -154,13 +134,13 @@ class OnEveryTimeBeingXDoYForZTime(
     }
 }
 
-class OnEveryTimeBeingXDoExtraIterationsUntil(
+class OnTheNthTimeBeingXDoExtraIterationsUntil(
     val condition: () -> Boolean,
     val n: Int,
     val extendCondition: (Boolean, Long) -> Boolean,
 ) {
     fun until(untilCondition: (Long) -> Boolean): OnImpl {
-        return OnImpl(condition, n, { b, l -> !extendCondition(b, l) }, untilCondition)
+        return OnImpl(condition, n, { b, l -> !extendCondition(b, l) }, nthTime = 1, untilCondition)
     }
 
     fun forever(): OnImpl {

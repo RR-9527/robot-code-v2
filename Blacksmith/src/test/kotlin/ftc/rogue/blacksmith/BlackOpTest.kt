@@ -7,10 +7,12 @@ import ftc.rogue.blacksmith.internal.blackop.CreationException
 import ftc.rogue.blacksmith.internal.blackop.injectCreateOnGoFields
 import ftc.rogue.blacksmith.internal.blackop.injectEvalOnGoFields
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.assertTrue
 
-class BlackOpTest : BlackOpTestSuper() {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+internal class BlackOpTest : BlackOpTestSuper() {
     @JvmField
     @CreateOnGo
     var hi1: Teast? = null

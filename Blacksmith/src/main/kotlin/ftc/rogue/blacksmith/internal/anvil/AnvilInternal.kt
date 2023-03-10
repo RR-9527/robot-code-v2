@@ -237,6 +237,10 @@ class AnvilInternal
         }
     }
 
+    fun execute(toExecute: Anvil.() -> Anvil) {
+        instance.toExecute()
+    }
+
     // -- Constraints --
 
     fun _resetConstraints() = enqueue {

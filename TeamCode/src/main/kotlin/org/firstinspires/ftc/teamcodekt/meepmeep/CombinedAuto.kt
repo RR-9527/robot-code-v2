@@ -32,7 +32,7 @@ fun main() {
         .setBackgroundAlpha(0.95f)
         .addEntity(bot)
         .addEntity(util.customMouseCoords())
-//        .addEntity(util.botShadowOnHover(12.0, 12.0))
+        .addEntity(util.botShadowOnHover(12.0, 12.0))
         .start()
 }
 

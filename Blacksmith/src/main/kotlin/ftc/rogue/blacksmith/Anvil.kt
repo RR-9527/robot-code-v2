@@ -350,7 +350,11 @@ class Anvil
         internal.doTimes(times, pathsToDo)
     }
 
-    // -- Constraints --
+    fun execute(toExecute: Anvil.() -> Anvil) = tap {
+        internal.execute(toExecute)
+    }
+
+    // -- Constraints --cc
 
     /**
      * [Link to method docs](https://blacksmithftc.vercel.app/anvil/constraints#anvilresetconstraints)
