@@ -118,20 +118,18 @@ class OnTheNth(val condition: () -> Boolean, val n: Int) {
 }
 
 fun main() {
-    var calls = 0
+    var calls = -1
 
-//    On { calls > 0 }.every().single().timeBeingTrue().forever().execute { println("hi1 ($calls)") }
-
-    On { calls++; calls in 1..3 || calls in 10..12 }.every().single().timeBeingTrue().extendFor(2).iterations().forever()
+    On { calls++; calls in 1..3 || calls in 10..12 }.every().single().timeBecomingTrue().extendFor(100).milliseconds().until { calls >= 100 }
         .execute { println("hi2 ($calls)") }
 
-    Scheduler.launchManually({ calls < 16 })
+    Scheduler.launchManually({ true })
 }
 
 class OnImpl(
     val condition: () -> Boolean,
     val requiredTrueStreak: Int,
-    val extendCondition: (Long) -> Boolean = { false },
+    val extendCondition: (Boolean, Long) -> Boolean = { _, _ -> false },
     val untilCondition: (Long) -> Boolean = { false },
 ) : Schedulable {
     init {
@@ -158,24 +156,24 @@ class OnImpl(
         totalCalls++
 
         val conditionIsTrue = condition()
-        val canExtendAction = canBeExtended && extendCondition(totalCalls)
 
         if (conditionIsTrue) {
             trueStreak++
         }
 
-        if (trueStreak < requiredTrueStreak) {
-            if (!canBeExtended || !canExtendAction) {
-                canBeExtended = false
-                return
-            }
+        val canExtendAction = extendCondition(conditionIsTrue && trueStreak >= requiredTrueStreak, totalCalls)
+        val shouldExtendAction = canBeExtended && canExtendAction
+
+        if (trueStreak < requiredTrueStreak && !shouldExtendAction) {
+            canBeExtended = false
+            return
         }
 
-        if (!canExtendAction) {
+        if (conditionIsTrue && !shouldExtendAction) {
             trueStreak = 0
         }
 
-        if (conditionIsTrue || canExtendAction) {
+        if (conditionIsTrue || shouldExtendAction) {
             canBeExtended = true
             actions.forEach(Runnable::run)
         }
