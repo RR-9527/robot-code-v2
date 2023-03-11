@@ -1,6 +1,6 @@
 package ftc.rogue.blacksmith.internal.scheduler
 
-import ftc.rogue.blacksmith.listeners.OnImpl
+import ftc.rogue.blacksmith.Scheduler
 import ftc.rogue.blacksmith.units.TimeUnit
 import ftc.rogue.blacksmith.util.SignalEdgeDetector
 
@@ -50,21 +50,26 @@ class OnEveryNth(
 class OnEveryTimeBeingX(
     val condition: () -> Boolean,
     val n: Int,
+    val offset: Int = 0,
 ) {
     fun extendFor(x: Int): OnEveryTimeBeingXDoYFor {
-        return OnEveryTimeBeingXDoYFor(condition, n, x)
+        return OnEveryTimeBeingXDoYFor(condition, n, x, offset)
     }
 
     fun doUntil(extendCondition: (Boolean, Long) -> Boolean): OnEveryTimeBeingXDoExtraIterationsUntil {
-        return OnEveryTimeBeingXDoExtraIterationsUntil(condition, n, extendCondition)
+        return OnEveryTimeBeingXDoExtraIterationsUntil(condition, n, extendCondition, offset)
     }
 
-    fun until(untilCondition: (Long) -> Boolean): OnImpl {
-        return OnImpl(condition, n, untilCondition = untilCondition)
+    fun until(untilCondition: (Long) -> Boolean): OnEveryImpl {
+        return OnEveryImpl(condition, n, offset, untilCondition = untilCondition)
     }
 
-    fun forever(): OnImpl {
+    fun forever(): OnEveryImpl {
         return until { false }
+    }
+
+    fun withOffset(offset: Int): OnEveryTimeBeingX {
+        return OnEveryTimeBeingX(condition, n, offset)
     }
 }
 
@@ -72,13 +77,14 @@ class OnEveryTimeBeingXDoYFor(
     val condition: () -> Boolean,
     val n: Int,
     val x: Int,
+    val offset: Int,
 ) {
     fun iterations(): OnEveryTimeBeingXDoYForZExtraIterations {
         if (n < 0) {
             throw IllegalArgumentException("Can't extend for negative ($x) iterations")
         }
 
-        return OnEveryTimeBeingXDoYForZExtraIterations(condition, n, x)
+        return OnEveryTimeBeingXDoYForZExtraIterations(condition, n, x, offset)
     }
 
     fun milliseconds(): OnEveryTimeBeingXDoYForZTime {
@@ -98,7 +104,7 @@ class OnEveryTimeBeingXDoYFor(
     }
 
     fun time(unit: TimeUnit): OnEveryTimeBeingXDoYForZTime {
-        return OnEveryTimeBeingXDoYForZTime(condition, n, unit.toMs(x))
+        return OnEveryTimeBeingXDoYForZTime(condition, n, unit.toMs(x), offset)
     }
 }
 
@@ -106,24 +112,25 @@ class OnEveryTimeBeingXDoYForZExtraIterations(
     val condition: () -> Boolean,
     val n: Int,
     val iterations: Int,
+    val offset: Int,
 ) {
-    fun until(untilCondition: (Long) -> Boolean): OnImpl {
-        var offset = 0L
+    fun until(untilCondition: (Long) -> Boolean): OnEveryImpl {
+        var iterOffset = 0L
         var condWasTrue = true
 
         val extendCondition = { condIsTrue: Boolean, curr: Long ->
             if (!condIsTrue && condWasTrue) {
-                offset = curr
+                iterOffset = curr
             }
 
             condWasTrue = condIsTrue
-            curr - offset < iterations
+            curr - iterOffset < iterations
         }
 
-        return OnImpl(condition, n, extendCondition, untilCondition = untilCondition)
+        return OnEveryImpl(condition, n, offset, extendCondition, untilCondition = untilCondition)
     }
 
-    fun forever(): OnImpl {
+    fun forever(): OnEveryImpl {
         return until { false }
     }
 }
@@ -132,24 +139,25 @@ class OnEveryTimeBeingXDoYForZTime(
     val condition: () -> Boolean,
     val n: Int,
     val ms: Int,
+    val offset: Int,
 ) {
-    fun until(untilCondition: (Long) -> Boolean): OnImpl {
-        var offset = 0L
+    fun until(untilCondition: (Long) -> Boolean): OnEveryImpl {
+        var timeOffset = 0L
         var condWasTrue = true
 
         val extendCondition = { condIsTrue: Boolean, _: Long ->
             if (!condIsTrue && condWasTrue) {
-                offset = System.currentTimeMillis()
+                timeOffset = System.currentTimeMillis()
             }
 
             condWasTrue = condIsTrue
-            System.currentTimeMillis() - offset < ms
+            System.currentTimeMillis() - timeOffset < ms
         }
 
-        return OnImpl(condition, n, extendCondition, untilCondition = untilCondition)
+        return OnEveryImpl(condition, n, offset, extendCondition, untilCondition = untilCondition)
     }
 
-    fun forever(): OnImpl {
+    fun forever(): OnEveryImpl {
         return until { false }
     }
 }
@@ -158,12 +166,79 @@ class OnEveryTimeBeingXDoExtraIterationsUntil(
     val condition: () -> Boolean,
     val n: Int,
     val extendCondition: (Boolean, Long) -> Boolean,
+    val offset: Int,
 ) {
-    fun until(untilCondition: (Long) -> Boolean): OnImpl {
-        return OnImpl(condition, n, { b, l -> !extendCondition(b, l) }, untilCondition = untilCondition)
+    fun until(untilCondition: (Long) -> Boolean): OnEveryImpl {
+        return OnEveryImpl(condition, n, offset, { b, l -> !extendCondition(b, l) }, untilCondition = untilCondition)
     }
 
-    fun forever(): OnImpl {
+    fun forever(): OnEveryImpl {
         return until { false }
+    }
+}
+
+class OnEveryImpl(
+    val condition: () -> Boolean,
+    val requiredTrueStreak: Int,
+    val offset: Int,
+    val extendCondition: (Boolean, Long) -> Boolean = { _, _ -> false },
+    val untilCondition: (Long) -> Boolean = { false },
+) : Schedulable {
+    init {
+        hook()
+    }
+
+    private var totalCalls = 0L
+    private var trueStreak = 0
+    private var totalTrues = 0
+
+    private var canBeExtended = false
+
+    private var actions = mutableSetOf<Runnable>()
+
+    fun execute(action: Runnable) = this.also {
+        actions += action
+    }
+
+    override fun tick() {
+        if (untilCondition(totalCalls)) {
+            destroy()
+            return
+        }
+
+        totalCalls++
+
+        val conditionIsTrue = condition()
+
+        if (conditionIsTrue) {
+            trueStreak++
+            totalTrues++
+        }
+
+        if (totalTrues <= offset) {
+            return
+        }
+
+        val canExtendAction = extendCondition(conditionIsTrue && trueStreak >= requiredTrueStreak, totalCalls)
+        val shouldExtendAction = canBeExtended && canExtendAction
+
+        if (trueStreak < requiredTrueStreak && !shouldExtendAction) {
+            canBeExtended = false
+            return
+        }
+
+        if (conditionIsTrue && !shouldExtendAction) {
+            trueStreak = 0
+        }
+
+        if (conditionIsTrue || shouldExtendAction) {
+            canBeExtended = true
+            actions.forEach(Runnable::run)
+        }
+    }
+
+    override fun destroy() {
+        actions.clear()
+        Scheduler.unhook(this)
     }
 }

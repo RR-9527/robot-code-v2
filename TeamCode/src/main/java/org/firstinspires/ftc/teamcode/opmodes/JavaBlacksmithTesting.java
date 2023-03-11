@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
-import com.noahbres.meepmeep.MeepMeep;
 import com.outoftheboxrobotics.photoncore.PhotonCore;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -12,8 +11,8 @@ import ftc.rogue.blacksmith.BlackOp;
 import ftc.rogue.blacksmith.Scheduler;
 import ftc.rogue.blacksmith.annotations.CreateOnGo;
 import ftc.rogue.blacksmith.annotations.EvalOnGo;
+import ftc.rogue.blacksmith.listeners.On;
 import ftc.rogue.blacksmith.listeners.ReforgedGamepad;
-import ftc.rogue.blacksmith.util.meepmeep.MeepMeepUtil;
 
 @TeleOp
 public class JavaBlacksmithTesting extends BlackOp {

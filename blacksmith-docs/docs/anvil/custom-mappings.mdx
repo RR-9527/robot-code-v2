@@ -37,6 +37,100 @@ All of these functions return the Anvil instance to allow for method chaining (l
 </TabItem>
 </Tabs>
 
+## anvil.execute()
+
+A utility method for splitting up your trajectory into multiple methods without generating a whole
+new one. Applies the actions on the anvil instance that's passed in.
+
+Useful for organizing the parts of your trajectory into their own little section allowing for
+cleaner and more reusable code.
+
+<Tabs groupId="programming-language">
+<TabItem value="java" label="Java">
+
+  ```java
+  Anvil mainTrajectory(Pose2d startPose) {
+      return Anvil.forgeTrajectory(drive, startPose)
+          .execute(this::goToPole)
+          .execute(this::awaitDeposit);
+
+      // Equivalent to:
+      // return Anvil.forgeTrajectory(drive, startPose)
+      //     .forwards(10)
+      //     .turn(45)
+      //     .addTemporalMarker(() -> {
+      //         lift.goToHigh();
+      //     })
+      //     .addTemporalMarker(.5, () -> {
+      //         claw.open();
+      //     })
+      //     .waitTime(1);
+  }
+
+  Anvil goToPole(Anvil anvil) {
+      return anvil
+          .forwards(10)
+          .turn(45);
+  }
+
+  Anvil awaitDeposit(Anvil anvil) {
+      return anvil
+          .addTemporalMarker(() -> {
+              lift.goToHigh();
+          })
+          .addTemporalMarker(.5, () -> {
+              claw.open();
+          })
+          .waitTime(1);
+  }
+  ```
+
+</TabItem>
+<TabItem value="kt" label="Kotlin">
+
+  ```kotlin
+  fun mainTrajectory(startPose: Pose2d) =
+      Anvil.forgeTrajectory(drive, startPose)
+          .execute(::goToPole)
+          .execute(::awaitDeposit);
+
+      // Equivalent to:
+      // Anvil.forgeTrajectory(drive, startPose)
+      //     .forwards(10)
+      //     .turn(45)
+      //     .addTemporalMarker() {
+      //         lift.goToHigh()
+      //     }
+      //     .addTemporalMarker(.5) {
+      //         claw.open()
+      //     }
+      //     .waitTime(1)
+
+  fun goToPole(anvil: Anvil) = anvil
+      .forwards(10)
+      .turn(45)
+
+  fun awaitDeposit(anvil: Anvil) = anvil
+      .addTemporalMarker() {
+          lift.goToHigh()
+      }
+      .addTemporalMarker(.5) {
+          claw.open()
+      }
+      .waitTime(1)
+  ```
+
+</TabItem>
+</Tabs>
+
+<ParamsList params={[
+  {
+    name: 'toExecute',
+    type: '(Anvil) -> Anvil',
+    desc: 'The function that transforms the given Anvil',
+  },
+]}/>
+
 ## anvil.doTimes()
 
 Performs the actions in the lambda 'x' times.
@@ -295,49 +389,4 @@ don't understand the basics of how Anvil works under the hood or you may shoot y
     desc: 'You can optionally pass in an AtomicInteger that\'ll be set to the # of things popped if really you want to know for whatever reason',
     defaultsTo: 'new AtomicInteger()',
   }
-]}/>
-
-## anvil.execute()
-
-This is a very niche one, but it basically just allows you to access the raw TrajectorySequenceBuilder
-and use it directly there instead of interacting with it through Anvil.
-
-Directly using the raw TrajectorySequenceBuilder does not auto convert units for you or anything.
-It allows you to access methods that Anvil doesn't support as well.
-
-Usage example- (**Note that you need to pass in the class in the <\>s**)
-
-<Tabs groupId="programming-language">
-<TabItem value="java" label="Java">
-
-  ```java
-  Anvil mainTrajectory(Pose2d startPose) {
-      return Anvil.forgeTrajectory(drive, startPose)
-          .execute(this::goForwards)
-          .execute(this::awaitDeposit);
-  }
-
-  Anvil mainTrajectory(Pose2d startPose) {
-      return Anvil.forgeTrajectory(drive, startPose)
-          .execute(goForwards)
-          .execute(awaitDeposit);
-  }
-  ```
-
-</TabItem>
-<TabItem value="kt" label="Kotlin">
-
-  ```kotlin
-
-  ```
-
-</TabItem>
-</Tabs>
-
-<ParamsList params={[
-  {
-    name: 'toExecute',
-    type: '(Anvil) -> Anvil',
-    desc: 'The function that transforms the given Anvil',
-  },
 ]}/>

@@ -10,7 +10,7 @@ import Returns from '../../src/components/Returns';
 # Tips for cleaner auto code
 
 :::danger
-This page is obviously a subject opinion, and it's no definitive guide. These are just a few tips
+This page is obviously a subject of opinion, and it's no definitive guide. These are just a few tips
 to better utilize Anvil + other programming concepts
 :::
 
@@ -20,15 +20,148 @@ to better utilize Anvil + other programming concepts
   ```java
   // Tip #1:
   // Break your trajectories into smaller, more digestible chunks with anvil.execute()
-  // (TODO())
+  // (https://www.blacksmithftc.com/anvil/custom-mappings#anvilexecute)
+
+  // Doing so makes your code much, much easier to both read and reuse
+  // (e.g. between a right and left side auto)
+
+  // For example, we can reuse 'awaitDeposit' here:
+
+  public Anvil rightSideTrajectory(Pose2d startPose) {
+      return Anvil.forgeTrajectory(drive, startPose)
+          .forwards(10)
+          .turn(45)
+          .execute(this::awaitDeposit);
+  }
+
+  public Anvil leftSideTrajectory(Pose2d startPose) {
+      return Anvil.forgeTrajectory(drive, startPose)
+          .forwards(10)
+          .turn(-45)
+          .execute(this::awaitDeposit);
+  }
+
+  private Anvil awaitDeposit(Anvil anvil) {
+      return anvil
+          .addTemporalMarker(() -> {
+              lift.goToHigh();
+          })
+          .addTemporalMarker(.5, () -> {
+              claw.open();
+          })
+          .waitTime(1);
+  }
   ```
 
 </TabItem>
 <TabItem value="kt" label="Kotlin">
 
   ```kotlin
+  // Tip #1:
+  // Break your trajectories into smaller, more digestible chunks with extension functions
+  // (Just remember to return the anvil instance)
 
+  // Doing so makes your code much, much easier to both read and reuse
+  // (e.g. between a right and left side auto)
+
+  // For example, we can reuse 'awaitDeposit' here:
+
+  fun rightSideTrajectory(startPose: Pose2d) =
+      Anvil.forgeTrajectory(drive, startPose)
+          .forwards(10)
+          .turn(45)
+          .awaitDeposit()
+
+  fun rightSideTrajectory(startPose: Pose2d) =
+      Anvil.forgeTrajectory(drive, startPose)
+          .forwards(10)
+          .turn(-45)
+          .awaitDeposit()
+
+  // Don't forget to return the anvil instance so that you can still chain the method
+  private fun Anvil.awaitDeposit() = this
+      .addTemporalMarker() {
+          lift.goToHigh()
+      }
+      .addTemporalMarker(.5) {
+          claw.open()
+      }
+      .waitTime(1)
   ```
 
 </TabItem>
 </Tabs>
+
+```java
+// Tip #2: Break your autos into different files, and if you use the trajectory-splitting
+// technique as shown above, create a file for related autos to share trajectory components
+// such as intaking & depositing methods
+```
+
+<Tabs groupId="programming-language">
+<TabItem value="java" label="Java">
+
+  ```java
+  // Tip #3: You can combine 'doTimes()', 'execute()', and if-elses/switch statements to create
+  // repeating paths that each need slight modification for accuracy
+
+  // again this is just a general example, it's ofc much more flexible than this
+
+  public Anvil mainTraj(Pose2d startPose) {
+      return Anvil.forgeTrajectory(drive, startPose)
+          .whateverElse(...)
+          .doTimes(3, (anvil, i) -> {
+              // other stuff...
+              goToDeposit(anvil, i); // 'i' is the current iteration number, starting from 0
+          });
+  }
+
+  // Example of method that makes minor trajectory corrections
+  // for each subsequent cycle
+  public void goToDeposit(Anvil anvil, int i) {
+      if (i == 1) {
+          anvil.splineTo(10.0, 10.0, 0);
+      } else if (i == 2) {
+          anvil.splineTo(10.1, 10.1, 0);
+      } else if (i == 3) {
+          anvil.splineTo(10.2, 10.2, 0);
+      }
+  }
+  ```
+
+</TabItem>
+<TabItem value="kt" label="Kotlin">
+
+  ```kotlin
+  // Tip #3: You can combine 'doTimes()', extension methods, and when statements to create
+  // repeating paths that each need slight modification for accuracy
+
+  // again this is just a general example, it's ofc much more flexible than this
+
+  fun mainTraj(startPose: Pose2d) =
+      Anvil.forgeTrajectory(drive, startPose)
+          .whateverElse(...)
+          .doTimes(3) {
+              // other stuff...
+              goToDeposit(it) // 'it' is the current iteration number, starting from 0
+          }
+
+  // Example of method that makes minor trajectory corrections
+  // for each subsequent cycle
+  fun Anvil.goToDeposit(i: Int) = when (i) {
+      1 -> splineTo(10.0, 10.0, 0)
+      2 -> splineTo(10.1, 10.1, 0)
+      3 -> splineTo(10.2, 10.2, 0)
+      else -> noop // Using noop (which does nothing) to make Kotlin compiler happy
+  }
+  ```
+
+</TabItem>
+</Tabs>
+
+```java
+// Tip #4: Read through the documentation a bit, you're sure to find new features that may help
+// you with your auto or even something else!
+```
+
+I'll do more later probably lol

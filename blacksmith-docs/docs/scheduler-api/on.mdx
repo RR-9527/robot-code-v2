@@ -1,0 +1,297 @@
+---
+sidebar_position: 7
+---
+
+import Returns from '../../src/components/Returns';
+import { TypeLinks } from '../../src/util/type-links';
+import ParamsList from '../../src/components/ParamsList';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# On
+
+:::danger
+I feel like I don't have to say this by now, but anyways, this won't work unless the
+Scheduler is running.
+:::
+
+:::tip
+I also recommend using the Listener and other things when you don't need something complicated
+as they're more lightweight and less bug-prone
+:::
+
+On. A powerful WIP component that will allow you to make your complex scheduling nightmares come
+true with a simple, declarative builder syntax. You can think of it as a much more powerful, if
+not slightly more computationally expensive [Listener](./listeners)
+
+Say that every other time a certain button is pressed (on the rising edge0), except for the first
+time, you want to execute `x` action for ~500 milliseconds, but stop doing this the first time your
+lift gets to max height.
+
+This is obviously a contrived example, but still, normally, the code for this would be pretty messy,
+but here it is using On:
+
+<Tabs groupId="programming-language">
+<TabItem value="java" label="Java">
+
+  ```java
+  new On(() -> gamepad1.a)
+       .becomingTrue()
+       .withOffset(3)
+       .extendFor(500)
+       .milliseconds()
+       .until(() -> lift.getHeight() < Lift.MAX_HEIGHT)
+       .execute(() -> whateverAction());
+  ```
+
+</TabItem>
+<TabItem value="kt" label="Kotlin">
+
+  ```kotlin
+  On { gamepad1.a }
+      .becomingTrue()
+      .withOffset(3)
+      .extendFor(500)
+      .milliseconds()
+      .until { lift.height < Lift.MAX_HEIGHT }
+      .execute { whateverAction() }
+  ```
+
+</TabItem>
+</Tabs>
+
+:::note
+This is a WIP component and more features to allow for even more convoluted queries becoming simple
+will come soon.
+:::
+
+## On hierarchy (so far)
+```
+--------------------------------
+| Hierarchy (I understand this doesn't make much sense yet so let me explain a little):
+| - every():
+| --- single() |
+| --- other()  |
+| --- third()  |
+| --- nth(n)   :
+| ----- timeBeingTrue()     |
+| ----- timeBeingFalse()    |
+| ----- timeBecomingTrue()  |
+| ----- timeBecomingFalse() :
+| ------ withOffset() ^
+| ------- doUntil(λn.b)
+| ------- doFor(n):
+| --------- iterations()
+| --------- milliseconds()
+| --------- time(u)
+| ------- doWhile(λn.b)
+| - beingTrue():
+| --> every().single().timeBeingTrue()
+| - beingFalse():
+| --> every().single().timeBeingFalse()
+| - becomingTrue():
+| --> every().single().timeBecomingTrue()
+| - becomingFalse():
+| --> every().single().timeBecomingFalse()
+|
+| Terminal operations:
+| - until()
+| - forever()
+|
+| Finally:
+| - execute(λ)
+--------------------------------
+```
+
+## Explanation
+
+:::note
+I won't dive toooo deep into this since I feel like it's not too hard to explore on your own with
+just IDE autocomplete and such, but I'll give a decent explanation
+:::
+
+:::caution
+The order in which these functions can be called matters.
+:::
+
+On(() -> condition) is the entry point to this twisted tree of function chaining, where you pass
+in the initial condition to be acted upon.
+
+From there, you can let the hierarchy and autocomplete guide you to your intended destination,
+but I can just explain the methods rq
+
+### every()
+
+The entry point to the branch of On which deals with continuous listening (i.e. it doesn't stop
+after the first 'x' conditions).
+
+From here, you can call `every().single()`, `every().other()`, `every().third()`, or
+`every().nth(n)` to move on, specifying what on interval you should be responding to actions.
+
+`every().single()` means you respond to every time the final condition comes true
+
+`every().other()` means you respond to every other (every second) the final condition comes true
+
+and so on
+
+### - timeBeingX
+
+Specifies that the action be acted upon "every time" the condition is true/false. When I say "every
+time", I mean every time specified by the aforementioned interval.
+
+From here you can call `withOffset()`, `until()/forever()`, or any of the extension methods.
+
+### - timeBecomingX
+
+Specifies that the action be acted upon "every time" the condition *becomes* true/false (i.e. on the
+rising or falling edge). When I say "every time", I mean every time specified by the aforementioned
+interval.
+
+From here you can call `withOffset()`, `until()/forever()`, or any of the extension methods.
+
+### -- withOffset()
+
+Specifies how many initial true conditions to skip.
+
+For example, say you want to listen to a button every time it's pressed, except for the first
+three times. Using a .withOffset(3) would skip the first three times the button is pressed.
+
+### --- extendFor
+
+Along with `doUntil()`, this is a way to easily extend the effect of your condition becoming true. I'll
+just give you a couple really simple example to work with because I think it'll explain it better
+than I can with just words
+
+```java
+// Whenever the button is pressed, prints "hihihihihi"
+// If someone pressed 'a' once, then pressed it again in 2 loops,
+// it would just restart the 4 extra loop counter.
+On(() -> gamepad1.a)
+    .every()
+    .single()
+    .timeBecomingTrue() // Act every time gamepad1.a is *just* pressed (rising edge)
+    .extendFor(4)
+    .iterations() // "Extend" the calling of the end function by two scheduler loops
+    .forever() // Never stop
+    .execute(() -> System.out.print("hi!"));
+
+// Whenever the button is pressed, prints "hi" for the next second
+// If someone pressed 'a' once, then pressed it again half a second later,
+// it would restart the 1 second timer
+On(() -> gamepad1.a)
+    .every()
+    .single()
+    .timeBecomingTrue() // Act every time gamepad1.a is *just* pressed (rising edge)
+    .extendFor(1)
+    .time(TimeUnit.SECONDS) // "Extend" the calling of the end function for 1 second
+    .forever() // Never stop
+    .execute(() -> System.out.print("hi!"));
+```
+
+from here you can call a terminal operation (forever()/until())
+
+### --- doUntil
+
+**Note that this is different from until()**
+
+Like `extendFor()`, but you pass in your *own* extension function, and it keeps extending
+until you return 'true'.
+
+The extension function takes in two arguments:
+ - a boolean specifying whether or not the condition is true or not
+ - a long specifying how many times the 'On' has been looped
+
+```java
+// Whenever the button is pressed, starts printing hi and never stops since 'until' always
+// returns 'false'
+On(() -> gamepad1.a)
+    .every()
+    .single()
+    .timeBecomingTrue() // Act every time gamepad1.a is *just* pressed (rising edge)
+    .doUntil((condIsTrue, count) -> false)
+    .forever() // Never stop
+    .execute(() -> System.out.print("hi!"));
+```
+
+from here you can call a terminal operation (forever()/until())
+
+### (Terminal) forever()
+
+A terminal operation which creates the actual Schedulable object which you can subscribe things
+to.
+
+`forever()` means keep going and never stop until the Scheduler is [nuked](./scheduler#schedulernuke)
+
+```java
+// Whenever the button is pressed, starts printing hi and never stops since 'until' always
+// returns 'false'
+On(() -> gamepad1.a)
+    .every()
+    .single()
+    .timeBecomingTrue() // Act every time gamepad1.a is *just* pressed (rising edge)
+    .doUntil((condIsTrue, count) -> false)
+    .forever() // Never stop
+    .execute(() -> System.out.print("hi!"));
+```
+
+### (Terminal) until()
+
+**Note that this is different from doUntil()**
+
+A terminal operation which creates the actual Schedulable object which you can subscribe things
+to.
+
+`until()` takes in a function (lambda) which in turn takes in a long which specifies how many times
+the On has been looped. If the passed in function returns 'true', the On instance is destroyed.
+(Hard reset is prob a better word for it, it'd still be usable if you resubscribe actions to it)
+
+```java
+// Whenever the button is pressed, starts printing hi and stops when the On instance has been looped
+// over 1000 times
+// But it doesn't just stop, it unhooks the whole On instance and clears all of it's actions
+// aka it "destroys" it, or rather hard resets it
+On(() -> gamepad1.a)
+    .every()
+    .single()
+    .timeBecomingTrue() // Act every time gamepad1.a is *just* pressed (rising edge)
+    .doUntil((condIsTrue, count) -> false)
+    .until((count) -> count > 1000) // Never stop
+    .execute(() -> System.out.print("hi!"));
+```
+
+### execute()
+
+Called on the built On instance, `execute()` takes in a function to run whenever the final
+condition, with all of the offsets and stuff taken into account is true. Can be called multiple
+times to subscribe multiple actions to the same listener.
+
+```java
+// Prints "hi!\n" while gamepad1.a is pressed
+On(() -> gamepad1.a)
+    .every()
+    .single()
+    .timeBeingTrue()
+    .forever()
+    .execute(() -> System.out.print("h"))
+    .execute(() -> System.out.print("i"))
+    .execute(() -> System.out.print("!"))
+    .execute(() -> System.out.println());
+```
+
+## oh and one more thing
+
+Every time you call another builder method, it creates an entirely new immutable object, so that
+means you can reuse partially build Ons with no worry
+
+```java
+// This is fine
+OnEveryNth onEverySingleGamepad1a = On(() -> gamepad1.a)
+    .every()
+    .single();
+
+onEverySingleGamepad1a
+    .whatever();
+
+onEverySingleGamepad1a
+    .whateverElse();
+```

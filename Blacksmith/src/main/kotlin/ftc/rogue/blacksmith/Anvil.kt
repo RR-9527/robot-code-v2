@@ -291,6 +291,13 @@ class Anvil
     // -- Utilities --
 
     /**
+     * [Link to method docs](https://blacksmithftc.vercel.app/anvil/custom-mappings#anvilexecute)
+     */
+    fun execute(toExecute: Anvil.() -> Anvil) = tap {
+        internal.execute(toExecute)
+    }
+
+    /**
      * [Link to method docs](https://blacksmithftc.vercel.app/anvil/custom-mappings#anvilsetposeestimatenow)
      */
     fun setPoseEstimateNow(pose: Pose2d) = tap {
@@ -314,8 +321,8 @@ class Anvil
     /**
      * [READ DOCS FOR THIS (click me)](https://blacksmithftc.vercel.app/anvil/custom-mappings#anvildoinreverse)
      *
-     * (probably don't use this lol unless you understand how anvil works which you don't. Easy to
-     * shoot yourself in the foot)
+     * (probably don't use this lol unless you understand how anvil works which you most likely
+     * don't. Easy to shoot yourself in the foot)
      */
     @JvmOverloads
     fun doInReverse(num: Int = 1, numPopped: AtomicInteger = AtomicInteger()) = tap {
@@ -348,10 +355,6 @@ class Anvil
      */
     fun doTimes(times: Int, pathsToDo: AnvilCycle) = tap {
         internal.doTimes(times, pathsToDo)
-    }
-
-    fun execute(toExecute: Anvil.() -> Anvil) = tap {
-        internal.execute(toExecute)
     }
 
     // -- Constraints --cc

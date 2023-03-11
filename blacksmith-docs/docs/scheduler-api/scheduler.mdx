@@ -420,8 +420,15 @@ Clears and unhooks all of the listeners, clears all of the messages, clears the 
 
 Basically just a hard reset. But with a cooler name. Thanks GHCup.
 
+***you can still reuse all the listeners and stuff by just resubscribing actions to them***
+
 Optionally, if you want to only nuke specific parts of the Scheduler, you can pass in `Nuke.Listeners`,
 `Nuke.Messages`, or `Nuke.BeforeEach` (you can pass in multiple as well since it's varargs)
+
+:::danger
+Nuking the 'Listeners' means nuking as Schedulable things, including timers, Ons, pulsars, gamepad
+listeners, etc.
+:::
 
 <Tabs groupId="programming-language">
 <TabItem value="java" label="Java">
