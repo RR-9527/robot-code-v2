@@ -40,19 +40,15 @@ abstract class RogueBaseAuto : BlackOp() {
         val startTraj = mainTraj(startPose)
         Anvil.startAutoWith(startTraj).onSchedulerLaunch()
 
-        val pipeline = TapeDetector(telemetry)
-        bot.camera.setPipeline(pipeline)
 
-        bot.camera.lookDown()
+        bot.camera.lookForwards()
 
         while (!opModeIsActive()) {
-            mTelemetry.addData("Tape angle:", pipeline.tapeAngle)
-            mTelemetry.addData("Tape correction:", pipeline.correction)
-            mTelemetry.addData("Tape lag:", pipeline.lagTime)
-            mTelemetry.addData("Tape proc lag:", pipeline.procLagTime)
             mTelemetry.update()
-//            signalID = bot.camera.stageDetection(this) ?: 2
+            signalID = bot.camera.stageDetection(this) ?: 2
         }
+
+        bot.camera.lookDown()
 
         Scheduler.debug({ opModeIsActive() && !isStopRequested }) {
             bot.updateComponents(useLiftDeadzone = false)

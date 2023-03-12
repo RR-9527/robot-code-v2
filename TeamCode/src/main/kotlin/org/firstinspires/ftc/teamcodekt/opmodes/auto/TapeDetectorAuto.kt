@@ -18,7 +18,8 @@ class TapeDetectorAuto : RogueBaseAuto() {
     override fun mainTraj(startPose: Pose2d) =
         Anvil.forgeTrajectory(bot.drive, startPose)
             .setVelConstraint(40, 250.toRad(), DriveConstants.TRACK_WIDTH)
-            .splineTo(0, 1, 0);
+//            .splineTo(0, 1, 0);
+            .forward(0.05)
 
     private fun Anvil.resetBot() = this
         .addTemporalMarker {

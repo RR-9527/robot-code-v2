@@ -24,6 +24,12 @@ var CAM_FORWARDS = 56.5
 @JvmField
 var CAM_LOOKDOWN = 30.0
 
+@JvmField
+var width = 160
+
+@JvmField
+var height = 120
+
 class Camera {
     private val camServo = SimpleServo(BlackOp.hwMap, DeviceNames.CAM_SERVO, 0.0, 180.0)
 
@@ -32,7 +38,7 @@ class Camera {
     private val camera: OpenCvCamera
 
     val aprilTagDetectionPipeline = AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy)
-//    val tapeDetectorPipeline = TapeDetector(mTelemetry)
+    val tapeDetectorPipeline = TapeDetector(mTelemetry)
 
     fun lookForwards() {
         targetAngle = CAM_FORWARDS
@@ -57,10 +63,11 @@ class Camera {
         )
 
 //        camera.setPipeline(aprilTagDetectionPipeline)
+        camera.setPipeline(tapeDetectorPipeline)
 
         camera.openCameraDeviceAsync(object : OpenCvCamera.AsyncCameraOpenListener {
             override fun onOpened() {
-                camera.startStreaming(1280, 720, OpenCvCameraRotation.UPRIGHT)
+                camera.startStreaming(width, height, OpenCvCameraRotation.UPRIGHT)
             }
 
             override fun onError(errorCode: Int) {
@@ -79,6 +86,8 @@ class Camera {
         mTelemetry.addData("FPS", camera.fps)
         mTelemetry.addData("Overhead ms", camera.overheadTimeMs)
         mTelemetry.addData("Pipeline ms", camera.pipelineTimeMs)
+        mTelemetry.addData("Angle: ", tapeDetectorPipeline.tapeAngle)
+
 
         if (detections.size == 0) {
             numFramesWithoutDetection++
