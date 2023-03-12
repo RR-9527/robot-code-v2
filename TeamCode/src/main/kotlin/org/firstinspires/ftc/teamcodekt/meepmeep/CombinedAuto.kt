@@ -7,6 +7,7 @@ import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder
 import com.noahbres.meepmeep.roadrunner.DriveShim
 import com.noahbres.meepmeep.roadrunner.trajectorysequence.TrajectorySequence
 import ftc.rogue.blacksmith.Anvil
+import ftc.rogue.blacksmith.BlackOp.Companion.hwMap
 import ftc.rogue.blacksmith.units.GlobalUnits
 import ftc.rogue.blacksmith.util.meepmeep.MeepMeepUtil
 import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants.*
