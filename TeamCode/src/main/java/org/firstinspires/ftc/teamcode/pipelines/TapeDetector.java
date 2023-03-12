@@ -27,12 +27,12 @@ public class TapeDetector extends OpenCvPipeline {
     public static double maxLineGap = 40;
     public static double minYDist = 200;
     public static double maxXDist = 4;
-    public static double focalWidth = 1428.837;
 
-    public final int[] initalTunedSize = {1280, 720};
+    public static double adj_a = 0.000699205;
+    public static double adj_b = 0.0016927;
+    public static double adj_c = 0.55;
 
     public double tapeAngle = -1;
-    public double tapeDist = -1;
     public double correction = -1;
 
 
@@ -41,13 +41,6 @@ public class TapeDetector extends OpenCvPipeline {
      */
     private final Telemetry telemetry;
 
-
-
-
-    private static final double FOV = 30; // Degrees here!
-    private static double FOV_MULT;
-
-    private final ElapsedTime timer;
 
     /**
      * Constructor to assign the telemetry object and actually have telemetry work.
@@ -58,7 +51,6 @@ public class TapeDetector extends OpenCvPipeline {
      */
     public TapeDetector(Telemetry telemetry) {
         this.telemetry = telemetry;
-        timer = new ElapsedTime();
     }
 
     /**
@@ -84,7 +76,6 @@ public class TapeDetector extends OpenCvPipeline {
         // Probabilistic Line Transform
         Mat linesP = new Mat();
         Imgproc.HoughLinesP(dst, linesP, 1, Math.PI/180, houghThresh, minLineLen, maxLineGap); // runs the actual detection
-        double afterProc = timer.milliseconds();
 
 
         ArrayList<double[]> lines = new ArrayList<>();
@@ -135,8 +126,7 @@ public class TapeDetector extends OpenCvPipeline {
                 Imgproc.line(src, new Point(l[0], l[1]), new Point(l[2], l[3]), new Scalar(0, 255, 0), 3, Imgproc.LINE_AA, 0);
 
         tapeAngle = 60*(pixels/width)-30;
-        tapeDist = 4.6*focalWidth/(rightAvg-leftAvg);
-        correction = Math.sin(tapeAngle)*tapeDist;
+        correction = adjustment(tapeAngle);
 
 //        telemetry.addData("Estimated pixel position", avg);
 //        src.release();
@@ -147,24 +137,15 @@ public class TapeDetector extends OpenCvPipeline {
         return src;
 }
 
-
-    /**
-     * Get the angle in <strong>RADIANS</strong> of an x value in pixels based on frameWidth
-     * Used to
-     *
-     * @param xPos the x position in pixels
-     * @return the angle in radians (+ is right of middle, - is left of middle)
-     */
-    private double pixelXAngle(double xPos) {
-        return Math.atan(FOV_MULT * (xPos - (width / 2.0)));
-    }
-
-
-
     public double listAverage(ArrayList<Double> data){
         double sum = 0;
         for(Double item: data)
             sum += item;
         return sum / data.size();
+    }
+
+    public static double adjustment(double angle){
+        if (Math.abs(angle) > 20) return adj_a * angle * angle * angle + adj_b * angle * angle;
+        return adj_c * angle;
     }
 }

@@ -35,7 +35,7 @@ class Camera {
 
     var targetAngle = CAM_FORWARDS
 
-    private val camera: OpenCvCamera
+    val camera: OpenCvCamera
 
     val aprilTagDetectionPipeline = AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy)
     val tapeDetectorPipeline = TapeDetector(mTelemetry)
@@ -82,12 +82,6 @@ class Camera {
         var lastIntID: Int? = null
 
         val detections = aprilTagDetectionPipeline.detectionsUpdate
-
-        mTelemetry.addData("FPS", camera.fps)
-        mTelemetry.addData("Overhead ms", camera.overheadTimeMs)
-        mTelemetry.addData("Pipeline ms", camera.pipelineTimeMs)
-        mTelemetry.addData("Angle: ", tapeDetectorPipeline.tapeAngle)
-
 
         if (detections.size == 0) {
             numFramesWithoutDetection++
