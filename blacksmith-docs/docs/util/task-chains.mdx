@@ -1,0 +1,216 @@
+---
+sidebar_position: 2
+---
+
+import ParamsList from '../../src/components/ParamsList';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import Returns from '../../src/components/Returns';
+import { TypeLinks } from '../../src/util/type-links';
+
+# Task Chains
+
+`Chain` and `CancellableChain` are just two utility interfaces to provide *a* method to organize
+your code.
+
+You can of course create your own interfaces or use a different thing entirely, this is just a
+thing I use myself.
+
+<Tabs groupId="programming-language">
+<TabItem value="java" label="Java">
+
+  ```java title=Chain.java
+  public interface Chain {
+      void invokeOn(Listener listener);
+  }
+  ```
+
+  ```java title=CancellableChain.java
+  public interface CancellableChain extends Chain {
+      void cancelOn(Listener listener);
+  }
+  ```
+
+</TabItem>
+<TabItem value="kt" label="Kotlin">
+
+  ```kotlin title=Chain.kt
+  fun interface Chain {
+      fun invokeOn(listener: Listener)
+  }
+  ```
+
+  ```kotlin title=CancellableChain.kt
+  interface CancellableChain : Chain {
+      fun cancelOn(listener: Listener)
+  }
+  ```
+
+</TabItem>
+</Tabs>
+
+## Usage example:
+
+(this is (almost) my actual deposit chain)
+
+<Tabs groupId="programming-language">
+<TabItem value="java" label="Java">
+
+  ```java title=DepositChain.java
+  // IMPORTANT: notice how I have an 'isCancelled' variable that's set to
+  // true when the chain is not running
+
+  // Having it set to true when not running, and checking if it's already true when trying
+  // to cancel it again stops the cancel chain from being invoked every time if you use the same
+  // button to cancel something else as well
+  public class DepositChain implements CancellableChain {
+      private final TeleOpBotComponents bot;
+
+      public RegularDepositChain(TeleOpBotComponents bot) {
+          this.bot = bot;
+      }
+
+      private boolean isCancelled = true;
+
+      @Override
+      public void invokeOn(Listener button) {
+          button.and(() -> bot.lift.clippedHeight > 90)
+              .onRise(() -> {
+                  isCancelled = false;
+                  bot.arm.setToForwardsPos();
+                  bot.wrist.setToForwardsPos();
+              })
+              .onFall(() -> {
+                  if (isCancelled) {
+                      return;
+                  }
+
+                  int newTarget = (bot.lift.getTargetHeight() - 300).coerceAtLeast(LIFT_LOW);
+                  bot.lift.setTargetHeight(newTarget);
+
+                  bot.claw.openForDeposit();
+
+                  // I've static imported Timer.after() here
+                  after(350).milliseconds(() -> {
+                      finish();
+                      bot.lift.goToZero();
+                      isCancelled = true;
+                  });
+              });
+      }
+
+      @Override
+      public void cancelOn(Listener button) {
+        button.and(() -> !isCancelled)
+            .onRise(this::finish);
+      }
+
+      private void finish() {
+          bot.claw.close();
+          bot.arm.goToRest();
+          bot.wrist.setToRestingPos();
+          isCancelled = true;
+      }
+  }
+  ```
+
+  ```java title=ActualUsageExample.java
+  @TeleOp
+  public class MyTeleOp extends BlackOp {
+      @CreateOnGo
+      private TeleOpBotComponents bot;
+
+      @EvalOnGo(method = "getReforgedGamepad2")
+      private ReforgedGamepad codriver;
+
+      @EvalOnGo(method = "makeDepositChain")
+      private DepositChain depositChain;
+
+      //...
+
+      @Override
+      public void go() {
+          depositChain.invokeOn(codriver.a);
+          depositChain.cancelOn(codriver.x);
+
+          Scheduler.launchOnStart(this);
+      }
+
+      private CancellableChain makeDepositChain() {
+          return new DepositChain(bot);
+      }
+  }
+  ```
+
+</TabItem>
+<TabItem value="kt" label="Kotlin">
+
+  ```kotlin title=DepositChain.kt
+  // IMPORTANT: notice how I have an 'isCancelled' variable that's set to
+  // true when the chain is not running
+
+  // Having it set to true when not running, and checking if it's already true when trying
+  // to cancel it again stops the cancel chain from being invoked every time if you use the same
+  // button to cancel something else as well
+  class DepositChain(val bot: TeleOpBotComponents) : CancellableChain {
+      private var isCancelled = true
+
+      override fun invokeOn(button: Listener) = (button + { bot.lift.clippedHeight > 90 })
+          .onRise {
+              isCancelled = false
+              bot.arm.setToForwardsPos()
+              bot.wrist.setToForwardsPos()
+          }
+          .onFall {
+              if (isCancelled) {
+                  return@onFall
+              }
+
+              bot.lift.targetHeight = (bot.lift.targetHeight - 300).coerceAtLeast(LIFT_LOW)
+
+              bot.claw.openForDeposit()
+
+              after(350).milliseconds {
+                  finish()
+                  bot.lift.goToZero()
+                  isCancelled = true
+              }
+          }
+          .hook() // just using .hook() so it returns Unit so Kotlin doesn't yell at me
+                  // it acts as a noop here since it's already hooked
+
+      override fun cancelOn(button: Listener) = (button + { !isCancelled })
+          .onRise(::finish)
+          .hook()
+
+      private fun finish() {
+          bot.claw.close()
+          bot.arm.goToRest()
+          bot.wrist.setToRestingPos()
+          isCancelled = true
+      }
+  }
+  ```
+
+  ```kt title=ActualUsageExample.kt
+  @TeleOp
+  class MyTeleOp : BlackOp() {
+      private val bot by createOnGo<TeleOpBotComponents>();
+
+      private val codriver by createOnGo<ReforgedGamepad> { gamepad2 }
+
+      private val depositChain by createOnGo< DepositChain >{ bot }
+
+      //...
+
+      override fun go() {
+          depositChain.invokeOn(codriver.a)
+          depositChain.cancelOn(codriver.x)
+
+          Scheduler.launchOnStart(this)
+      }
+  }
+  ```
+
+</TabItem>
+</Tabs>

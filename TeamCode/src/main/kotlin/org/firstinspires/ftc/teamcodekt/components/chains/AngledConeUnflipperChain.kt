@@ -10,7 +10,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
 import org.firstinspires.ftc.teamcodekt.components.meta.TeleOpBotComponents
 
 @Config
-class ConeUnflipperChain(val bot: TeleOpBotComponents) : Chain {
+class AngledConeUnflipperChain(val bot: TeleOpBotComponents) : Chain {
     companion object {
         @JvmField
         var flipperTargetHeight = 113
@@ -49,7 +49,7 @@ class ConeUnflipperChain(val bot: TeleOpBotComponents) : Chain {
             bot.lift.goToZero()
         }
 
-        Listener { isRunning && bot.rcs.getDistance(DistanceUnit.CM) < .8 }.onRise {
+        Listener { isRunning && bot.rcs.getDistance(DistanceUnit.CM) < .675 }.onRise {
             bot.intake.disable()
             isRunning = false
 

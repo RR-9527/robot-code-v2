@@ -21,6 +21,6 @@ class RogueTestingOp : RogueBaseTele() {
         coneLaunchingChain.invokeOn(driver.b)
         coneLaunchingChain.cancelOn(driver.x)
 
-        coneUnflipperChain.invokeOn(driver.a)
+        angledConeUnflipperChain.invokeOn(driver.a)
     }
 }

@@ -7,7 +7,6 @@ import com.qualcomm.hardware.lynx.LynxModule
 import ftc.rogue.blacksmith.BlackOp
 import ftc.rogue.blacksmith.Scheduler
 import ftc.rogue.blacksmith.listeners.ReforgedGamepad
-import org.firstinspires.ftc.teamcodekt.components.Imu
 import org.firstinspires.ftc.teamcodekt.components.chains.*
 import org.firstinspires.ftc.teamcodekt.components.meta.createTeleOpBotComponents
 
@@ -22,8 +21,10 @@ abstract class RogueBaseTele : BlackOp() {
     protected val intakeChain         by createOnGo< IntakeChain         >{ bot }
     protected val regularDepositChain by createOnGo< RegularDepositChain >{ bot }
     protected val reverseDepositChain by createOnGo< ReverseDepositChain >{ bot }
-    protected val coneLaunchingChain  by createOnGo< ConeLaunchingChain  >{ bot }
-    protected val coneUnflipperChain  by createOnGo< ConeUnflipperChain  >{ bot }
+
+    protected val coneLaunchingChain        by createOnGo< ConeLaunchingChain       >{ bot }
+    protected val angledConeUnflipperChain  by createOnGo< AngledConeUnflipperChain >{ bot }
+    protected val flatConeUnflipperChain    by createOnGo< FlatConeUnflipperChain   >{ bot }
 
     final override fun go() {
         setupPhoton()
