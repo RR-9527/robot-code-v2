@@ -8,7 +8,7 @@ import com.outoftheboxrobotics.photoncore.PhotonCore
 import ftc.rogue.blacksmith.Anvil
 import ftc.rogue.blacksmith.BlackOp
 import ftc.rogue.blacksmith.Scheduler
-import ftc.rogue.blacksmith.internal.scheduler.Listeners
+import ftc.rogue.blacksmith.internal.scheduler.Schedulables
 import ftc.rogue.blacksmith.listeners.ReforgedGamepad
 import ftc.rogue.blacksmith.units.DistanceUnit
 import ftc.rogue.blacksmith.util.toCm
@@ -93,7 +93,7 @@ abstract class RogueBaseAuto : BlackOp() {
             """.trimIndent())
         }
 
-        Scheduler.nuke(Listeners)
+        Scheduler.nuke(Schedulables)
 
         poleOffset = Vector2d(x.toCm(DistanceUnit.INCHES), y.toCm(DistanceUnit.INCHES))
     }

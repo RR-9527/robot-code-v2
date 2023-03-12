@@ -112,7 +112,7 @@ class MyArmClass {
 }
 ```
 
-Rules for @EvalOnGo
+## Rules for @EvalOnGo
 
 1. @EvalOnGo can work with any public or private function in the class itself (or the class passed in),
 *or* it works with any *public* function in the superclass of the class given.
@@ -126,3 +126,26 @@ by @EvalOnGo
 
 5. Make sure the function spelling is correct, like double, quadruple check. All @EvalOnGo errors
 will only be at runtime.
+
+## Provided utility methods
+
+The BlackOp class has, as of now, two utility methods (more will come soon as I think of them)
+
+```java
+// 1/2.
+
+@EvalOnGo("getReforgedGamepad1") // Declared in BlackOp, you don't have to declare this method yourself
+ReforgedGamepad driver;
+
+@EvalOnGo("getReforgedGamepad2") // Declared in BlackOp, you don't have to declare this method yourself
+ReforgedGamepad codriver;
+```
+
+## Practical example
+
+[Link to Java example](https://github.com/RR-9527/robot-code-v2/blob/master/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/opmodes/JavaBlacksmithTesting.java)
+
+You can check our the Kotlin version as well if you want to see how we *really* use it, but the
+syntax is much different for CreateOnGo/EvalOnGo
+
+[Link to Kotlin example](https://github.com/RR-9527/robot-code-v2/blob/master/TeamCode/src/main/kotlin/org/firstinspires/ftc/teamcodekt/opmodes/teleop/RogueBaseTele.kt)

@@ -111,7 +111,7 @@ abstract class BlackOp : LinearOpMode() {
     }
 
     fun getReforgedGamepad2(): ReforgedGamepad {
-        return ReforgedGamepad(gamepad1)
+        return ReforgedGamepad(gamepad2)
     }
 
     // -- KOTLIN ONLY BELOW (Check out @CreateOnGo and @EvalOnGo for Java) --

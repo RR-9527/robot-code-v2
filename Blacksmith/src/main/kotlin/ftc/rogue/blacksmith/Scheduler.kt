@@ -184,13 +184,13 @@ object Scheduler {
     @get:JvmSynthetic
     internal val internal = SchedulerInternal()
 
-    @JvmSynthetic
-    internal fun hook(schedulable: Schedulable) {
+    @JvmStatic
+    fun hook(schedulable: Schedulable) {
         internal.hook(schedulable)
     }
 
-    @JvmSynthetic
-    internal fun unhook(schedulable: Schedulable) {
+    @JvmStatic
+    fun unhook(schedulable: Schedulable) {
         internal.unhook(schedulable)
     }
 }

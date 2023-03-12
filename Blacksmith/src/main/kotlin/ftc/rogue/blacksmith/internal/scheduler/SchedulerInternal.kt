@@ -65,7 +65,7 @@ internal class SchedulerInternal {
             throw IllegalArgumentException("Bitflag uses number that isn't Listener, Messages, BeforeEach, nor All (1, 2, 4, or 7)")
         }
 
-        if (nukeFlag and Listeners == Listeners) {
+        if (nukeFlag and Schedulables == Schedulables) {
             schedulables.forEach {
                 it.destroy()
             }

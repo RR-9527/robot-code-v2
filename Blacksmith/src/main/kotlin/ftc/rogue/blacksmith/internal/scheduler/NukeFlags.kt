@@ -20,7 +20,7 @@ data class NukeFlag internal constructor(val flag: Int) {
 }
 
 @JvmField
-val Listeners = NukeFlag(0x1)
+val Schedulables = NukeFlag(0x1)
 
 @JvmField
 val Messages = NukeFlag(0x2)
@@ -29,4 +29,4 @@ val Messages = NukeFlag(0x2)
 val BeforeEach = NukeFlag(0x4)
 
 @JvmField
-val All = Listeners or Messages or BeforeEach
+val All = Schedulables or Messages or BeforeEach

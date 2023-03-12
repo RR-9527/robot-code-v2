@@ -1,7 +1,7 @@
 package ftc.rogue.blacksmith
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
-import ftc.rogue.blacksmith.internal.scheduler.Listeners
+import ftc.rogue.blacksmith.internal.scheduler.Schedulables
 import ftc.rogue.blacksmith.internal.scheduler.Messages
 import ftc.rogue.blacksmith.internal.scheduler.NukeFlag
 import ftc.rogue.blacksmith.listeners.Listener
@@ -117,7 +117,7 @@ internal class SchedulerTest {
 
         Scheduler.on(0) {}
 
-        Scheduler.nuke(Listeners, Messages)
+        Scheduler.nuke(Schedulables, Messages)
 
         Scheduler.debug({ !isStopped }) {
             assertTrue("numHookedListeners == 0") { numHookedListeners == 0 }

@@ -1,0 +1,69 @@
+---
+sidebar_position: 8
+---
+
+import Returns from '../../src/components/Returns';
+import { TypeLinks } from '../../src/util/type-links';
+import ParamsList from '../../src/components/ParamsList';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Custom Schedulables
+
+The Listener (and a couple of other things) implement an interface called Schedulable, which
+represents something that can be hooked to the Scheduler to be ran every loop.
+
+:::danger
+Your Schedulables will not run unless they're hooked to the Scheduler & the Scheduler is running
+:::
+
+The definition of Schedulable is as follows:
+
+<Tabs groupId="programming-language">
+<TabItem value="java" label="Java">
+
+  ```java
+  public interface Schedulable {
+      void tick();
+      void destroy();
+
+      default void hook() {
+          Scheduler.hook(this);
+      }
+  }
+  ```
+
+</TabItem>
+<TabItem value="kt" label="Kotlin">
+
+  ```kotlin
+  interface Schedulable {
+      fun tick()
+      fun destroy()
+
+      fun hook() {
+          Scheduler.hook(this)
+      }
+  }
+  ```
+
+</TabItem>
+</Tabs>
+
+You'll notice three methods:
+
+## tick()
+
+tick() is the method that's called every loop, and runs after the `beforeEach()` block, and before
+the `beforeEach()` block, intermingled with the other Schedulables, such as Listeners.
+
+## destroy()
+
+destroy() is called when someone nukes the Scheduler of all it's Schedulables, and you should
+provide any cleanup logic there. Your Schedulable will be automatically unhooked when the Scheduler
+is nuked of it's Schedulables.
+
+## hook()
+
+hook() simply hooks your Schedulable to the Scheduler. You should not need to touch this method
+unless you're doing some custom logic when hooking it.

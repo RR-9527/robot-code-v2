@@ -422,12 +422,12 @@ Basically just a hard reset. But with a cooler name. Thanks GHCup.
 
 ***you can still reuse all the listeners and stuff by just resubscribing actions to them***
 
-Optionally, if you want to only nuke specific parts of the Scheduler, you can pass in `Nuke.Listeners`,
+Optionally, if you want to only nuke specific parts of the Scheduler, you can pass in `Nuke.Schedulables`,
 `Nuke.Messages`, or `Nuke.BeforeEach` (you can pass in multiple as well since it's varargs)
 
 :::danger
-Nuking the 'Listeners' means nuking as Schedulable things, including timers, Ons, pulsars, gamepad
-listeners, etc.
+Nuking the 'Schedulables' means nuking things that implement/use Schedulable, including listeners,
+timers, Ons, pulsars, gamepad listeners, etc.
 :::
 
 <Tabs groupId="programming-language">
@@ -448,10 +448,10 @@ listeners, etc.
       // Scheduler.listeners.size == 0
       // Scheduler.messages.size == 0
 
-      Scheduler.nuke(Nuke.Listeners) // Only nukes the listeners
+      Scheduler.nuke(Nuke.Schedulables) // Only nukes the listeners & other schedulables
 
       // (also you can static import for readability)
-      Scheduler.nuke(Listeners, BeforeEach) // Nukes everything besides messages
+      Scheduler.nuke(Schedulables, BeforeEach) // Nukes everything besides messages
   }
   ```
 
