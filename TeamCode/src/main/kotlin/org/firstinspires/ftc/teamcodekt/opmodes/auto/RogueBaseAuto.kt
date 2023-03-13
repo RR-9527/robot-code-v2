@@ -22,6 +22,8 @@ abstract class RogueBaseAuto : BlackOp() {
     protected val bot by evalOnGo(::createAutoBotComponents)
     protected var signalID by Delegates.notNull<Int>()
 
+    protected var tapeCorrection = 0.0
+
     protected abstract val startPose: Pose2d
     protected abstract fun mainTraj(startPose: Pose2d): Anvil
 
@@ -44,8 +46,14 @@ abstract class RogueBaseAuto : BlackOp() {
         bot.camera.lookForwards()
 
         while (!opModeIsActive()) {
+            mTelemetry.addData("FPS", bot.camera.camera.fps)
+            mTelemetry.addData("Overhead ms", bot.camera.camera.overheadTimeMs)
+            mTelemetry.addData("Pipeline ms", bot.camera.camera.pipelineTimeMs)
+            mTelemetry.addData("Angle: ", bot.camera.tapeDetectorPipeline.tapeAngle)
+
             mTelemetry.update()
-            signalID = bot.camera.stageDetection(this) ?: 2
+            tapeCorrection = bot.camera.tapeDetectorPipeline.correction
+//            signalID = bot.camera.stageDetection(this) ?: 2
         }
 
         bot.camera.lookDown()
