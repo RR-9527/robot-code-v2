@@ -13,11 +13,12 @@ abstract class BaseBotComponents {
     val wrist  = Wrist()
     val lift   = Lift()
 
-    open fun updateComponents(useLiftDeadzone: Boolean) {
+    open fun updateComponents(useLiftDeadzone: Boolean, auto: Boolean) {
         claw.update()
         arm.update()
         wrist.update()
-        lift.update(useLiftDeadzone)
+//        lift.update(useLiftDeadzone)
+        lift.updateMotionProfile(auto)
     }
 }
 
@@ -42,8 +43,8 @@ data class AutoBotComponents(
     val drive: SampleMecanumDrive,
     val camera: Camera,
 ) : BaseBotComponents() {
-    override fun updateComponents(useLiftDeadzone: Boolean) {
-        super.updateComponents(useLiftDeadzone)
+    override fun updateComponents(useLiftDeadzone: Boolean, auto: Boolean) {
+        super.updateComponents(useLiftDeadzone, true)
         camera.update()
         drive.update()
     }

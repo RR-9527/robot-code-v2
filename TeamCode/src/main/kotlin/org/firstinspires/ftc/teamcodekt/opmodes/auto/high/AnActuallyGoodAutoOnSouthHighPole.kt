@@ -19,31 +19,31 @@ class AnActuallyGoodAutoOnSouthHighPole : RogueBaseAuto() {
     override fun mainTraj(startPose: Pose2d) =
         Anvil.forgeTrajectory(bot.drive, startPose)
 
-//            .addTemporalMarker {
-//                bot.lift.goToAngledMid()
-//                bot.claw.close()
-//                bot.arm.setToForwardsAngledPos()
-//                bot.wrist.setToForwardsPos()
-//            }
+            .addTemporalMarker {
+                bot.lift.goToAngledMid()
+                bot.claw.close()
+                bot.arm.setToForwardsAngledPos()
+                bot.wrist.setToForwardsPos()
+            }
 
             .initialGoToDeposit()
-//            .initialDeposit()
+            .initialDeposit()
 
             .doTimes(NUM_CYCLES) {
-//                when (it) {
-//                    LAST_CYCLE -> fastIntakePrep(it)
-//                    else -> regularIntakePrep(it)
-//                }
+                when (it) {
+                    LAST_CYCLE -> fastIntakePrep(it)
+                    else -> regularIntakePrep(it)
+                }
 
                 goToIntake(it)
 
-//                when (it) {
-//                    LAST_CYCLE -> awaitFastIntake()
-//                    else -> awaitRegularIntake()
-//                }
+                when (it) {
+                    LAST_CYCLE -> awaitFastIntake()
+                    else -> awaitRegularIntake()
+                }
 
                 goToDeposit(it)
-//                deposit(it)
+                deposit(it)
             }
 
             .thenRun(::parkTraj)
@@ -53,20 +53,20 @@ class AnActuallyGoodAutoOnSouthHighPole : RogueBaseAuto() {
         .turn(-49-90)
 
     private fun Anvil.goToDeposit(it: Int) = when (it) {
-        0 -> splineTo(-2 + poleOffset.x, 2 + poleOffset.y, -30)
-        1 -> splineTo(-2+ poleOffset.x, 4 + poleOffset.y, -30)
-        2 -> splineTo(-2 + poleOffset.x, 4 + poleOffset.y, -30)
-        3 -> splineTo(-2 + poleOffset.x, 4 + poleOffset.y, -30)
-        4 -> splineTo(-2 + poleOffset.x, 4 + poleOffset.y, -30)
+        0 -> splineTo(3 + poleOffset.x, -2.5 + poleOffset.y, -30)
+        1 -> splineTo(2+ poleOffset.x, -1.5 + poleOffset.y, -30)
+        2 -> splineTo(4.25 + poleOffset.x, 1 + poleOffset.y, -30)
+        3 -> splineTo(5 + poleOffset.x, 2 + poleOffset.y, -30)
+        4 -> splineTo(3.5 + poleOffset.x, -2.5 + poleOffset.y, -30)
         else -> throw CycleException()
     }
 
     private fun Anvil.goToIntake(it: Int) = when (it) {
-        0 -> splineTo(-180, 14.5, 180)
-        1 -> splineTo(-180, 17.7, 180)
-        2 -> splineTo(-180, 20.5, 180)
-        3 -> splineTo(-180, 22.5, 180)
-        4 -> splineTo(-180, 26.5, 180)
+        0 -> splineTo(-179, 15, 180)
+        1 -> splineTo(-179, 23, 180)
+        2 -> splineTo(-178.5, 26, 180)
+        3 -> splineTo(-178.5, 28, 180)
+        4 -> splineTo(-178.5, 31, 180)
         else -> throw CycleException()
     }.doInReverse()
 
@@ -80,7 +80,7 @@ class AnActuallyGoodAutoOnSouthHighPole : RogueBaseAuto() {
         }
 
         .addTemporalMarker(275) {
-            bot.lift.goToAngledMid()
+            bot.lift.goToAngledHigh()
         }
 
         .addTemporalMarker(425) {
@@ -101,7 +101,7 @@ class AnActuallyGoodAutoOnSouthHighPole : RogueBaseAuto() {
 
         .addTemporalMarker(15) {
             bot.arm.setToForwardsAngledPos()
-            bot.lift.goToAngledMid()
+            bot.lift.goToAngledHigh()
         }
 
         .addTemporalMarker(100) {
@@ -113,17 +113,20 @@ class AnActuallyGoodAutoOnSouthHighPole : RogueBaseAuto() {
     private fun Anvil.initialDeposit() = this
         .addTemporalMarker(-165) {
             bot.lift.targetHeight -= AutoData.DEPOSIT_DROP_AMOUNT
-            bot.arm.setToForwardsPos()
+            bot.arm.setToForwardsAngledPos()
         }
         .addTemporalMarker(50) {
             bot.claw.openForDeposit()
             bot.intake.enable()
         }
+        .addTemporalMarker(60) {
+            bot.lift.targetHeight = liftOffsets[0]
+        }
 
     private fun Anvil.deposit(iterations: Int) = this.apply {
         addTemporalMarker(-165) {
             bot.lift.targetHeight -= AutoData.DEPOSIT_DROP_AMOUNT
-            bot.arm.setToForwardsPos()
+            bot.arm.setToForwardsAngledPos()
         }
 
         val durationOffset = if (iterations < 4) -20 else -70
@@ -135,17 +138,8 @@ class AnActuallyGoodAutoOnSouthHighPole : RogueBaseAuto() {
 
     private fun Anvil.regularIntakePrep(iterations: Int) = this
         .addTemporalMarker(185) {
-            when (iterations) {
-                0 -> {
-                    bot.lift.targetHeight = liftOffsets[iterations]+12
-                }
-                1 -> {
-                    bot.lift.targetHeight = liftOffsets[iterations]+15
-                }
-                else -> {
-                    bot.lift.targetHeight = liftOffsets[iterations]
-                }
-            }
+            bot.lift.targetHeight = liftOffsets[iterations]
+
             bot.wrist.setToBackwardsPos()
             bot.arm.setToBackwardsLowerPos()
         }

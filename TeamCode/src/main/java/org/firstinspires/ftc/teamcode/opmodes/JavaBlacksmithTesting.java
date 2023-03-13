@@ -39,7 +39,7 @@ public class JavaBlacksmithTesting extends BlackOp {
 
         Scheduler.launchOnStart(this, () -> {
             bot.getDrivetrain().drive(driver.getGamepad(), powerMulti);
-            bot.updateComponents(true);
+            bot.updateComponents(true, false);
             mTelemetry().addData("Hi isn't null?", hi != null);
             mTelemetry().update();
         });

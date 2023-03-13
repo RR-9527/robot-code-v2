@@ -43,7 +43,7 @@ abstract class RogueBaseTele : BlackOp() {
 
         Scheduler.debug({ opModeIsActive() && !isStopRequested }) {
             bot.drivetrain.drive(driver.gamepad, powerMulti)
-            bot.updateComponents(useLiftDeadzone = true)
+            bot.updateComponents(useLiftDeadzone = true, false)
 
             bot.lift.printLiftTelem()
             mTelemetry.addData("Loop time", loopTime)

@@ -55,7 +55,7 @@ abstract class RogueBaseAuto : BlackOp() {
         bot.camera.lookDown()
 
         Scheduler.debug({ opModeIsActive() && !isStopRequested }) {
-            bot.updateComponents(useLiftDeadzone = false)
+            bot.updateComponents(useLiftDeadzone = false, true)
 
             bot.lift.printLiftTelem()
             mTelemetry.addLine("Pole offset: x->${poleOffset.x}, y->${poleOffset.y}")

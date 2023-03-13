@@ -42,10 +42,12 @@ class Camera {
 
     fun lookForwards() {
         targetAngle = CAM_FORWARDS
+        update()
     }
 
     fun lookDown() {
         targetAngle = CAM_LOOKDOWN
+        update()
     }
 
     fun update() {
