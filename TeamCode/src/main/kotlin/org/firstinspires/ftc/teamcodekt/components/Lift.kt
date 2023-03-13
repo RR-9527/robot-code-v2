@@ -30,17 +30,17 @@ import kotlin.math.abs
 
 @JvmField var ANGLED_LIFT_LOW  = 210
 @JvmField var ANGLED_LIFT_MID  = 340
-@JvmField var ANGLED_LIFT_HIGH = 600
+@JvmField var ANGLED_LIFT_HIGH = 615
 
 @JvmField var NORMAL_LIFT_P = 0.0005
 @JvmField var NORMAL_LIFT_I = 0.0001
 @JvmField var NORMAL_LIFT_D = 0.0001
-@JvmField var AUTO_LIFT_P = 0.0009
-@JvmField var AUTO_LIFT_I = 0.0003
-@JvmField var AUTO_LIFT_D = 0.0004
+@JvmField var AUTO_LIFT_P = 0.0014
+@JvmField var AUTO_LIFT_I = 0.00005
+@JvmField var AUTO_LIFT_D = 0.001
 
-@JvmField var PROCESS_NOISE     = 10.0
-@JvmField var MEASUREMENT_NOISE = 10.0
+@JvmField var PROCESS_NOISE     = 99999999.0
+@JvmField var MEASUREMENT_NOISE = 99999999.0
 
 @JvmField var MAX_V = 20000.0
 @JvmField var MAX_A = 20000.0

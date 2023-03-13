@@ -64,8 +64,7 @@ class Camera {
             R.id.cameraMonitorViewId,
         )
 
-//        camera.setPipeline(aprilTagDetectionPipeline)
-        camera.setPipeline(tapeDetectorPipeline)
+        camera.setPipeline(aprilTagDetectionPipeline)
 
         camera.openCameraDeviceAsync(object : OpenCvCamera.AsyncCameraOpenListener {
             override fun onOpened() {

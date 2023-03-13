@@ -53,20 +53,20 @@ class AnActuallyGoodAutoOnSouthHighPole : RogueBaseAuto() {
         .turn(-49-90)
 
     private fun Anvil.goToDeposit(it: Int) = when (it) {
-        0 -> splineTo(3 + poleOffset.x, -2.5 + poleOffset.y, -30)
-        1 -> splineTo(2+ poleOffset.x, -1.5 + poleOffset.y, -30)
-        2 -> splineTo(4.25 + poleOffset.x, 1 + poleOffset.y, -30)
-        3 -> splineTo(5 + poleOffset.x, 2 + poleOffset.y, -30)
-        4 -> splineTo(3.5 + poleOffset.x, -2.5 + poleOffset.y, -30)
+        0 -> splineTo(4.5 + poleOffset.x, -3 + poleOffset.y, -34)
+        1 -> splineTo(5+ poleOffset.x, -1.8 + poleOffset.y, -33)
+        2 -> splineTo(5.5 + poleOffset.x, 3.5 + poleOffset.y, -33)
+        3 -> splineTo(6.3 + poleOffset.x, 4.2 + poleOffset.y, -30)
+        4 -> splineTo(7 + poleOffset.x, 5.5 + poleOffset.y, -30)
         else -> throw CycleException()
     }
 
     private fun Anvil.goToIntake(it: Int) = when (it) {
-        0 -> splineTo(-179, 15, 180)
-        1 -> splineTo(-179, 23, 180)
-        2 -> splineTo(-178.5, 26, 180)
-        3 -> splineTo(-178.5, 28, 180)
-        4 -> splineTo(-178.5, 31, 180)
+        0 -> splineTo(-180, 15, 180)
+        1 -> splineTo(-180, 22.5, 180)
+        2 -> splineTo(-180, 27, 180)
+        3 -> splineTo(-180.5, 29.5, 180)
+        4 -> splineTo(-180.5, 33, 180)
         else -> throw CycleException()
     }.doInReverse()
 
@@ -113,7 +113,7 @@ class AnActuallyGoodAutoOnSouthHighPole : RogueBaseAuto() {
     private fun Anvil.initialDeposit() = this
         .addTemporalMarker(-165) {
             bot.lift.targetHeight -= AutoData.DEPOSIT_DROP_AMOUNT
-            bot.arm.setToForwardsAngledPos()
+            bot.arm.targetAngle = 150.0
         }
         .addTemporalMarker(50) {
             bot.claw.openForDeposit()
@@ -126,7 +126,7 @@ class AnActuallyGoodAutoOnSouthHighPole : RogueBaseAuto() {
     private fun Anvil.deposit(iterations: Int) = this.apply {
         addTemporalMarker(-165) {
             bot.lift.targetHeight -= AutoData.DEPOSIT_DROP_AMOUNT
-            bot.arm.setToForwardsAngledPos()
+            bot.arm.targetAngle = 150.0
         }
 
         val durationOffset = if (iterations < 4) -20 else -70
@@ -166,15 +166,13 @@ class AnActuallyGoodAutoOnSouthHighPole : RogueBaseAuto() {
 
             when (signalID) {
                 1 -> {
-                    lineToLinearHeading(-92.5, -21, 90)
-                    lineToLinearHeading(-150, -16, 90)
+                    lineToLinearHeading(-92.5, 33, 90)
                 }
                 2 -> {
-                    lineToLinearHeading(-92.5, -21, 90)
+                    lineToLinearHeading(-92.5, 33, 90)
                 }
                 3 -> {
-                    lineToLinearHeading(-92.5, -21, 90)
-                    lineToLinearHeading(-30, -16, 90)
+                    lineToLinearHeading(-92.5, 33, 90)
                 }
             }
 

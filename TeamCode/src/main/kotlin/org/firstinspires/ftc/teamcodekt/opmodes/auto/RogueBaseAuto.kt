@@ -49,8 +49,10 @@ abstract class RogueBaseAuto : BlackOp() {
 
 
             mTelemetry.update()
-//            signalID = bot.camera.stageDetection(this) ?: 2
+            signalID = bot.camera.stageDetection(this) ?: 2
         }
+
+        bot.camera.setPipeline(bot.camera.tapeDetectorPipeline)
 
         bot.camera.lookDown()
 
