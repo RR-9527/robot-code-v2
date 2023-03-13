@@ -1,9 +1,14 @@
+@file:Config
 package ftc.rogue.blacksmith.util.kalman
 
+import com.acmerobotics.dashboard.config.Config
 import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.acmerobotics.roadrunner.localization.TwoTrackingWheelLocalizer
 import ftc.rogue.blacksmith.units.AngleUnit.DEGREES
 import ftc.rogue.blacksmith.util.toRad
+
+@JvmField
+var defaultVal = 999999999999999.0
 
 /**
  * [READ DOCS FOR THIS (click me)](https://blacksmithftc.vercel.app/util/kalmanfilters/kalmanfilter-localizers)
@@ -13,12 +18,12 @@ class KalmanTwoWheelLocalizer(
 ) : TwoTrackingWheelLocalizer(localizer.getWheelPoses()) {
 
     // Remember heading is in radians
-    private val headingFilter = KalmanFilter(0.25, 0.125)
-    private val wheelPos1Filter = KalmanFilter(9.0, 11.0)
-    private val wheelPos2Filter = KalmanFilter(9.0, 11.0)
-    private val headingVelocityFilter = KalmanFilter(0.500, 0.225)
-    private val wheelPos1VelocityFilter = KalmanFilter(8.0, 7.0)
-    private val wheelPos2VelocityFilter = KalmanFilter(8.0, 7.0)
+    var headingFilter = KalmanFilter(defaultVal, defaultVal)
+    var wheelPos1Filter = KalmanFilter(defaultVal, defaultVal)
+    var wheelPos2Filter = KalmanFilter(defaultVal, defaultVal)
+    var headingVelocityFilter = KalmanFilter(defaultVal, defaultVal)
+    var wheelPos1VelocityFilter = KalmanFilter(defaultVal, defaultVal)
+    var wheelPos2VelocityFilter = KalmanFilter(defaultVal, defaultVal)
 
     override fun getHeading(): Double {
         return headingFilter.filter(localizer.getHeading())

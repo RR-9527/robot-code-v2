@@ -15,25 +15,25 @@ abstract class RogueCombinedAuto : RogueBaseAuto() {
 
     override fun mainTraj(startPose: Pose2d) =
         Anvil.forgeTrajectory(bot.drive, startPose)
-            .initialSetup()
+//            .initialSetup()
             .initialGoToDeposit()
             .initialDeposit()
 
             .doTimes(NUM_CYCLES) {
-                when (it) {
-                    LAST_CYCLE -> fastIntakePrep(it)
-                    else -> regularIntakePrep(it)
-                }
+//                when (it) {
+//                    LAST_CYCLE -> fastIntakePrep(it)
+//                    else -> regularIntakePrep(it)
+//                }
 
                 goToIntake(it)
 
-                when (it) {
-                    LAST_CYCLE -> awaitFastIntake()
-                    else -> awaitRegularIntake()
-                }
+//                when (it) {
+//                    LAST_CYCLE -> awaitFastIntake()
+//                    else -> awaitRegularIntake()
+//                }
 
                 goToDeposit(it)
-                deposit()
+//                deposit()
             }
 
             .thenRun(::parkTraj)

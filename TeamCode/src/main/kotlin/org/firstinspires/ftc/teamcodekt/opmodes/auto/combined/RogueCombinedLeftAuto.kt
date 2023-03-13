@@ -40,13 +40,15 @@ class RogueCombinedLeftAuto : RogueCombinedAuto() {
     }
 
     override fun Anvil.goToIntake(it: Int) = when (it) {
-        0 -> splineTo(-164.1, -22.0 - 1.5, 180)
-        1 -> splineTo(-163.1, -19.5 - 1.7, 180)
-        2 -> splineTo(-162.5, -16.2 + 0.6, 180)
-        3 -> splineTo(-162.0, -14.7 + 1.7, 180)
-        4 -> splineTo(-161.5, -13.8 + 2.8, 180)
+        0 -> splineTo(-164.1, 5, 180)
+        1 -> splineTo(-163.1, 5, 180)
+        2 -> splineTo(-162.5, 5, 180)
+        3 -> splineTo(-162.0, 5, 180)
+        4 -> splineTo(-161.5, 5, 180)
         else -> throw CycleException()
-    }.doInReverse()
+    }
+        .addTemporalMarker() {}
+        .doInReverse()
 
     override fun parkTraj(startPose: Pose2d) =
         Anvil.forgeTrajectory(bot.drive, startPose) {

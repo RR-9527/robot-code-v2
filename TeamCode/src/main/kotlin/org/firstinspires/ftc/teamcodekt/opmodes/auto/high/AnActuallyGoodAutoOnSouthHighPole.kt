@@ -13,12 +13,11 @@ import org.firstinspires.ftc.teamcodekt.opmodes.auto.RogueBaseAuto
 import org.firstinspires.ftc.teamcodekt.util.CycleException
 
 @Autonomous
-class RogueHighLeftAuto : RogueBaseAuto() {
+class AnActuallyGoodAutoOnSouthHighPole : RogueBaseAuto() {
     override val startPose = GlobalUnits.pos(-91, -163, 90)
 
     override fun mainTraj(startPose: Pose2d) =
         Anvil.forgeTrajectory(bot.drive, startPose)
-            .setVelConstraint(40, 250.toRad(), DriveConstants.TRACK_WIDTH)
 
 //            .addTemporalMarker {
 //                bot.lift.goToAngledMid()
@@ -28,7 +27,7 @@ class RogueHighLeftAuto : RogueBaseAuto() {
 //            }
 
             .initialGoToDeposit()
-            .initialDeposit()
+//            .initialDeposit()
 
             .doTimes(NUM_CYCLES) {
 //                when (it) {
@@ -50,25 +49,24 @@ class RogueHighLeftAuto : RogueBaseAuto() {
             .thenRun(::parkTraj)
 
     private fun Anvil.initialGoToDeposit() = this
-        .forward(132)
-        .turn(-49.5)
-        .lineToLinearHeading(-78.75 + poleOffset.x, -15.5 + poleOffset.y, 49)
+        .lineTo(-91 + poleOffset.x, -12 + poleOffset.y)
+        .turn(-49-90)
 
     private fun Anvil.goToDeposit(it: Int) = when (it) {
-        0 -> splineTo(-81.3 + poleOffset.x, -12.2 + poleOffset.y, 42.3)
-        1 -> splineTo(-81.1 + poleOffset.x, -12.2 + poleOffset.y, 39.0)
-        2 -> splineTo(-80.7 + poleOffset.x, -12.6 + poleOffset.y, 32.8)
-        3 -> splineTo(-80.7 + poleOffset.x, -09.5 + poleOffset.y, 32.5)
-        4 -> splineTo(-80.1 + poleOffset.x, -09.5 + poleOffset.y, 30.0)
+        0 -> splineTo(-2 + poleOffset.x, 2 + poleOffset.y, -30)
+        1 -> splineTo(-2+ poleOffset.x, 4 + poleOffset.y, -30)
+        2 -> splineTo(-2 + poleOffset.x, 4 + poleOffset.y, -30)
+        3 -> splineTo(-2 + poleOffset.x, 4 + poleOffset.y, -30)
+        4 -> splineTo(-2 + poleOffset.x, 4 + poleOffset.y, -30)
         else -> throw CycleException()
     }
 
     private fun Anvil.goToIntake(it: Int) = when (it) {
-        0 -> splineTo(-161.8, -22.0, 180)
-        1 -> splineTo(-161.3, -21.5, 180)
-        2 -> splineTo(-161.0, -21.2, 180)
-        3 -> splineTo(-160.4, -20.9, 180)
-        4 -> splineTo(-160.6, -20.7, 180)
+        0 -> splineTo(-180, 14.5, 180)
+        1 -> splineTo(-180, 17.7, 180)
+        2 -> splineTo(-180, 20.5, 180)
+        3 -> splineTo(-180, 22.5, 180)
+        4 -> splineTo(-180, 26.5, 180)
         else -> throw CycleException()
     }.doInReverse()
 
