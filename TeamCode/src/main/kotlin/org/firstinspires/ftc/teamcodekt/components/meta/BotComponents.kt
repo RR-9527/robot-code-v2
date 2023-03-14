@@ -13,12 +13,10 @@ abstract class BaseBotComponents {
     val wrist  = Wrist()
     val lift   = Lift()
 
-    open fun updateComponents(useLiftDeadzone: Boolean, auto: Boolean) {
+    open fun updateComponents(useLiftDeadzone: Boolean) {
         claw.update()
         arm.update()
         wrist.update()
-//        lift.update(useLiftDeadzone)
-        lift.updateMotionProfile(auto)
     }
 }
 
@@ -31,7 +29,12 @@ fun createTeleOpBotComponents() =
 data class TeleOpBotComponents(
     val rcs: RevColorSensorV3,
     val drivetrain: Drivetrain,
-) : BaseBotComponents()
+) : BaseBotComponents() {
+    override fun updateComponents(useLiftDeadzone: Boolean) {
+        super.updateComponents(useLiftDeadzone)
+        lift.update(false)
+    }
+}
 
 fun createAutoBotComponents() =
     AutoBotComponents(
@@ -43,9 +46,10 @@ data class AutoBotComponents(
     val drive: SampleMecanumDrive,
     val camera: Camera,
 ) : BaseBotComponents() {
-    override fun updateComponents(useLiftDeadzone: Boolean, auto: Boolean) {
-        super.updateComponents(useLiftDeadzone, true)
+    override fun updateComponents(useLiftDeadzone: Boolean) {
+        super.updateComponents(useLiftDeadzone)
         camera.update()
         drive.update()
+        lift.updateMotionProfile(true)
     }
 }

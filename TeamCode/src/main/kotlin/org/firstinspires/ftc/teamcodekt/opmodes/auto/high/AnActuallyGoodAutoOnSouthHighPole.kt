@@ -9,6 +9,7 @@ import ftc.rogue.blacksmith.util.toRad
 import org.firstinspires.ftc.teamcode.AutoData
 import org.firstinspires.ftc.teamcode.AutoData.liftOffsets
 import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants
+import org.firstinspires.ftc.teamcodekt.components.LIFT_HIGH_AUTO
 import org.firstinspires.ftc.teamcodekt.opmodes.auto.RogueBaseAuto
 import org.firstinspires.ftc.teamcodekt.util.CycleException
 
@@ -83,7 +84,7 @@ class AnActuallyGoodAutoOnSouthHighPole : RogueBaseAuto() {
 
         .addTemporalMarker(190) {
             bot.arm.setToForwardsPos()
-            bot.lift.goToHigh()
+            bot.lift.targetHeight = LIFT_HIGH_AUTO
         }
 
         .addTemporalMarker(390) {
@@ -102,7 +103,7 @@ class AnActuallyGoodAutoOnSouthHighPole : RogueBaseAuto() {
         }
 
         .addTemporalMarker(60) {
-            bot.lift.goToHigh()
+            bot.lift.targetHeight = LIFT_HIGH_AUTO
         }
 
         .addTemporalMarker(200) {
