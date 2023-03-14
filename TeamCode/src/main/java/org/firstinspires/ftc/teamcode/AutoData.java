@@ -8,11 +8,11 @@ import com.acmerobotics.dashboard.config.Config;
 public class AutoData {
     public static int DEPOSIT_DROP_AMOUNT = 150;
 
-    public static int AUTO_INTAKE_LIFT_HEIGHT_1 = 134;
-    public static int AUTO_INTAKE_LIFT_HEIGHT_2 = 103;
-    public static int AUTO_INTAKE_LIFT_HEIGHT_3 = 79;
-    public static int AUTO_INTAKE_LIFT_HEIGHT_4 = 40;
-    public static int AUTO_INTAKE_LIFT_HEIGHT_5 = 0;
+    public static int AUTO_INTAKE_LIFT_HEIGHT_1 = 120;
+    public static int AUTO_INTAKE_LIFT_HEIGHT_2 = 90;
+    public static int AUTO_INTAKE_LIFT_HEIGHT_3 = 60;
+    public static int AUTO_INTAKE_LIFT_HEIGHT_4 = 22;
+    public static int AUTO_INTAKE_LIFT_HEIGHT_5 = -8;
 
     public static final int[] liftOffsets = {
         AUTO_INTAKE_LIFT_HEIGHT_1,

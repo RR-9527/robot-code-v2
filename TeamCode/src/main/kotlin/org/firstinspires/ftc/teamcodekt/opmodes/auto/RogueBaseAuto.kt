@@ -5,6 +5,7 @@ package org.firstinspires.ftc.teamcodekt.opmodes.auto
 import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.acmerobotics.roadrunner.geometry.Vector2d
 import com.outoftheboxrobotics.photoncore.PhotonCore
+import com.qualcomm.hardware.lynx.LynxModule
 import ftc.rogue.blacksmith.Anvil
 import ftc.rogue.blacksmith.BlackOp
 import ftc.rogue.blacksmith.Scheduler
@@ -31,8 +32,9 @@ abstract class RogueBaseAuto : BlackOp() {
         private set
 
     final override fun go() {
-        PhotonCore.experimental.setMaximumParallelCommands(8)
+        PhotonCore.experimental.setMaximumParallelCommands(6)
         PhotonCore.enable()
+        PhotonCore.CONTROL_HUB.bulkCachingMode = LynxModule.BulkCachingMode.MANUAL
 
 //        Imu.init(this)
 //        Imu.start()
@@ -46,13 +48,12 @@ abstract class RogueBaseAuto : BlackOp() {
         bot.camera.lookForwards()
 
         while (!opModeIsActive()) {
-
-
             mTelemetry.update()
             signalID = bot.camera.stageDetection(this) ?: 2
         }
 
-        bot.camera.setPipeline(bot.camera.tapeDetectorPipeline)
+        bot.camera.camera.stopStreaming()
+//        bot.camera.setPipeline(bot.camera.tapeDetectorPipeline)
 
         bot.camera.lookDown()
 
@@ -67,6 +68,8 @@ abstract class RogueBaseAuto : BlackOp() {
             mTelemetry.addData("Pipeline ms", bot.camera.camera.pipelineTimeMs)
             mTelemetry.addData("Angle: ", bot.camera.tapeDetectorPipeline.tapeAngle)
             mTelemetry.update()
+
+            PhotonCore.CONTROL_HUB.clearBulkCache()
         }
     }
 

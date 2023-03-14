@@ -118,7 +118,7 @@ public class TapeDetector extends OpenCvPipeline {
         // Determine true tape center
         double pixels = (leftAvg+rightAvg)/2;
 
-        // Temporary, just for line visualization
+        // for line visualization
         for(double[] l: lines)
             if((l[2]+l[0])/2 < biasedAverage)
                 Imgproc.line(src, new Point(l[0], l[1]), new Point(l[2], l[3]), new Scalar(255, 0, 0), 3, Imgproc.LINE_AA, 0);

@@ -35,9 +35,9 @@ import kotlin.math.abs
 @JvmField var NORMAL_LIFT_P = 0.0005
 @JvmField var NORMAL_LIFT_I = 0.0001
 @JvmField var NORMAL_LIFT_D = 0.0001
-@JvmField var AUTO_LIFT_P = 0.0014
-@JvmField var AUTO_LIFT_I = 0.00005
-@JvmField var AUTO_LIFT_D = 0.001
+@JvmField var AUTO_LIFT_P = 0.00185
+@JvmField var AUTO_LIFT_I = 0.00002
+@JvmField var AUTO_LIFT_D = 0.0011
 
 @JvmField var PROCESS_NOISE     = 99999999.0
 @JvmField var MEASUREMENT_NOISE = 99999999.0
@@ -84,7 +84,6 @@ class Lift {
         set(height) {
             targetHeight = height.clamp(LIFT_ZERO, LIFT_HIGH)
             generateMotionProfile()
-
         }
 
     fun goToZero() {

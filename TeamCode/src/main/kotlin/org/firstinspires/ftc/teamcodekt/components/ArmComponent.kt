@@ -12,11 +12,11 @@ object ArmComponent {
     const val tArmBackwards = 42.0
 
     @SetMethodName("goToRest")
-    const val tArmResting = 96.0
+    const val tArmResting = 90.0
 
     const val tArmBackwardsLower = 42.0
     const val tArmForwardsAngled = 122.5
-    const val tArmForwardsDown = 142.0
+    const val tArmForwardsDown = 160.0
 
     private val armServo = SimpleServo(hwMap, DeviceNames.ARM_SERVO, 0.0, 180.0)
 
