@@ -58,17 +58,17 @@ class AnActuallyGoodAutoOnSouthHighPole : RogueBaseAuto() {
         0 -> splineTo(8.35 + poleOffset.x, -5.5 + poleOffset.y, -34)
         1 -> splineTo(8.5 + poleOffset.x, -3.8 + poleOffset.y, -33)
         2 -> splineTo(9 + poleOffset.x, +1.5 + poleOffset.y, -33)
-        3 -> splineTo(9.8 + poleOffset.x, +2.3 + poleOffset.y, -30)
-        4 -> splineTo(10.5 + poleOffset.x, +3.5 + poleOffset.y, -30)
+        3 -> splineTo(9.8 + poleOffset.x, +2.8 + poleOffset.y, -30)
+        4 -> splineTo(10.5 + poleOffset.x, +6 + poleOffset.y, -30)
         else -> throw CycleException()
     }
 
     private fun Anvil.goToIntake(it: Int) = when (it) {
-        0 -> splineTo(-180.5, 15, 180)
-        1 -> splineTo(-180, 23, 180)
-        2 -> splineTo(-180, 28, 180)
-        3 -> splineTo(-180, 29.9, 180)
-        4 -> splineTo(-178.5, 35.4, 180)
+        0 -> splineTo(-178.7, 15, 180)
+        1 -> splineTo(-178.2, 23, 180)
+        2 -> splineTo(-178, 29.5, 180)
+        3 -> splineTo(-177.7, 31.6, 180)
+        4 -> splineTo(-177.3, 36, 180)
         else -> throw CycleException()
     }.doInReverse()
 
@@ -77,20 +77,20 @@ class AnActuallyGoodAutoOnSouthHighPole : RogueBaseAuto() {
             bot.intake.disable()
         }
 
-        .addTemporalMarker(-50) {
+        .addTemporalMarker(-60) {
             bot.claw.close()
         }
 
-        .addTemporalMarker(275) {
+        .addTemporalMarker(190) {
             bot.arm.setToForwardsPos()
             bot.lift.goToHigh()
         }
 
-        .addTemporalMarker(425) {
+        .addTemporalMarker(390) {
             bot.wrist.setToForwardsPos()
         }
 
-        .waitTime(120)
+        .waitTime(80)
 
     private fun Anvil.awaitFastIntake() = this
         .addTemporalMarker(-275) {
@@ -101,16 +101,20 @@ class AnActuallyGoodAutoOnSouthHighPole : RogueBaseAuto() {
             bot.claw.close()
         }
 
-        .addTemporalMarker(50) {
-            bot.arm.setToForwardsPos()
+        .addTemporalMarker(60) {
             bot.lift.goToHigh()
         }
 
-        .addTemporalMarker(100) {
-            bot.wrist.setToForwardsPos()
+        .addTemporalMarker(200) {
+            bot.arm.setToForwardsPos()
+
         }
 
-        .waitTime(120)
+        .addTemporalMarker(210) {
+            bot.wrist.setToForwardsPos()
+        }
+        .waitTime(0)
+
 
     private fun Anvil.initialDeposit() = this
         .addTemporalMarker(-165) {
@@ -140,10 +144,10 @@ class AnActuallyGoodAutoOnSouthHighPole : RogueBaseAuto() {
 
     private fun Anvil.regularIntakePrep(iterations: Int) = this
         .addTemporalMarker(185) {
-            bot.lift.targetHeight = liftOffsets[iterations]
+            bot.lift.targetHeight = liftOffsets[iterations] - 10
 
             bot.wrist.setToBackwardsPos()
-            bot.arm.setToBackwardsLowerPos()
+            bot.arm.targetAngle = 44.0
         }
 
         .addTemporalMarker(325) {
@@ -168,13 +172,13 @@ class AnActuallyGoodAutoOnSouthHighPole : RogueBaseAuto() {
 
             when (signalID) {
                 1 -> {
-                    lineToLinearHeading(-92.5, 37.5, 90)
+                    lineToLinearHeading(-2.5, 37.5, 0)
                 }
                 2 -> {
-                    lineToLinearHeading(-92.5, 37.5, 90)
+                    lineToLinearHeading(-92.5, 37.5, 0)
                 }
                 3 -> {
-                    lineToLinearHeading(-92.5, 37.5, 90)
+                    lineToLinearHeading(-160, 37.5, 0)
                 }
             }
 
