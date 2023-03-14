@@ -65,10 +65,10 @@ class AnActuallyGoodAutoOnSouthHighPole : RogueBaseAuto() {
 
     private fun Anvil.goToIntake(it: Int) = when (it) {
         0 -> splineTo(-180.5, 15, 180)
-        1 -> splineTo(-180, 22, 180)
-        2 -> splineTo(-180, 27, 180)
-        3 -> splineTo(-180, 28.9, 180)
-        4 -> splineTo(-178.5, 33.4, 180)
+        1 -> splineTo(-180, 23, 180)
+        2 -> splineTo(-180, 28, 180)
+        3 -> splineTo(-180, 29.9, 180)
+        4 -> splineTo(-178.5, 35.4, 180)
         else -> throw CycleException()
     }.doInReverse()
 
@@ -77,20 +77,20 @@ class AnActuallyGoodAutoOnSouthHighPole : RogueBaseAuto() {
             bot.intake.disable()
         }
 
-        .addTemporalMarker {
+        .addTemporalMarker(-50) {
             bot.claw.close()
         }
 
         .addTemporalMarker(275) {
+            bot.arm.setToForwardsPos()
             bot.lift.goToHigh()
         }
 
         .addTemporalMarker(425) {
-            bot.arm.setToForwardsPos()
             bot.wrist.setToForwardsPos()
         }
 
-        .waitTime(200)
+        .waitTime(120)
 
     private fun Anvil.awaitFastIntake() = this
         .addTemporalMarker(-275) {
@@ -168,13 +168,13 @@ class AnActuallyGoodAutoOnSouthHighPole : RogueBaseAuto() {
 
             when (signalID) {
                 1 -> {
-                    lineToLinearHeading(-92.5, 33, 90)
+                    lineToLinearHeading(-92.5, 37.5, 90)
                 }
                 2 -> {
-                    lineToLinearHeading(-92.5, 33, 90)
+                    lineToLinearHeading(-92.5, 37.5, 90)
                 }
                 3 -> {
-                    lineToLinearHeading(-92.5, 33, 90)
+                    lineToLinearHeading(-92.5, 37.5, 90)
                 }
             }
 
