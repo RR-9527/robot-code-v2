@@ -26,10 +26,7 @@ import kotlin.math.abs
 @JvmField var LIFT_MID  = 430
 @JvmField var LIFT_HIGH = 710
 
-// Slightly higher because auto uses motion profiling
-@JvmField var LIFT_HIGH_AUTO = 720
 
-// Deprecated - we dont do this anymore
 @JvmField var ANGLED_LIFT_LOW  = 210
 @JvmField var ANGLED_LIFT_MID  = 340
 @JvmField var ANGLED_LIFT_HIGH = 615
@@ -45,7 +42,7 @@ import kotlin.math.abs
 @JvmField var TELEOP_MP_D = 0.00015
 
 // Motion profiling PID values for auto
-@JvmField var AUTO_MP_P = 0.00185
+@JvmField var AUTO_MP_P = 0.0028
 @JvmField var AUTO_MP_I = 0.00002
 @JvmField var AUTO_MP_D = 0.0011
 

@@ -50,6 +50,6 @@ data class AutoBotComponents(
         super.updateComponents(useLiftDeadzone)
         camera.update()
         drive.update()
-        lift.updateMotionProfile(true)
+        lift.update(true)
     }
 }

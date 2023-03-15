@@ -5,11 +5,12 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import ftc.rogue.blacksmith.Anvil
 import ftc.rogue.blacksmith.units.GlobalUnits
+import ftc.rogue.blacksmith.util.toIn
 import ftc.rogue.blacksmith.util.toRad
 import org.firstinspires.ftc.teamcode.AutoData
 import org.firstinspires.ftc.teamcode.AutoData.liftOffsets
 import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants
-import org.firstinspires.ftc.teamcodekt.components.LIFT_HIGH_AUTO
+import org.firstinspires.ftc.teamcodekt.components.LIFT_MID
 import org.firstinspires.ftc.teamcodekt.opmodes.auto.RogueBaseAuto
 import org.firstinspires.ftc.teamcodekt.util.CycleException
 
@@ -21,7 +22,7 @@ class AnActuallyGoodAutoOnSouthHighPole : RogueBaseAuto() {
         Anvil.forgeTrajectory(bot.drive, startPose)
 
             .addTemporalMarker {
-                bot.lift.goToMid()
+                bot.lift.targetHeight = LIFT_MID + 10
                 bot.claw.close()
                 bot.arm.setToForwardsPos()
                 bot.wrist.setToForwardsPos()
@@ -56,20 +57,20 @@ class AnActuallyGoodAutoOnSouthHighPole : RogueBaseAuto() {
         .splineTo(-77.5, -10.5, -25)
 
     private fun Anvil.goToDeposit(it: Int) = when (it) {
-        0 -> splineTo(8.35 + poleOffset.x, -5.5 + poleOffset.y, -34)
-        1 -> splineTo(8.5 + poleOffset.x, -3.8 + poleOffset.y, -33)
-        2 -> splineTo(9 + poleOffset.x, +1.5 + poleOffset.y, -33)
-        3 -> splineTo(9.8 + poleOffset.x, +2.8 + poleOffset.y, -30)
-        4 -> splineTo(10.5 + poleOffset.x, +6 + poleOffset.y, -30)
+        0 -> splineTo(6.85 + poleOffset.x, -5.5 + poleOffset.y, -30)
+        1 -> splineTo(7 + poleOffset.x, -3.8 + poleOffset.y, -28)
+        2 -> splineTo(7.5 + poleOffset.x, +1.5 + poleOffset.y, -27)
+        3 -> splineTo(8.3 + poleOffset.x, +2.8 + poleOffset.y, -25)
+        4 -> splineTo(9 + poleOffset.x, +6 + poleOffset.y, -24.5)
         else -> throw CycleException()
     }
 
     private fun Anvil.goToIntake(it: Int) = when (it) {
-        0 -> splineTo(-178.7, 15, 180)
-        1 -> splineTo(-178.2, 23, 180)
-        2 -> splineTo(-178, 29.5, 180)
-        3 -> splineTo(-177.7, 31.6, 180)
-        4 -> splineTo(-177.3, 36, 180)
+        0 -> splineTo(-180.5, 15, 180)
+        1 -> splineTo(-180.25, 21.5, 180)
+        2 -> splineTo(-180.1, 25.8, 180)
+        3 -> splineTo(-178.9, 31, 180)
+        4 -> splineTo(-180, 34.8, 180)
         else -> throw CycleException()
     }.doInReverse()
 
@@ -81,13 +82,17 @@ class AnActuallyGoodAutoOnSouthHighPole : RogueBaseAuto() {
         .addTemporalMarker(-60) {
             bot.claw.close()
         }
+//        .addTemporalMarker(90) {
+//            mTelemetry.addLine("Setting pose... $tapeCorrection cm.")
+//            bot.drive.poseEstimate = (Pose2d(bot.drive.poseEstimate.x, bot.drive.poseEstimate.y+tapeCorrection.toIn(), bot.drive.poseEstimate.heading))
+//        }
 
         .addTemporalMarker(190) {
             bot.arm.setToForwardsPos()
-            bot.lift.targetHeight = LIFT_HIGH_AUTO
+            bot.lift.goToHigh()
         }
 
-        .addTemporalMarker(390) {
+        .addTemporalMarker(450) {
             bot.wrist.setToForwardsPos()
         }
 
@@ -103,7 +108,7 @@ class AnActuallyGoodAutoOnSouthHighPole : RogueBaseAuto() {
         }
 
         .addTemporalMarker(60) {
-            bot.lift.targetHeight = LIFT_HIGH_AUTO
+            bot.lift.goToHigh()
         }
 
         .addTemporalMarker(200) {
@@ -111,7 +116,7 @@ class AnActuallyGoodAutoOnSouthHighPole : RogueBaseAuto() {
 
         }
 
-        .addTemporalMarker(210) {
+        .addTemporalMarker(350) {
             bot.wrist.setToForwardsPos()
         }
         .waitTime(0)

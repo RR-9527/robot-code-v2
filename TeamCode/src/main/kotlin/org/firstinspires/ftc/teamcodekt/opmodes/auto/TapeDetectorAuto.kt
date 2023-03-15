@@ -15,10 +15,10 @@ class TapeDetectorAuto : RogueBaseAuto() {
         Anvil.forgeTrajectory(bot.drive, startPose)
             .back(150)
             .addTemporalMarker(-25) {
-                updateTapeCorrection()
+//                updateTapeCorrection()
             }
             .addTemporalMarker(-15) {
-                bot.drive.poseEstimate = (Pose2d(bot.drive.poseEstimate.x, bot.drive.poseEstimate.y+tapeCorrection.toIn(), bot.drive.poseEstimate.heading))
+//                bot.drive.poseEstimate = (Pose2d(bot.drive.poseEstimate.x, bot.drive.poseEstimate.y+tapeCorrection.toIn(), bot.drive.poseEstimate.heading))
             }
 
 

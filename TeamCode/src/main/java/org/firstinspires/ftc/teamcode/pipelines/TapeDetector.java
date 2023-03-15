@@ -125,8 +125,8 @@ public class TapeDetector extends OpenCvPipeline {
             else
                 Imgproc.line(src, new Point(l[0], l[1]), new Point(l[2], l[3]), new Scalar(0, 255, 0), 3, Imgproc.LINE_AA, 0);
 
-        tapeAngle = 60*(pixels/width)-30;
-        correction = adjustment(tapeAngle);
+        tapeAngle = 60*(pixels/width)-30+9;
+        correction = adjustment(tapeAngle)+1;
 
 //        telemetry.addData("Estimated pixel position", avg);
 //        src.release();

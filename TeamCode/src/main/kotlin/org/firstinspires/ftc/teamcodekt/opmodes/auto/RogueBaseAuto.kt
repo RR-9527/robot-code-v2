@@ -66,7 +66,9 @@ abstract class RogueBaseAuto : BlackOp() {
             mTelemetry.addData("FPS", bot.camera.camera.fps)
             mTelemetry.addData("Overhead ms", bot.camera.camera.overheadTimeMs)
             mTelemetry.addData("Pipeline ms", bot.camera.camera.pipelineTimeMs)
-            mTelemetry.addData("Angle: ", bot.camera.tapeDetectorPipeline.tapeAngle)
+//            updateTapeCorrection()
+//            mTelemetry.addData("Angle: ", bot.camera.tapeDetectorPipeline.tapeAngle)
+//            mTelemetry.addData("Correction: ", bot.camera.tapeDetectorPipeline.correction)
             mTelemetry.update()
 
             PhotonCore.CONTROL_HUB.clearBulkCache()
