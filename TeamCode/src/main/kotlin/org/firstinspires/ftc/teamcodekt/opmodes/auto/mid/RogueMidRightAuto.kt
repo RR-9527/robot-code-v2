@@ -2,10 +2,12 @@ package org.firstinspires.ftc.teamcodekt.opmodes.auto.mid
 
 import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
+import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import ftc.rogue.blacksmith.Anvil
 import ftc.rogue.blacksmith.units.GlobalUnits
 import org.firstinspires.ftc.teamcodekt.util.CycleException
 
+@Disabled
 @Autonomous
 class RogueMidRightAuto : RogueMidAuto() {
     override val startPose = GlobalUnits.pos(91, -163, 90)
