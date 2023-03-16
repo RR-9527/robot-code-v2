@@ -14,16 +14,15 @@ import org.firstinspires.ftc.teamcodekt.components.LIFT_MID
 import org.firstinspires.ftc.teamcodekt.opmodes.auto.RogueBaseAuto
 import org.firstinspires.ftc.teamcodekt.util.CycleException
 
-@Disabled
 @Autonomous
-class HighAuto14VSouthPole : RogueBaseAuto() {
+class NewHighAuto : RogueBaseAuto() {
     override val startPose = GlobalUnits.pos(-91, -163, 90)
 
     override fun mainTraj(startPose: Pose2d) =
         Anvil.forgeTrajectory(bot.drive, startPose)
 
             .addTemporalMarker {
-                bot.lift.targetHeight = LIFT_MID + 10
+                bot.lift.targetHeight = LIFT_MID
                 bot.claw.close()
                 bot.arm.setToForwardsPos()
                 bot.wrist.setToForwardsPos()
@@ -55,23 +54,23 @@ class HighAuto14VSouthPole : RogueBaseAuto() {
 //        .splineTo(-94, -8, -49-90)
 //        .lineTo(-93.5 + poleOffset.x, -8 + poleOffset.y)
 //        .turn(-49-90)
-        .splineTo(-78, -10.5, -25)
+        .splineTo(-78, -10.5, -29)
 
     private fun Anvil.goToDeposit(it: Int) = when (it) {
-        0 -> splineTo(3 + poleOffset.x, -7.5 + poleOffset.y, -39.5)
-        1 -> splineTo(3.5 + poleOffset.x, -6 + poleOffset.y, -37.5)
-        2 -> splineTo(4 + poleOffset.x, +1.5 + poleOffset.y, -35)
-        3 -> splineTo(4.5 + poleOffset.x, +2.8 + poleOffset.y, -35)
-        4 -> splineTo(5 + poleOffset.x, +6 + poleOffset.y, -34)
+        0 -> splineTo(-82.3 + poleOffset.x, 30 + poleOffset.y, 49.5)
+        1 -> splineTo(-82.3 + poleOffset.x, 30 + poleOffset.y, 47)
+        2 -> splineTo(-82.7 + poleOffset.x, 30 + poleOffset.y, 46)
+        3 -> splineTo(-82.7 + poleOffset.x, 30 + poleOffset.y, 45)
+        4 -> splineTo(-83.7 + poleOffset.x, 29 + poleOffset.y, 42)
         else -> throw CycleException()
     }
 
     private fun Anvil.goToIntake(it: Int) = when (it) {
-        0 -> splineTo(-182, 15, 180)
-        1 -> splineTo(-182, 22, 180)
-        2 -> splineTo(-182.1, 27, 180)
-        3 -> splineTo(-182, 32.5, 180)
-        4 -> splineTo(-181.8, 36.3, 180)
+        0 -> splineTo(-181.4, 16, 180)
+        1 -> splineTo(-181, 15, 180)
+        2 -> splineTo(-181, 14.25, 180)
+        3 -> splineTo(-181, 13.25, 180)
+        4 -> splineTo(-180.8, 13.25, 180)
         else -> throw CycleException()
     }.doInReverse()
 
@@ -117,10 +116,11 @@ class HighAuto14VSouthPole : RogueBaseAuto() {
 
         }
 
-        .addTemporalMarker(350) {
+        .addTemporalMarker(410) {
             bot.wrist.setToForwardsPos()
         }
         .waitTime(0)
+
 
 
     private fun Anvil.initialDeposit() = this
@@ -151,10 +151,17 @@ class HighAuto14VSouthPole : RogueBaseAuto() {
 
     private fun Anvil.regularIntakePrep(iterations: Int) = this
         .addTemporalMarker(185) {
-            bot.lift.targetHeight = liftOffsets[iterations] - 10
+//            when (iterations) {
+//                0 -> bot.lift.targetHeight = liftOffsets[iterations]-2
+//                1 -> bot.lift.targetHeight = liftOffsets[iterations]-8
+//                2 -> bot.lift.targetHeight = liftOffsets[iterations]-8
+//                3 -> bot.lift.targetHeight = liftOffsets[iterations]-8
+//                4 -> bot.lift.targetHeight = liftOffsets[iterations]-8
+//            }
+            bot.lift.targetHeight = liftOffsets[iterations]-13
 
             bot.wrist.setToBackwardsPos()
-            bot.arm.targetAngle = 44.0
+            bot.arm.targetAngle = 45.0
         }
 
         .addTemporalMarker(325) {
@@ -166,12 +173,13 @@ class HighAuto14VSouthPole : RogueBaseAuto() {
         .addTemporalMarker(185) {
             bot.lift.targetHeight = liftOffsets[iterations]
 
-            bot.arm.targetAngle = 40.0
+            bot.arm.targetAngle = 45.0
             bot.wrist.setToBackwardsPos()
 
             bot.claw.openForIntakeNarrow()
             bot.intake.enable()
         }
+
 
     private fun parkTraj(startPose: Pose2d) =
         Anvil.forgeTrajectory(bot.drive, startPose) {
@@ -179,13 +187,13 @@ class HighAuto14VSouthPole : RogueBaseAuto() {
 
             when (signalID) {
                 1 -> {
-                    lineToLinearHeading(-2.5, 37.5, 0)
+                    lineToLinearHeading(-2.5, 9, 0)
                 }
                 2 -> {
-                    lineToLinearHeading(-92.5, 37.5, 0)
+                    lineToLinearHeading(-92.5, 9, 0)
                 }
                 3 -> {
-                    lineToLinearHeading(-160, 37.5, 0)
+                    lineToLinearHeading(-160, 9, 0)
                 }
             }
 

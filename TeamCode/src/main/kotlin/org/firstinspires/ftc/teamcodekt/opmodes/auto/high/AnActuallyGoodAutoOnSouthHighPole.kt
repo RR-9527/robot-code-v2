@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcodekt.components.LIFT_MID
 import org.firstinspires.ftc.teamcodekt.opmodes.auto.RogueBaseAuto
 import org.firstinspires.ftc.teamcodekt.util.CycleException
 
+@Disabled
 @Autonomous
 class AnActuallyGoodAutoOnSouthHighPole : RogueBaseAuto() {
     override val startPose = GlobalUnits.pos(-91, -163, 90)
@@ -60,17 +61,17 @@ class AnActuallyGoodAutoOnSouthHighPole : RogueBaseAuto() {
         0 -> splineTo(6.85 + poleOffset.x, -5.5 + poleOffset.y, -33.5)
         1 -> splineTo(7 + poleOffset.x, -3.8 + poleOffset.y, -28)
         2 -> splineTo(7.5 + poleOffset.x, +1.5 + poleOffset.y, -27)
-        3 -> splineTo(8.3 + poleOffset.x, +2.8 + poleOffset.y, -24.5)
+        3 -> splineTo(7.5 + poleOffset.x, +2.8 + poleOffset.y, -24.5)
         4 -> splineTo(9 + poleOffset.x, +6 + poleOffset.y, -27.5)
         else -> throw CycleException()
     }
 
     private fun Anvil.goToIntake(it: Int) = when (it) {
-        0 -> splineTo(-180.5, 15, 180)
+        0 -> splineTo(-180.8, 15, 180)
         1 -> splineTo(-180.6, 21.5, 180)
         2 -> splineTo(-180.7, 25.8, 180)
         3 -> splineTo(-180, 31, 180)
-        4 -> splineTo(-180.3, 34.8, 180)
+        4 -> splineTo(-181, 34.8, 180)
         else -> throw CycleException()
     }.doInReverse()
 

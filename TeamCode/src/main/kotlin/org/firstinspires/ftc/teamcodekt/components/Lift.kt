@@ -23,7 +23,7 @@ import kotlin.math.abs
 
 @JvmField var LIFT_ZERO = 0
 @JvmField var LIFT_LOW  = 250
-@JvmField var LIFT_MID  = 430
+@JvmField var LIFT_MID  = 465
 @JvmField var LIFT_HIGH = 710
 
 

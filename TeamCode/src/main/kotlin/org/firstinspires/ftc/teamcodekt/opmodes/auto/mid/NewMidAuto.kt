@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcodekt.opmodes.auto.high
+package org.firstinspires.ftc.teamcodekt.opmodes.auto.mid
 
 import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
@@ -14,16 +14,15 @@ import org.firstinspires.ftc.teamcodekt.components.LIFT_MID
 import org.firstinspires.ftc.teamcodekt.opmodes.auto.RogueBaseAuto
 import org.firstinspires.ftc.teamcodekt.util.CycleException
 
-@Disabled
 @Autonomous
-class HighAuto14VSouthPole : RogueBaseAuto() {
+class NewMidAuto : RogueBaseAuto() {
     override val startPose = GlobalUnits.pos(-91, -163, 90)
 
     override fun mainTraj(startPose: Pose2d) =
         Anvil.forgeTrajectory(bot.drive, startPose)
 
             .addTemporalMarker {
-                bot.lift.targetHeight = LIFT_MID + 10
+                bot.lift.targetHeight = LIFT_MID
                 bot.claw.close()
                 bot.arm.setToForwardsPos()
                 bot.wrist.setToForwardsPos()
@@ -58,20 +57,20 @@ class HighAuto14VSouthPole : RogueBaseAuto() {
         .splineTo(-78, -10.5, -25)
 
     private fun Anvil.goToDeposit(it: Int) = when (it) {
-        0 -> splineTo(3 + poleOffset.x, -7.5 + poleOffset.y, -39.5)
-        1 -> splineTo(3.5 + poleOffset.x, -6 + poleOffset.y, -37.5)
-        2 -> splineTo(4 + poleOffset.x, +1.5 + poleOffset.y, -35)
-        3 -> splineTo(4.5 + poleOffset.x, +2.8 + poleOffset.y, -35)
-        4 -> splineTo(5 + poleOffset.x, +6 + poleOffset.y, -34)
+        0 -> splineTo(-78 + poleOffset.x, -10.5 + poleOffset.y, -25)
+        1 -> splineTo(-78 + poleOffset.x, -10.5 + poleOffset.y, -25)
+        2 -> splineTo(-78 + poleOffset.x, -10.5 + poleOffset.y, -25)
+        3 -> splineTo(-78 + poleOffset.x, -10.5 + poleOffset.y, -25)
+        4 -> splineTo(-78 + poleOffset.x, -10.5 + poleOffset.y, -25)
         else -> throw CycleException()
     }
 
     private fun Anvil.goToIntake(it: Int) = when (it) {
-        0 -> splineTo(-182, 15, 180)
-        1 -> splineTo(-182, 22, 180)
-        2 -> splineTo(-182.1, 27, 180)
-        3 -> splineTo(-182, 32.5, 180)
-        4 -> splineTo(-181.8, 36.3, 180)
+        0 -> splineTo(-182, 16, 180)
+        1 -> splineTo(-182.2, 18.5, 180)
+        2 -> splineTo(-182.1, 19, 180)
+        3 -> splineTo(-182, 21, 180)
+        4 -> splineTo(-181.3, 23, 180)
         else -> throw CycleException()
     }.doInReverse()
 
@@ -90,7 +89,7 @@ class HighAuto14VSouthPole : RogueBaseAuto() {
 
         .addTemporalMarker(190) {
             bot.arm.setToForwardsPos()
-            bot.lift.goToHigh()
+            bot.lift.goToMid()
         }
 
         .addTemporalMarker(450) {
@@ -109,7 +108,7 @@ class HighAuto14VSouthPole : RogueBaseAuto() {
         }
 
         .addTemporalMarker(60) {
-            bot.lift.goToHigh()
+            bot.lift.goToMid()
         }
 
         .addTemporalMarker(200) {
@@ -117,7 +116,7 @@ class HighAuto14VSouthPole : RogueBaseAuto() {
 
         }
 
-        .addTemporalMarker(350) {
+        .addTemporalMarker(410) {
             bot.wrist.setToForwardsPos()
         }
         .waitTime(0)
@@ -151,10 +150,10 @@ class HighAuto14VSouthPole : RogueBaseAuto() {
 
     private fun Anvil.regularIntakePrep(iterations: Int) = this
         .addTemporalMarker(185) {
-            bot.lift.targetHeight = liftOffsets[iterations] - 10
+            bot.lift.targetHeight = liftOffsets[iterations]
 
             bot.wrist.setToBackwardsPos()
-            bot.arm.targetAngle = 44.0
+            bot.arm.targetAngle = 45.0
         }
 
         .addTemporalMarker(325) {
@@ -166,7 +165,7 @@ class HighAuto14VSouthPole : RogueBaseAuto() {
         .addTemporalMarker(185) {
             bot.lift.targetHeight = liftOffsets[iterations]
 
-            bot.arm.targetAngle = 40.0
+            bot.arm.targetAngle = 45.0
             bot.wrist.setToBackwardsPos()
 
             bot.claw.openForIntakeNarrow()
