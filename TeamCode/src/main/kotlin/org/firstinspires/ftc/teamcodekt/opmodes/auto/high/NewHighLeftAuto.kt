@@ -57,20 +57,20 @@ class NewHighLeftAuto : RogueBaseAuto() {
         .splineTo(-78, -10.5, -29)
 
     private fun Anvil.goToDeposit(it: Int) = when (it) {
-        0 -> splineTo(-82.3 + poleOffset.x, 30 + poleOffset.y, 49.5)
-        1 -> splineTo(-82.3 + poleOffset.x, 30 + poleOffset.y, 47)
-        2 -> splineTo(-82.7 + poleOffset.x, 30 + poleOffset.y, 46)
-        3 -> splineTo(-82.7 + poleOffset.x, 30 + poleOffset.y, 45)
-        4 -> splineTo(-83.7 + poleOffset.x, 29 + poleOffset.y, 42)
+        0 -> splineTo(-76.5 + poleOffset.x, 37.3 + poleOffset.y, 30)
+        1 -> splineTo(-76.5 + poleOffset.x, 37.3 + poleOffset.y, 30)
+        2 -> splineTo(-76.5 + poleOffset.x, 35.3 + poleOffset.y, 30)
+        3 -> splineTo(-76.5 + poleOffset.x, 35.3 + poleOffset.y, 30)
+        4 -> splineTo(-76.5 + poleOffset.x, 35.3 + poleOffset.y, 30)
         else -> throw CycleException()
     }
 
     private fun Anvil.goToIntake(it: Int) = when (it) {
-        0 -> splineTo(-181.4, 16, 180)
-        1 -> splineTo(-181, 15, 180)
-        2 -> splineTo(-181, 14.25, 180)
-        3 -> splineTo(-181, 13.25, 180)
-        4 -> splineTo(-180.8, 13.25, 180)
+        0 -> splineTo(-180.3, 15.8, 180)
+        1 -> splineTo(-179.7, 15, 180)
+        2 -> splineTo(-179.3, 14.25, 180)
+        3 -> splineTo(-178.9, 13.25, 180)
+        4 -> splineTo(-178.6, 13.25, 180)
         else -> throw CycleException()
     }.doInReverse()
 
@@ -88,8 +88,9 @@ class NewHighLeftAuto : RogueBaseAuto() {
 //        }
 
         .addTemporalMarker(190) {
-            bot.arm.setToForwardsPos()
             bot.lift.goToHigh()
+            bot.arm.setToForwardsPos()
+
         }
 
         .addTemporalMarker(450) {
@@ -161,7 +162,7 @@ class NewHighLeftAuto : RogueBaseAuto() {
             bot.lift.targetHeight = liftOffsets[iterations]-13
 
             bot.wrist.setToBackwardsPos()
-            bot.arm.targetAngle = 45.0
+            bot.arm.targetAngle = 43.0
         }
 
         .addTemporalMarker(325) {
@@ -173,7 +174,7 @@ class NewHighLeftAuto : RogueBaseAuto() {
         .addTemporalMarker(185) {
             bot.lift.targetHeight = liftOffsets[iterations]
 
-            bot.arm.targetAngle = 45.0
+            bot.arm.targetAngle = 43.0
             bot.wrist.setToBackwardsPos()
 
             bot.claw.openForIntakeNarrow()

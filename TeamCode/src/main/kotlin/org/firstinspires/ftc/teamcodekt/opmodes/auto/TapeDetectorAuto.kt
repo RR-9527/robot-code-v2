@@ -13,13 +13,13 @@ class TapeDetectorAuto : RogueBaseAuto() {
 
     override fun mainTraj(startPose: Pose2d) =
         Anvil.forgeTrajectory(bot.drive, startPose)
-            .back(150)
-            .addTemporalMarker(-25) {
-//                updateTapeCorrection()
-            }
-            .addTemporalMarker(-15) {
-//                bot.drive.poseEstimate = (Pose2d(bot.drive.poseEstimate.x, bot.drive.poseEstimate.y+tapeCorrection.toIn(), bot.drive.poseEstimate.heading))
-            }
+            .back(0.01)
+//            .addTemporalMarker(-25) {
+////                updateTapeCorrection()
+//            }
+//            .addTemporalMarker(-15) {
+////                bot.drive.poseEstimate = (Pose2d(bot.drive.poseEstimate.x, bot.drive.poseEstimate.y+tapeCorrection.toIn(), bot.drive.poseEstimate.heading))
+//            }
 
 
 

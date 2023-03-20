@@ -8,7 +8,7 @@ import ftc.rogue.blacksmith.BlackOp.Companion.hwMap
 import org.firstinspires.ftc.teamcodekt.components.meta.DeviceNames
 
 @JvmField var WRIST_FORWARDS  = 0.81
-@JvmField var WRIST_BACKWARDS = 0.151
+@JvmField var WRIST_BACKWARDS = 0.12
 @JvmField var WRIST_REST      = 0.4805
 
 class Wrist {

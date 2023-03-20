@@ -192,12 +192,10 @@ public class TrajectorySequenceRunner {
             poseHistory.removeFirst();
         }
 
-        final double NOMINAL_VOLTAGE = 13.5;
-        double voltage = voltageSensor.getVoltage();
         if (driveSignal != null && !DriveConstants.RUN_USING_ENCODER) {
             driveSignal = new DriveSignal(
-                    driveSignal.getVel().times(NOMINAL_VOLTAGE / voltage),
-                    driveSignal.getAccel().times(NOMINAL_VOLTAGE / voltage)
+                    driveSignal.getVel(),
+                    driveSignal.getAccel()
             );
         }
 
