@@ -35,12 +35,10 @@ public class TapeDetector extends OpenCvPipeline {
     public double tapeAngle = -1;
     public double correction = -1;
 
-
     /**
      * Telemetry object to display data to the console
      */
     private final Telemetry telemetry;
-
 
     /**
      * Constructor to assign the telemetry object and actually have telemetry work.
@@ -64,19 +62,16 @@ public class TapeDetector extends OpenCvPipeline {
         return detection(img);
     }
 
-
     public Mat detection(Mat src) {
         Mat dst = new Mat(), cdstP = new Mat();
 
         // Edge detection
-
         Imgproc.Canny(src, dst, cannyThresh1, cannyThresh2, 3, false);
         Imgproc.cvtColor(dst, cdstP, Imgproc.COLOR_GRAY2BGR);
 
         // Probabilistic Line Transform
         Mat linesP = new Mat();
         Imgproc.HoughLinesP(dst, linesP, 1, Math.PI/180, houghThresh, minLineLen, maxLineGap); // runs the actual detection
-
 
         ArrayList<double[]> lines = new ArrayList<>();
         for (int x = 0; x < linesP.rows(); x++) {

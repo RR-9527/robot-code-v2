@@ -3,11 +3,11 @@ package org.firstinspires.ftc.teamcodekt.meepmeep
 import com.noahbres.meepmeep.MeepMeep
 import com.noahbres.meepmeep.MeepMeep.Background
 import com.noahbres.meepmeep.core.colorscheme.scheme.ColorSchemeBlueDark
+import com.noahbres.meepmeep.core.entity.Entity
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder
 import com.noahbres.meepmeep.roadrunner.DriveShim
 import com.noahbres.meepmeep.roadrunner.trajectorysequence.TrajectorySequence
 import ftc.rogue.blacksmith.Anvil
-import ftc.rogue.blacksmith.BlackOp.Companion.hwMap
 import ftc.rogue.blacksmith.units.GlobalUnits
 import ftc.rogue.blacksmith.util.meepmeep.MeepMeepUtil
 import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants.*
@@ -28,13 +28,18 @@ fun main() {
         .setDimensions(12.0, 12.0)
         .followTrajectorySequence(::mainTraj)
 
-    mm.setBackground(Background.FIELD_POWERPLAY_OFFICIAL)
+    mm.setBackground(Background.FIELD_POWERPLAY_KAI_DARK)
         .setDarkMode(true)
         .setBackgroundAlpha(0.95f)
-        .addEntity(bot)
-        .addEntity(util.customMouseCoords())
-        .addEntity(util.botShadowOnHover(12.0, 12.0))
-        .start()
+//        .addEntity(bot)
+        .addEntity(util.endTangentVisualizer(shouldHighlight = true, endX = 50.0))
+//        .addEntity(util.botShadowOnHover(12.0, 12.0))
+//        .addEntity(util.customMouseCoords())
+
+    mm::class.java.getMethod("requestToRemoveEntity", Entity::class.java)
+        .invoke(mm, mm::class.java.getDeclaredField("DEFAULT_AXES_ENTITY").get(mm))
+
+    mm.start()
 }
 
 private val startPose = GlobalUnits.pos(-86.25, -163, 90)
@@ -51,17 +56,19 @@ private fun mainTraj(drive: DriveShim) =
             awaitDeposit()
         }
 
-        .apply { when (1) {
-            1 -> inReverse {
-                splineTo(-143, -30, 180)
+        .apply {
+            when (1) {
+                1 -> inReverse {
+                    splineTo(-143, -30, 180)
+                }
+                2 -> inReverse {
+                    splineTo(-87, -30, 180)
+                }
+                3 -> inReverse {
+                    splineTo(-27, -30, 90)
+                }
             }
-            2 -> inReverse {
-                splineTo(-87, -30, 180)
-            }
-            3 -> inReverse {
-                splineTo(-27, -30, 90)
-            }
-        } }
+        }
 
         .build<TrajectorySequence>()
 

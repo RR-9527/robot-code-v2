@@ -23,3 +23,19 @@ enum class TimeUnit(private val msConversionFactor: Double) {
 
     fun to(unit: TimeUnit, x: Number) = unit.toMs(x) / msConversionFactor
 }
+
+class TimeUnit2(val msConversionFactor: Double)
+
+val Nanoseconds  = TimeUnit2(msConversionFactor = 1.0 / 1e+6)
+val Microseconds = TimeUnit2(msConversionFactor = 1.0 / 1e+3)
+val Milliseconds = TimeUnit2(msConversionFactor = 1.0)
+val Seconds      = TimeUnit2(msConversionFactor = 1000.0)
+val Minutes      = TimeUnit2(msConversionFactor = 60000.0)
+val Hours        = TimeUnit2(msConversionFactor = 3600000.0)
+val Days         = TimeUnit2(msConversionFactor = 86400000.0)
+val Weeks        = TimeUnit2(msConversionFactor = 604800000.0)
+val Months       = TimeUnit2(msConversionFactor = 2.628e+9)
+val Years        = TimeUnit2(msConversionFactor = 3.154e+10)
+val Centuries    = TimeUnit2(msConversionFactor = 3.154e+11)
+val Millennia    = TimeUnit2(msConversionFactor = 3.154e+12)
+

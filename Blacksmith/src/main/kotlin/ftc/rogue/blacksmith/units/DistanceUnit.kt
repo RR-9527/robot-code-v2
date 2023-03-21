@@ -35,3 +35,28 @@ enum class DistanceUnit(private val inchConversionFactor: Double) {
 
     fun toOtherDistanceUnit(x: Number, other: DistanceUnit) = x.toDouble() * (inchConversionFactor / other.inchConversionFactor)
 }
+
+class DistanceUnit2(val inchConversionFactor: Double)
+
+val Centimeters   = DistanceUnit2(inchConversionFactor = 1.0 / 2.54)
+val Inches        = DistanceUnit2(inchConversionFactor = 1.0)
+val Meters        = DistanceUnit2(inchConversionFactor = 1.0 / 0.0254)
+val Feet          = DistanceUnit2(inchConversionFactor = 12.0)
+val Yards         = DistanceUnit2(inchConversionFactor = 36.0)
+val Miles         = DistanceUnit2(inchConversionFactor = 63360.0)
+val Kilometers    = DistanceUnit2(inchConversionFactor = 39370.0)
+val NauticalMiles = DistanceUnit2(inchConversionFactor = 72913.4)
+val LightYears    = DistanceUnit2(inchConversionFactor = 5.878e+25)
+val Parsecs       = DistanceUnit2(inchConversionFactor = 1.97e+26)
+val Angstroms     = DistanceUnit2(inchConversionFactor = 1.0 / 2.54e-8)
+val Furlongs      = DistanceUnit2(inchConversionFactor = 7920.0)
+val Fermats       = DistanceUnit2(inchConversionFactor = 1.0 / 2.54e-15)
+val Smoots        = DistanceUnit2(inchConversionFactor = 1 / 67.0)
+val Aus           = DistanceUnit2(inchConversionFactor = 1.0 / 0.00000484813681109536)
+val Fathoms       = DistanceUnit2(inchConversionFactor = 6.0 * 12.0)
+val Hands         = DistanceUnit2(inchConversionFactor = 4.0 * 12.0)
+val Links         = DistanceUnit2(inchConversionFactor = 0.01 * 12.0)
+val Paces         = DistanceUnit2(inchConversionFactor = 5.0 * 12.0)
+val Rods          = DistanceUnit2(inchConversionFactor = 16.5 * 12.0)
+val Spans         = DistanceUnit2(inchConversionFactor = 9.0 * 12.0)
+val Leagues       = DistanceUnit2(inchConversionFactor = 3.0 * 63360.0)
