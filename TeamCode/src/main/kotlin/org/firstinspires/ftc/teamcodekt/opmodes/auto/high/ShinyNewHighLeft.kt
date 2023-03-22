@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcodekt.opmodes.auto.RogueBaseAuto
 import org.firstinspires.ftc.teamcodekt.util.CycleException
 
 @Autonomous
-class NewHighRightAuto : RogueBaseAuto() {
+class ShinyNewHighLeft : RogueBaseAuto() {
     override val startPose = GlobalUnits.pos(-91, -163, 90)
 
     override fun mainTraj(startPose: Pose2d) =
@@ -54,24 +54,23 @@ class NewHighRightAuto : RogueBaseAuto() {
 //        .splineTo(-94, -8, -49-90)
 //        .lineTo(-93.5 + poleOffset.x, -8 + poleOffset.y)
 //        .turn(-49-90)
-        .splineTo(76.5, -23, -25-90)
-
+        .splineTo(-77.5, -42.5, -43)
 
     private fun Anvil.goToDeposit(it: Int) = when (it) {
-        0 -> splineTo(-82.3 + poleOffset.x, 30 + poleOffset.y, 49.5)
-        1 -> splineTo(-82.3 + poleOffset.x, 30 + poleOffset.y, 47)
-        2 -> splineTo(-82.7 + poleOffset.x, 30 + poleOffset.y, 46)
-        3 -> splineTo(-82.7 + poleOffset.x, 30 + poleOffset.y, 45)
-        4 -> splineTo(-83.7 + poleOffset.x, 29 + poleOffset.y, 42)
+        0 -> splineTo(-87.9 + poleOffset.x, 0.6 + poleOffset.y, 30)
+        1 -> splineTo(-88.5 + poleOffset.x, 0.6 + poleOffset.y, 30)
+        2 -> splineTo(-89 + poleOffset.x, 0.6 + poleOffset.y, 30)
+        3 -> splineTo(-89.5 + poleOffset.x, 0.6 + poleOffset.y, 30)
+        4 -> splineTo(-91 + poleOffset.x, 0.6 + poleOffset.y, 30)
         else -> throw CycleException()
     }
 
     private fun Anvil.goToIntake(it: Int) = when (it) {
-        0 -> splineTo(-181.4, 16, 180)
-        1 -> splineTo(-181, 15, 180)
-        2 -> splineTo(-181, 14.25, 180)
-        3 -> splineTo(-181, 13.25, 180)
-        4 -> splineTo(-180.8, 13.25, 180)
+        0 -> splineTo(-167, -19, 180)
+        1 -> splineTo(-167.25, -20, 180)
+        2 -> splineTo(-169, -27.5, 180)
+        3 -> splineTo(-167.75, -27.5, 180)
+        4 -> splineTo(-168, -28, 180)
         else -> throw CycleException()
     }.doInReverse()
 
@@ -89,8 +88,9 @@ class NewHighRightAuto : RogueBaseAuto() {
 //        }
 
         .addTemporalMarker(190) {
-            bot.arm.setToForwardsPos()
             bot.lift.goToHigh()
+            bot.arm.setToForwardsPos()
+
         }
 
         .addTemporalMarker(450) {
@@ -162,7 +162,7 @@ class NewHighRightAuto : RogueBaseAuto() {
             bot.lift.targetHeight = liftOffsets[iterations]-13
 
             bot.wrist.setToBackwardsPos()
-            bot.arm.targetAngle = 45.0
+            bot.arm.targetAngle = 43.0
         }
 
         .addTemporalMarker(325) {
@@ -174,7 +174,7 @@ class NewHighRightAuto : RogueBaseAuto() {
         .addTemporalMarker(185) {
             bot.lift.targetHeight = liftOffsets[iterations]
 
-            bot.arm.targetAngle = 45.0
+            bot.arm.targetAngle = 43.0
             bot.wrist.setToBackwardsPos()
 
             bot.claw.openForIntakeNarrow()

@@ -36,8 +36,8 @@ abstract class RogueBaseAuto : BlackOp() {
         PhotonCore.enable()
         PhotonCore.CONTROL_HUB.bulkCachingMode = LynxModule.BulkCachingMode.MANUAL
 
-//        Imu.init(this)
-//        Imu.start()
+        Imu.init(this)
+        Imu.start()
 
 //        readPoleOffset()
 
