@@ -1,6 +1,8 @@
 package ftc.rogue.blacksmith.util.meepmeep
 
 import com.noahbres.meepmeep.MeepMeep
+import com.noahbres.meepmeep.core.colorscheme.ColorManager
+import com.noahbres.meepmeep.core.colorscheme.ColorPalette
 import java.lang.reflect.Method
 
 class GraphicsHelper(mm: MeepMeep) {
@@ -32,5 +34,17 @@ class GraphicsHelper(mm: MeepMeep) {
 
     fun drawString(str: String, x: Int, y: Int) {
         drawString.invoke(g, str, x, y)
+    }
+
+    companion object {
+        fun newFont(name: String, style: Int, size: Int) =
+            Class.forName("java.awt.Font")
+                .getConstructor(String::class.java, Int::class.java, Int::class.java)
+                .newInstance(name, style, size);
+
+        fun getColor(color: String) =
+            ColorPalette::class.java
+                .getMethod("get${color.uppercase()}")
+                .invoke(ColorManager.COLOR_PALETTE)
     }
 }

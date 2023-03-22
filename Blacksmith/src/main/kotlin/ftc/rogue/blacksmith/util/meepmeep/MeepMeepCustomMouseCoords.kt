@@ -1,9 +1,6 @@
 package ftc.rogue.blacksmith.util.meepmeep
 
-import com.acmerobotics.roadrunner.geometry.Vector2d
 import com.noahbres.meepmeep.MeepMeep
-import com.noahbres.meepmeep.core.colorscheme.ColorManager
-import com.noahbres.meepmeep.core.colorscheme.ColorPalette
 import com.noahbres.meepmeep.core.entity.Entity
 import com.noahbres.meepmeep.core.util.FieldUtil
 import ftc.rogue.blacksmith.units.AngleUnit
@@ -21,19 +18,11 @@ object MeepMeepCustomMouseCoords {
 
         val height = c::class.java.getMethod("getHeight").invoke(c) as Int
 
-        val canvasMouseX = mm::class.java.getDeclaredField("canvasMouseX")
-            .also { it.isAccessible = true }
+        val mouseCoordsSupplier = getCanvasMouseSupplier(mm)
 
-        val canvasMouseY = mm::class.java.getDeclaredField("canvasMouseY")
-            .also { it.isAccessible = true }
+        val sansFont = GraphicsHelper.newFont("Sans", 1, 20)
 
-        val sansFont = Class.forName("java.awt.Font")
-            .getConstructor(String::class.java, Int::class.java, Int::class.java)
-            .newInstance("Sans", 1, 20)
-
-        val txtColor = ColorPalette::class.java
-            .getMethod("getGRAY_100")
-            .invoke(ColorManager.COLOR_PALETTE)
+        val txtColor = GraphicsHelper.getColor("GRAY_100")
 
         return object : ReflectedEntity {
             override val meepMeep = mm
@@ -41,12 +30,8 @@ object MeepMeepCustomMouseCoords {
             override val tag = "CUSTOM_UNITS_MOUSE_COORDS"
 
             override fun render(gfx: GraphicsHelper, canvasWidth: Int, canvasHeight: Int) {
-                val fieldCoords = Vector2d(
-                    (canvasMouseX.get(mm) as Int).toDouble(),
-                    (canvasMouseY.get(mm) as Int).toDouble(),
-                )
-
-                val mouseToFieldCoords = FieldUtil.screenCoordsToFieldCoords(fieldCoords)
+                val mouseCoords = mouseCoordsSupplier()
+                val mouseToFieldCoords = FieldUtil.screenCoordsToFieldCoords(mouseCoords)
 
                 gfx.setFont(sansFont)
                 gfx.setColor(txtColor)

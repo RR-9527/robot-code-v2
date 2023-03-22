@@ -34,18 +34,6 @@ class MeepMeepUtil(private val mm: MeepMeep) {
         return MeepMeepBotHover.use(mm, width, height, colorScheme, opacity)
     }
 
-    @JvmOverloads
-    fun endTangentVisualizer(
-        endX: Double = 25.0, /* GlobalUnits */
-        endY: Double = endX, /* GlobalUnits */
-        txtX: Int = 300, /* Pixels */
-        txtY: Int = 200, /* Pixels */
-        tangentLength: Double = 20.0, /* GlobalUnits */
-        shouldHighlight: Boolean = true, /* IMPORTANT: HIGHLIGHTING CAN CAUSE MEEPMEEP FREEZING AFTER A LITTLE ESP W/ LOW MEMORY */
-    ): Entity {
-        return MeepMeepEndTangentVisualizer(mm, endX, endY, txtX, txtY, tangentLength, shouldHighlight,).run {
-            start()
-            get()
-        }
-    }
+    fun splineVisualizer() = MeepMeepSplineVisualizer.Builder()
+        .setMeepMeep(mm)
 }

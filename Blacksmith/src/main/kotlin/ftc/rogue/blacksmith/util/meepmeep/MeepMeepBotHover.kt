@@ -8,11 +8,8 @@ import com.noahbres.meepmeep.core.colorscheme.scheme.ColorSchemeBlueLight
 import com.noahbres.meepmeep.core.entity.BotEntity
 import com.noahbres.meepmeep.core.entity.Entity
 import com.noahbres.meepmeep.core.util.FieldUtil
-import ftc.rogue.blacksmith.internal.util.invokeMethodI
 import ftc.rogue.blacksmith.units.AngleUnit
 import ftc.rogue.blacksmith.util.toRad
-import java.lang.reflect.Proxy
-import kotlin.math.PI
 
 object MeepMeepBotHover {
     var heading = Double.NaN
@@ -32,35 +29,21 @@ object MeepMeepBotHover {
 
         heading = 0.0
 
-        val canvasMouseX = mm::class.java.getDeclaredField("canvasMouseX")
-            .also { it.isAccessible = true }
-
-        val canvasMouseY = mm::class.java.getDeclaredField("canvasMouseY")
-            .also { it.isAccessible = true }
-
-        val instance = Class.forName("java.awt.event.MouseWheelListener")
-
-        val listener = Proxy.newProxyInstance(instance.classLoader, arrayOf(instance)) { _, method, args ->
-            if (method.name != "mouseWheelMoved")
-                return@newProxyInstance null
-
-            val notches = args[0].invokeMethodI<Int>("getWheelRotation")
-
-            val isShiftPressed = args[0].invokeMethodI<Int>("getModifiers") and 1 == 1
+        scrollWheelMovedListener(mm) { notches, isShiftPressed, isAltPressed ->
+            if (isAltPressed) return@scrollWheelMovedListener
 
             heading = (heading - if (isShiftPressed) {
                 notches
             } else {
                 notches * 20
             }) % 360
-
-            null
         }
 
-        mm.canvas::class.java
-            .methods
-            .first { it.name == "addMouseWheelListener" }
-            .invoke(mm.canvas, listener)
+        val canvasMouseX = mm::class.java.getDeclaredField("canvasMouseX")
+            .also { it.isAccessible = true }
+
+        val canvasMouseY = mm::class.java.getDeclaredField("canvasMouseY")
+            .also { it.isAccessible = true }
 
         return object : BotEntity(
             mm, width, height, Pose2d(), colorScheme, opacity
@@ -73,6 +56,22 @@ object MeepMeepBotHover {
                 val inches = FieldUtil.screenCoordsToFieldCoords(Vector2d(x, y))
 
                 pose = Pose2d(inches.x, inches.y, r)
+            }
+
+            init {
+                var isHidden = false
+
+                keyPressedListener(mm) { code ->
+                    if (code != 72) return@keyPressedListener
+
+                    if (isHidden) {
+                        super.setDimensions(width, height)
+                        isHidden = false
+                    } else {
+                        super.setDimensions(0.0, 0.0)
+                        isHidden = true
+                    }
+                }
             }
         }
     }
