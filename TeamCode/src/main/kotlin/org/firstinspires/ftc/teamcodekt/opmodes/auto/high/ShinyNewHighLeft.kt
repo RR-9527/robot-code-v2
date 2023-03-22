@@ -31,7 +31,7 @@ class ShinyNewHighLeft : RogueBaseAuto() {
                 bot.wrist.setToForwardsPos()
             }
 
-            .addTemporalMarker(1385) {
+            .addTemporalMarker(1250) {
                 bot.lift.targetHeight = LIFT_MID
                 bot.arm.setToForwardsPos()
             }
@@ -52,7 +52,7 @@ class ShinyNewHighLeft : RogueBaseAuto() {
                         bot.drive.localizer.poseEstimate.x,
                         bot.drive.localizer.poseEstimate.y + tapeCorrection.toIn(),
                         bot.drive.localizer.poseEstimate.heading,
-                    )
+                    ).also {  }
                 }
 
                 when (it) {
@@ -67,23 +67,23 @@ class ShinyNewHighLeft : RogueBaseAuto() {
             .thenRun(::parkTraj)
 
     private fun Anvil.initialGoToDeposit() = this
-        .splineTo(-77.5, -42.5, -43)
+        .splineTo(-77.5, -42.5, -43.75)
 
     private fun Anvil.goToDeposit(it: Int) = when (it) {
-        0 -> splineTo(-85.0 + poleOffset.x, -4.2 + poleOffset.y, 34)
-        1 -> splineTo(-85.0 + poleOffset.x, -4.5 + poleOffset.y, 34)
-        2 -> splineTo(-85.0 + poleOffset.x, -5.4 + poleOffset.y, 34)
-        3 -> splineTo(-85.0 + poleOffset.x, -7.9 + poleOffset.y, 34)
-        4 -> splineTo(-85.0 + poleOffset.x, -9.2 + poleOffset.y, 34)
+        0 -> splineTo(-84.5 + poleOffset.x, -4.3 + poleOffset.y, 35.5)
+        1 -> splineTo(-84.5 + poleOffset.x, -5.0 + poleOffset.y, 34)
+        2 -> splineTo(-84.5 + poleOffset.x, -5.9 + poleOffset.y, 34)
+        3 -> splineTo(-84.5 + poleOffset.x, -8.4 + poleOffset.y, 34)
+        4 -> splineTo(-84.5 + poleOffset.x, -12.3 + poleOffset.y, 33.5)
         else -> throw CycleException()
     }
 
     private fun Anvil.goToIntake(it: Int) = when (it) {
-        0 -> splineTo(-165.0, -21.0, 180)
-        1 -> splineTo(-165.5, -22.5, 180)
-        2 -> splineTo(-165.9, -28.0, 180)
-        3 -> splineTo(-166.3, -27.5, 180)
-        4 -> splineTo(-166.8, -29.25, 180)
+        0 -> splineTo(-165.5 + .5, -21.0, 180)
+        1 -> splineTo(-166.0 + .5, -22.5, 180)
+        2 -> splineTo(-166.1 + .5, -28.0, 180)
+        3 -> splineTo(-166.2 + .5, -27.5, 180)
+        4 -> splineTo(-166.3 + .5, -29.6, 180)
         else -> throw CycleException()
     }.doInReverse()
 
@@ -197,13 +197,13 @@ class ShinyNewHighLeft : RogueBaseAuto() {
 
             when (signalID) {
                 1 -> {
-                    lineToLinearHeading(-2.5, 9, 0)
+                    lineToLinearHeading(-2.500, -25, 0)
                 }
                 2 -> {
-                    lineToLinearHeading(-92.5, 9, 0)
+                    lineToLinearHeading(-92.50, -25, 0)
                 }
                 3 -> {
-                    lineToLinearHeading(-160, 9, 0)
+                    lineToLinearHeading(-160.0, -25, 0)
                 }
             }
 

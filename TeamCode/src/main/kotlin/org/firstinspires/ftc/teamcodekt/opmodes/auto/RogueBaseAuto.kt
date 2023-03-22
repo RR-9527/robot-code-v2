@@ -23,8 +23,6 @@ abstract class RogueBaseAuto : BlackOp() {
     protected val bot by evalOnGo(::createAutoBotComponents)
     protected var signalID by Delegates.notNull<Int>()
 
-    protected var tapeCorrection = 0.0
-
     protected abstract val startPose: Pose2d
     protected abstract fun mainTraj(startPose: Pose2d): Anvil
 
