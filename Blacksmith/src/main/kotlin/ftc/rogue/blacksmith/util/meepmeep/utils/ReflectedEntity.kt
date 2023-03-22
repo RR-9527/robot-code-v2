@@ -1,4 +1,4 @@
-package ftc.rogue.blacksmith.util.meepmeep
+package ftc.rogue.blacksmith.util.meepmeep.utils
 
 import com.noahbres.meepmeep.MeepMeep
 import com.noahbres.meepmeep.core.entity.Entity

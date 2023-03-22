@@ -307,8 +307,8 @@ class Anvil
     /**
      * [Link to method docs](https://blacksmithftc.vercel.app/anvil/custom-mappings#anvilsetposeestimateintemporalmarker)
      */
-    fun setPoseEstimateInTemporalMarker(pose: Pose2d) = tap {
-        internal.__setPoseEstimateInTemporalMarker(pose)
+    fun setPoseEstimateInTemporalMarker(offset: Number = 0.0, poseSupplier: () -> Pose2d) = tap {
+        internal.__setPoseEstimateInTemporalMarker(offset, poseSupplier)
     }
 
     /**

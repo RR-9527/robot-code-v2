@@ -182,9 +182,9 @@ class AnvilInternal
         driveProxy.setPoseEstimate(pose)
     }
 
-    fun __setPoseEstimateInTemporalMarker(pose: Pose2d) {
-        _addTemporalMarker(0.0) {
-            driveProxy.setPoseEstimate(pose)
+    fun __setPoseEstimateInTemporalMarker(offset: Number = 0.0, poseSupplier: () -> Pose2d) {
+        _addTemporalMarker(offset.toSec()) {
+            driveProxy.setPoseEstimate(poseSupplier())
         }
     }
 

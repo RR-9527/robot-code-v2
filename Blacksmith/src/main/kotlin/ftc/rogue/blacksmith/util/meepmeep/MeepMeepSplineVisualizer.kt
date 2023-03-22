@@ -1,6 +1,5 @@
 package ftc.rogue.blacksmith.util.meepmeep
 
-import android.provider.Settings.Global
 import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.acmerobotics.roadrunner.geometry.Vector2d
 import com.noahbres.meepmeep.MeepMeep
@@ -13,8 +12,8 @@ import com.noahbres.meepmeep.roadrunner.DriveShim
 import com.noahbres.meepmeep.roadrunner.DriveTrainType
 import com.noahbres.meepmeep.roadrunner.entity.TrajectorySequenceEntity
 import com.noahbres.meepmeep.roadrunner.trajectorysequence.TrajectorySequence
-import ftc.rogue.blacksmith.Anvil
 import ftc.rogue.blacksmith.units.GlobalUnits
+import ftc.rogue.blacksmith.util.meepmeep.utils.*
 import ftc.rogue.blacksmith.util.toRad
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
@@ -25,17 +24,19 @@ import kotlin.math.sin
 class MeepMeepSplineVisualizer
     private constructor (
         val mm: MeepMeep,
-        var startVec: Vector2d,         /* Stored & displayed in GlobalUnits */
-        var endVec: Vector2d,           /* Stored & displayed in GlobalUnits */
-        val textCoords: Pair<Int, Int>, /* Stored & displayed in pixels */
-        tangentLength: Double,          /* Stored & displayed in GlobalUnits */
+        var startPos: Pose2d,      /* Stored & displayed in GlobalUnits */
+        var endVec: Vector2d,      /* Stored & displayed in GlobalUnits */
+        val textCoords: Vector2d,  /* Stored & displayed in pixels */
+        val tangentLength: Double, /* Stored & displayed in GlobalUnits */
         private val shouldHighlight: Boolean,
         private val shouldInitiallyRotate: Boolean,
+        private val shouldShowTangentLine: Boolean,
+        persistence: MeepMeepPersistence?,
     ) {
-    private val tangentLength = GlobalUnits.distance.toIn(tangentLength)
-
     private var endTangent = 0.0
     private var heading = 90.0
+
+    private var isDirty = true
 
     private val drive = DriveShim(
         DriveTrainType.MECANUM,
@@ -58,7 +59,7 @@ class MeepMeepSplineVisualizer
             override fun render(gfx: GraphicsHelper, canvasWidth: Int, canvasHeight: Int) {
                 gfx.setFont(sansFont)
                 gfx.setColor(txtColor)
-                gfx.drawString("End tangent: $endTangent deg", textCoords.first, textCoords.second)
+                gfx.drawString("End tangent: $endTangent deg", textCoords.x.toInt(), textCoords.y.toInt())
             }
         }.asEntity()
 
@@ -66,38 +67,39 @@ class MeepMeepSplineVisualizer
         var oldTrajectories = makeTrajectories()
 
         fun update() {
+            if (!isDirty) return
+
             val newTrajectorySequences = makeTrajectories()
 
             (0..3).forEach {
-                mm.requestToRemoveEntity(oldTrajectories[it])
-                mm.requestToAddEntity(newTrajectorySequences[it])
+                oldTrajectories[it]?.let { it1 -> mm.requestToRemoveEntity(it1) }
+                newTrajectorySequences[it]?.let { it1 -> mm.requestToAddEntity(it1) }
             }
             oldTrajectories = newTrajectorySequences
-        }
 
-        val exec = Executors.newSingleThreadScheduledExecutor()
+            isDirty = false
+        }
 
         var shouldRotate = shouldInitiallyRotate
 
-        exec.scheduleAtFixedRate({
+        ScheduledMeepMeepExecutor.EXECUTOR.scheduleAtFixedRate({
             update()
 
             if (shouldRotate) {
-                endTangent += 2.5
+                endTangent += 5
                 endTangent %= 360
+                isDirty = true
             }
-        }, 0, 50, TimeUnit.MILLISECONDS)
+        }, 0, 100, TimeUnit.MILLISECONDS)
 
         val mouseCoordsSupplier = getCanvasMouseSupplier(mm)
 
         scrollWheelMovedListener(mm) { notches, isShiftPressed, _ ->
             val sCoords = mouseCoordsSupplier()
-            val fCoords = FieldUtil.screenCoordsToFieldCoords(sCoords)
+            val (startOverlaps, endOverlaps) = getIsMouseOverlappingEndpoints(sCoords, 2)
 
-            val endDiff   = endVec   - fCoords
-            val startDiff = startVec - fCoords
-
-            if (abs(endDiff.x) < 5 && abs(endDiff.y) < 5) {
+            if (endOverlaps) {
+                isDirty = true
                 shouldRotate = false
 
                 endTangent = (endTangent - if (isShiftPressed) {
@@ -105,7 +107,9 @@ class MeepMeepSplineVisualizer
                 } else {
                     notches * 20
                 }) % 360
-            } else if (abs(startDiff.x) < 5 && abs(startDiff.y) < 5) {
+            } else if (startOverlaps) {
+                isDirty = true
+
                 heading = (heading - if (isShiftPressed) {
                     notches
                 } else {
@@ -116,32 +120,34 @@ class MeepMeepSplineVisualizer
 
         mouseDraggedListener(mm) { x, y ->
             val sCoords = Vector2d(x.toDouble(), y.toDouble())
-            val fCoords = FieldUtil.screenCoordsToFieldCoords(sCoords)
+            val (startOverlaps, endOverlaps, fCoords) = getIsMouseOverlappingEndpoints(sCoords, 2)
 
-            val endDiff   = endVec   - fCoords
-            val startDiff = startVec - fCoords
-
-            if (abs(endDiff.x) < 5 && abs(endDiff.y) < 5) {
-                endVec   = fCoords
-            } else if (abs(startDiff.x) < 5 && abs(startDiff.y) < 5) {
-                startVec = fCoords
+            if (endOverlaps) {
+                endVec = fCoords
+                isDirty = true
+            } else if (startOverlaps) {
+                startPos = fCoords.pos(heading.toRad())
+                isDirty = true
             }
         }
     }
 
     private fun makeTrajectories() = arrayOf(
         TrajectorySequenceEntity(mm, spline(), ColorSchemeBlueLight()),
-        TrajectorySequenceEntity(mm, tangent(), ColorSchemeRedDark()),
-        TrajectorySequenceEntity(mm, arrowLeft(), ColorSchemeRedDark()),
-        TrajectorySequenceEntity(mm, arrowRight(), ColorSchemeRedDark()),
-    ).onEach { if (shouldHighlight) it.trajectoryProgress = 0.1 }
+        tangent()?.let { TrajectorySequenceEntity(mm, it, ColorSchemeRedDark()) },
+        arrowLeft()?.let { TrajectorySequenceEntity(mm, it, ColorSchemeRedDark()) },
+        arrowRight()?.let { TrajectorySequenceEntity(mm, it, ColorSchemeRedDark()) },
+    ).onEach { if (shouldHighlight) it?.trajectoryProgress = 0.1 }
 
     private fun spline() =
-        drive.trajectorySequenceBuilder(Pose2d(startVec.x, startVec.y, heading.toRad()))
+        drive.trajectorySequenceBuilder(startPos)
             .splineTo(endVec, endTangent.toRad())
             .build()
 
-    private fun tangent(): TrajectorySequence {
+    private fun tangent(): TrajectorySequence? {
+        if (!shouldShowTangentLine)
+            return null
+
         val xOffset = tangentLength * cos(endTangent.toRad())
         val yOffset = tangentLength * sin(endTangent.toRad())
 
@@ -156,7 +162,10 @@ class MeepMeepSplineVisualizer
             .build()
     }
 
-    private fun arrowLeft(): TrajectorySequence {
+    private fun arrowLeft(): TrajectorySequence? {
+        if (!shouldShowTangentLine)
+            return null
+
         val x1 = endVec.x + tangentLength * cos(endTangent.toRad())
         val y1 = endVec.y + tangentLength * sin(endTangent.toRad())
 
@@ -168,7 +177,10 @@ class MeepMeepSplineVisualizer
             .build()
     }
 
-    private fun arrowRight(): TrajectorySequence {
+    private fun arrowRight(): TrajectorySequence? {
+        if (!shouldShowTangentLine)
+            return null
+
         val x1 = endVec.x + tangentLength * cos(endTangent.toRad())
         val y1 = endVec.y + tangentLength * sin(endTangent.toRad())
 
@@ -180,62 +192,111 @@ class MeepMeepSplineVisualizer
             .build()
     }
     
-    private fun Vector2d.pos() = Pose2d(x, y)
+    private fun Vector2d.pos(r: Double) = Pose2d(x, y, r)
 
-    class Builder {
-        private var mm: MeepMeep? = null
+    @Suppress("SameParameterValue")
+    private fun getIsMouseOverlappingEndpoints(
+        mouseCoords: Vector2d,
+        deadzone: Number
+    ): Triple<Boolean, Boolean, Vector2d> {
+        val fCoords = FieldUtil.screenCoordsToFieldCoords(mouseCoords)
 
-        private var startVec = Vector2d()
-        private var endVec = Vector2d(30.0, 30.0)
+        val startDiffs = fCoords - startPos.vec()
+        val endDiffs   = fCoords - endVec
 
-        private var textPose = 300 to 200
+        val startsDiffInIn = GlobalUnits.vec(startDiffs)
+        val endDiffsInIn = GlobalUnits.vec(endDiffs)
 
-        private var tangentLine: Double? = null
+        val startOverlaps = abs(startsDiffInIn.x) < deadzone.toDouble() && abs(startsDiffInIn.y) < deadzone.toDouble()
+        val endOverlaps = abs(endDiffsInIn.x) < deadzone.toDouble() && abs(endDiffsInIn.y) < deadzone.toDouble()
 
-        private var shouldHighlight = false
-        private var shouldInitiallyRotate = false
+        return Triple(
+            startOverlaps,
+            endOverlaps,
+            fCoords,
+        )
+    }
 
-        fun setMeepMeep(mm: MeepMeep) = apply {
-            this.mm = mm
-        }
+    data class Builder(
+       val mm: MeepMeep? = null,
 
-        fun setStartPose(x: Number, y: Number) = apply {
-            this.startVec = Vector2d(x.toDouble(), y.toDouble())
-        }
+       val startPos: Pose2d = Pose2d(),
+       val endVec: Vector2d = GlobalUnits.vec(30, 30),
 
-        fun setEndPose(x: Number, y: Number) = apply {
-            this.endVec = Vector2d(x.toDouble(), y.toDouble())
-        }
+       val textPose: Vector2d = Vector2d(200.0, 300.0),
 
-        fun setTextPose(x: Int, y: Int) = apply {
-            this.textPose = x to y
-        }
+       val tangentLine: Double? = null,
 
-        fun setTangentLineLength(length: Number) = apply {
-            this.tangentLine = GlobalUnits.distance.toIn(length)
-        }
+       val shouldHighlight: Boolean = false,
+       val shouldInitiallyRotate: Boolean = false,
+       val shouldShowTangentLine: Boolean = true,
 
-        fun enableHighlighting() = apply {
-            this.shouldHighlight = true
-        }
+       val persistence: MeepMeepPersistence? = null,
+    ) {
+        fun setMeepMeep(mm: MeepMeep) = copy(
+            mm = mm
+        )
 
-        fun enableRotation() = apply {
-            this.shouldInitiallyRotate = true
-        }
+        @JvmOverloads
+        fun setStartPose(x: Number, y: Number, heading: Double = 90.0) = copy(
+            startPos = GlobalUnits.pos(x, y, heading)
+        )
+
+        fun setEndVec(x: Number, y: Number) = copy(
+            endVec = GlobalUnits.vec(x, y)
+        )
+
+        fun setTextPose(x: Int, y: Int) = copy(
+            textPose = Vector2d(x.toDouble(), y.toDouble())
+        )
+
+        fun setTangentLineLength(length: Number) = copy(
+            tangentLine = GlobalUnits.distance.toIn(length)
+        )
+
+        fun enableHighlighting() = copy(
+            shouldHighlight = true
+        )
+
+        fun disableHighlighting() = copy(
+            shouldHighlight = false
+        )
+
+        fun enableRotation() = copy(
+            shouldInitiallyRotate = true
+        )
+
+        fun disableRotation() = copy(
+            shouldInitiallyRotate = false
+        )
+
+        fun enableTangentLine() = copy(
+            shouldShowTangentLine = true
+        )
+
+        fun disableTangentLine() = copy(
+            shouldShowTangentLine = false
+        )
+
+        fun setPersistence(persistence: MeepMeepPersistence) = copy(
+            persistence = persistence
+        )
 
         fun build(): MeepMeepSplineVisualizer {
             require(mm != null) { "MeepMeep instance must be set" }
 
-            tangentLine = tangentLine ?: (endVec.norm() * .375)
+            val actualTangentLine = tangentLine ?: (endVec.norm() * .375)
 
             return MeepMeepSplineVisualizer(
-                mm!!,
-                GlobalUnits.vec(startVec),
-                GlobalUnits.vec(endVec),
+                mm,
+                startPos,
+                endVec,
                 textPose,
-                GlobalUnits.distance.toIn(tangentLine!!),
+                actualTangentLine,
                 shouldHighlight,
                 shouldInitiallyRotate,
+                shouldShowTangentLine,
+                persistence,
             )
         }
 

@@ -1,9 +1,12 @@
-package ftc.rogue.blacksmith.util.meepmeep
+package ftc.rogue.blacksmith.util.meepmeep.utils
 
 import com.noahbres.meepmeep.MeepMeep
 import com.noahbres.meepmeep.core.colorscheme.ColorManager
 import com.noahbres.meepmeep.core.colorscheme.ColorPalette
+import com.noahbres.meepmeep.roadrunner.entity.TrajectorySequenceEntity
+import java.lang.reflect.Field
 import java.lang.reflect.Method
+import java.lang.reflect.Modifier
 
 class GraphicsHelper(mm: MeepMeep) {
     private val g: Any

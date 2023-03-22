@@ -9,6 +9,8 @@ import com.noahbres.meepmeep.core.entity.BotEntity
 import com.noahbres.meepmeep.core.entity.Entity
 import com.noahbres.meepmeep.core.util.FieldUtil
 import ftc.rogue.blacksmith.units.AngleUnit
+import ftc.rogue.blacksmith.util.meepmeep.utils.keyPressedListener
+import ftc.rogue.blacksmith.util.meepmeep.utils.scrollWheelMovedListener
 import ftc.rogue.blacksmith.util.toRad
 
 object MeepMeepBotHover {
@@ -66,11 +68,11 @@ object MeepMeepBotHover {
 
                     if (isHidden) {
                         super.setDimensions(width, height)
-                        isHidden = false
                     } else {
                         super.setDimensions(0.0, 0.0)
-                        isHidden = true
                     }
+
+                    isHidden = !isHidden
                 }
             }
         }

@@ -52,8 +52,8 @@ abstract class RogueBaseAuto : BlackOp() {
             signalID = bot.camera.stageDetection(this) ?: 2
         }
 
-        bot.camera.camera.stopStreaming()
-//        bot.camera.setPipeline(bot.camera.tapeDetectorPipeline)
+//        bot.camera.camera.stopStreaming()
+        bot.camera.setPipeline(bot.camera.tapeDetectorPipeline)
 
         bot.camera.lookDown()
 
@@ -66,9 +66,8 @@ abstract class RogueBaseAuto : BlackOp() {
             mTelemetry.addData("FPS", bot.camera.camera.fps)
             mTelemetry.addData("Overhead ms", bot.camera.camera.overheadTimeMs)
             mTelemetry.addData("Pipeline ms", bot.camera.camera.pipelineTimeMs)
-//            updateTapeCorrection()
-//            mTelemetry.addData("Angle: ", bot.camera.tapeDetectorPipeline.tapeAngle)
-//            mTelemetry.addData("Correction: ", bot.camera.tapeDetectorPipeline.correction)
+            mTelemetry.addData("Angle: ", bot.camera.tapeDetectorPipeline.tapeAngle)
+            mTelemetry.addData("Correction: ", bot.camera.tapeDetectorPipeline.correction)
             mTelemetry.update()
 
             PhotonCore.CONTROL_HUB.clearBulkCache()
@@ -76,10 +75,6 @@ abstract class RogueBaseAuto : BlackOp() {
     }
 
     protected lateinit var whichPole: String
-
-    protected fun updateTapeCorrection(){
-        tapeCorrection = bot.camera.tapeDetectorPipeline.correction
-    }
 
     private fun readPoleOffset() {
         if (!::whichPole.isInitialized)

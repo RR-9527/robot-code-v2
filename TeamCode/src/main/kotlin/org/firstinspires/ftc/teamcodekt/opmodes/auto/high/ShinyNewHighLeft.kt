@@ -4,12 +4,15 @@ import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import ftc.rogue.blacksmith.Anvil
+import ftc.rogue.blacksmith.listeners.Listener
+import ftc.rogue.blacksmith.listeners.On
 import ftc.rogue.blacksmith.units.GlobalUnits
 import ftc.rogue.blacksmith.util.toIn
 import ftc.rogue.blacksmith.util.toRad
 import org.firstinspires.ftc.teamcode.AutoData
 import org.firstinspires.ftc.teamcode.AutoData.liftOffsets
 import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants
+import org.firstinspires.ftc.teamcodekt.components.LIFT_LOW
 import org.firstinspires.ftc.teamcodekt.components.LIFT_MID
 import org.firstinspires.ftc.teamcodekt.opmodes.auto.RogueBaseAuto
 import org.firstinspires.ftc.teamcodekt.util.CycleException
@@ -22,10 +25,15 @@ class ShinyNewHighLeft : RogueBaseAuto() {
         Anvil.forgeTrajectory(bot.drive, startPose)
 
             .addTemporalMarker {
-                bot.lift.targetHeight = LIFT_MID
+                bot.lift.targetHeight = LIFT_LOW - 200
                 bot.claw.close()
-                bot.arm.setToForwardsPos()
+                bot.arm.setToForwardsDownPos()
                 bot.wrist.setToForwardsPos()
+            }
+
+            .addTemporalMarker(1385) {
+                bot.lift.targetHeight = LIFT_MID
+                bot.arm.setToForwardsPos()
             }
 
             .initialGoToDeposit()
@@ -39,6 +47,14 @@ class ShinyNewHighLeft : RogueBaseAuto() {
 
                 goToIntake(it)
 
+                setPoseEstimateInTemporalMarker(-375) {
+                    Pose2d(
+                        bot.drive.localizer.poseEstimate.x,
+                        bot.drive.localizer.poseEstimate.y + tapeCorrection.toIn(),
+                        bot.drive.localizer.poseEstimate.heading,
+                    )
+                }
+
                 when (it) {
                     LAST_CYCLE -> awaitFastIntake()
                     else -> awaitRegularIntake()
@@ -51,26 +67,23 @@ class ShinyNewHighLeft : RogueBaseAuto() {
             .thenRun(::parkTraj)
 
     private fun Anvil.initialGoToDeposit() = this
-//        .splineTo(-94, -8, -49-90)
-//        .lineTo(-93.5 + poleOffset.x, -8 + poleOffset.y)
-//        .turn(-49-90)
         .splineTo(-77.5, -42.5, -43)
 
     private fun Anvil.goToDeposit(it: Int) = when (it) {
-        0 -> splineTo(-87.9 + poleOffset.x, 0.6 + poleOffset.y, 30)
-        1 -> splineTo(-88.5 + poleOffset.x, 0.6 + poleOffset.y, 30)
-        2 -> splineTo(-89 + poleOffset.x, 0.6 + poleOffset.y, 30)
-        3 -> splineTo(-89.5 + poleOffset.x, 0.6 + poleOffset.y, 30)
-        4 -> splineTo(-91 + poleOffset.x, 0.6 + poleOffset.y, 30)
+        0 -> splineTo(-85.0 + poleOffset.x, -4.2 + poleOffset.y, 34)
+        1 -> splineTo(-85.0 + poleOffset.x, -4.5 + poleOffset.y, 34)
+        2 -> splineTo(-85.0 + poleOffset.x, -5.4 + poleOffset.y, 34)
+        3 -> splineTo(-85.0 + poleOffset.x, -7.9 + poleOffset.y, 34)
+        4 -> splineTo(-85.0 + poleOffset.x, -9.2 + poleOffset.y, 34)
         else -> throw CycleException()
     }
 
     private fun Anvil.goToIntake(it: Int) = when (it) {
-        0 -> splineTo(-167, -19, 180)
-        1 -> splineTo(-167.25, -20, 180)
-        2 -> splineTo(-169, -27.5, 180)
-        3 -> splineTo(-167.75, -27.5, 180)
-        4 -> splineTo(-168, -28, 180)
+        0 -> splineTo(-165.0, -21.0, 180)
+        1 -> splineTo(-165.5, -22.5, 180)
+        2 -> splineTo(-165.9, -28.0, 180)
+        3 -> splineTo(-166.3, -27.5, 180)
+        4 -> splineTo(-166.8, -29.25, 180)
         else -> throw CycleException()
     }.doInReverse()
 
@@ -82,10 +95,6 @@ class ShinyNewHighLeft : RogueBaseAuto() {
         .addTemporalMarker(-60) {
             bot.claw.close()
         }
-//        .addTemporalMarker(90) {
-//            mTelemetry.addLine("Setting pose... $tapeCorrection cm.")
-//            bot.drive.poseEstimate = (Pose2d(bot.drive.poseEstimate.x, bot.drive.poseEstimate.y+tapeCorrection.toIn(), bot.drive.poseEstimate.heading))
-//        }
 
         .addTemporalMarker(190) {
             bot.lift.goToHigh()

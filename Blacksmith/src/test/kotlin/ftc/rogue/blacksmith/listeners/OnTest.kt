@@ -12,7 +12,13 @@ internal class OnTest {
         var calls = 0
         val nums = mutableListOf<Int>()
 
-        On { calls in 1..3 || calls in 10..12 }.every().single().timeBecomingTrue().extendFor(3).iterations().until { calls > 12 }
+        On { calls in 1..3 || calls in 10..12 }
+            .every()
+            .single()
+            .timeBecomingTrue()
+            .extendFor(3)
+            .iterations()
+            .until { calls > 12 }
             .execute { nums += calls }
 
         Scheduler.launchManually({ calls++ < 16 })
@@ -25,7 +31,11 @@ internal class OnTest {
         var calls = 0
         val nums = mutableListOf<Int>()
 
-        On { calls in 1..3 || calls in 10..12 }.every().other().timeBeingFalse().until { calls > 14 }
+        On { calls in 1..3 || calls in 10..12 }
+            .every()
+            .other()
+            .timeBeingFalse()
+            .until { calls > 14 }
             .execute { nums += calls }
 
         Scheduler.launchManually({ calls++ < 16 })
@@ -38,7 +48,11 @@ internal class OnTest {
         var calls = 0
         val nums = mutableListOf<Int>()
 
-        On { calls in 1..3 || calls in 10..12 }.every().nth(5).timeBecomingFalse().forever()
+        On { calls in 1..3 || calls in 10..12 }
+            .every()
+            .nth(5)
+            .timeBecomingFalse()
+            .forever()
             .execute { nums += calls }
 
         Scheduler.launchManually({ calls++ < 16 })

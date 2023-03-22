@@ -48,10 +48,11 @@ dependencies {
 
     testImplementation 'org.jetbrains.kotlin:kotlin-test'
     testImplementation 'org.junit.jupiter:junit-jupiter'
-    testImplementation "io.mockk:mockk:1.13.3"
+    testImplementation 'io.mockk:mockk:1.13.3'
     testImplementation 'org.junit.jupiter:junit-jupiter'
 
     implementation 'com.acmerobotics.dashboard:dashboard:0.4.8'
+    implementation 'org.jetbrains.kotlin:kotlin-reflect:1.7.20'
 }
 
 tasks.withType(Test) {

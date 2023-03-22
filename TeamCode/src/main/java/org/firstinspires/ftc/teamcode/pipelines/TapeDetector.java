@@ -20,7 +20,7 @@ import java.util.ArrayList;
 
 @Config
 public class TapeDetector extends OpenCvPipeline {
-    public static int cannyThresh1 =  100;
+    public static int cannyThresh1 = 100;
     public static int cannyThresh2 = 190;
     public static int houghThresh = 50;
     public final static double minLineLen = 50;
@@ -71,19 +71,19 @@ public class TapeDetector extends OpenCvPipeline {
 
         // Probabilistic Line Transform
         Mat linesP = new Mat();
-        Imgproc.HoughLinesP(dst, linesP, 1, Math.PI/180, houghThresh, minLineLen, maxLineGap); // runs the actual detection
+        Imgproc.HoughLinesP(dst, linesP, 1, Math.PI / 180, houghThresh, minLineLen, maxLineGap); // runs the actual detection
 
         ArrayList<double[]> lines = new ArrayList<>();
         for (int x = 0; x < linesP.rows(); x++) {
             double[] l = linesP.get(x, 0);
-            if(Math.abs(l[3]-l[1]) > maxXDist && Math.abs(l[2]-l[0]) < minYDist) {
+            if (Math.abs(l[3] - l[1]) > maxXDist && Math.abs(l[2] - l[0]) < minYDist) {
                 lines.add(l);
             }
         }
 
-        double[] allX = new double[lines.size()*2];
+        double[] allX = new double[lines.size() * 2];
         int insertIdx = 0;
-        for(double[] line: lines){
+        for (double[] line : lines) {
             allX[insertIdx] = line[0];
             insertIdx++;
             allX[insertIdx] = line[2];
@@ -91,15 +91,15 @@ public class TapeDetector extends OpenCvPipeline {
         }
 
         double sum = 0;
-        for(double x: allX){
+        for (double x : allX) {
             sum += x;
         }
 
         double biasedAverage = sum / allX.length;
         ArrayList<Double> left = new ArrayList<>();
         ArrayList<Double> right = new ArrayList<>();
-        for(double x: allX){
-            if(x < biasedAverage)
+        for (double x : allX) {
+            if (x < biasedAverage)
                 left.add(x);
             else {
                 right.add(x);
@@ -111,17 +111,19 @@ public class TapeDetector extends OpenCvPipeline {
         double rightAvg = listAverage(right);
 
         // Determine true tape center
-        double pixels = (leftAvg+rightAvg)/2;
+        double pixels = (leftAvg + rightAvg) / 2;
 
         // for line visualization
-        for(double[] l: lines)
-            if((l[2]+l[0])/2 < biasedAverage)
+        for (double[] l : lines)
+            if ((l[2] + l[0]) / 2 < biasedAverage)
                 Imgproc.line(src, new Point(l[0], l[1]), new Point(l[2], l[3]), new Scalar(255, 0, 0), 3, Imgproc.LINE_AA, 0);
             else
                 Imgproc.line(src, new Point(l[0], l[1]), new Point(l[2], l[3]), new Scalar(0, 255, 0), 3, Imgproc.LINE_AA, 0);
 
-        tapeAngle = 60*(pixels/width)-30+9;
-        correction = adjustment(tapeAngle)+1;
+        tapeAngle = 60 * (pixels / width) - 30;
+        correction = adjustment(tapeAngle) + 1;
+        if (Double.isNaN(correction))
+            correction = 0;
 
 //        telemetry.addData("Estimated pixel position", avg);
 //        src.release();
@@ -130,17 +132,17 @@ public class TapeDetector extends OpenCvPipeline {
         dst.release();
 
         return src;
-}
+    }
 
-    public double listAverage(ArrayList<Double> data){
+    public double listAverage(ArrayList<Double> data) {
         double sum = 0;
-        for(Double item: data)
+        for (Double item : data)
             sum += item;
         return sum / data.size();
     }
 
-    public static double adjustment(double angle){
-        if (Math.abs(angle) > 20) return adj_a * angle * angle * angle + adj_b * angle * angle;
+    public static double adjustment(double angle) {
+//        if (Math.abs(angle) > 20) return adj_a * angle * angle * angle + adj_b * angle * angle;
         return adj_c * angle;
     }
 }

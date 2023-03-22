@@ -6,6 +6,9 @@ import com.noahbres.meepmeep.core.util.FieldUtil
 import ftc.rogue.blacksmith.units.AngleUnit
 import ftc.rogue.blacksmith.units.DistanceUnit
 import ftc.rogue.blacksmith.units.GlobalUnits
+import ftc.rogue.blacksmith.util.meepmeep.utils.GraphicsHelper
+import ftc.rogue.blacksmith.util.meepmeep.utils.ReflectedEntity
+import ftc.rogue.blacksmith.util.meepmeep.utils.getCanvasMouseSupplier
 
 object MeepMeepCustomMouseCoords {
     @JvmOverloads

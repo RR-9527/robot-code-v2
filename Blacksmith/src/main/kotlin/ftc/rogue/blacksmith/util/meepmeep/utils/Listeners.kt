@@ -1,4 +1,4 @@
-package ftc.rogue.blacksmith.util.meepmeep
+package ftc.rogue.blacksmith.util.meepmeep.utils
 
 import com.acmerobotics.roadrunner.geometry.Vector2d
 import com.noahbres.meepmeep.MeepMeep
@@ -59,7 +59,10 @@ fun getCanvasMouseSupplier(mm: MeepMeep): () -> Vector2d {
         .also { it.isAccessible = true }
 
     return {
-        Vector2d((canvasMouseX.get(mm) as Int).toDouble(), (canvasMouseY.get(mm) as Int).toDouble())
+        Vector2d(
+            (canvasMouseX.get(mm) as Int).toDouble(),
+            (canvasMouseY.get(mm) as Int).toDouble()
+        )
     }
 }
 

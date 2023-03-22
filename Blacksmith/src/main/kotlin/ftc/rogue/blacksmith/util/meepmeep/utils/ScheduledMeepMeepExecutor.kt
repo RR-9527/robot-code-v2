@@ -1,6 +1,6 @@
 @file:Suppress("HasPlatformType")
 
-package ftc.rogue.blacksmith.util.meepmeep
+package ftc.rogue.blacksmith.util.meepmeep.utils
 
 import java.util.concurrent.Executors
 
