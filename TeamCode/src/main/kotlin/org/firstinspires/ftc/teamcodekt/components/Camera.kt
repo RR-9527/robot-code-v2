@@ -64,17 +64,24 @@ class Camera {
             R.id.cameraMonitorViewId,
         )
 
-        camera.setPipeline(aprilTagDetectionPipeline)
+//        camera.setPipeline(aprilTagDetectionPipeline)
+        camera.setPipeline(tapeDetectorPipeline) // TODO: change back for actual autos
 
         camera.openCameraDeviceAsync(object : OpenCvCamera.AsyncCameraOpenListener {
             override fun onOpened() {
-                camera.startStreaming(width, height, OpenCvCameraRotation.UPRIGHT)
+                camera.startStreaming(1280, 720, OpenCvCameraRotation.UPRIGHT)
             }
 
             override fun onError(errorCode: Int) {
                 throw RuntimeException("Error opening camera! Error code $errorCode")
             }
         })
+    }
+
+    fun setTapeDetectionPipeline() {
+        camera.stopStreaming()
+        camera.startStreaming(width, height)
+        camera.setPipeline(tapeDetectorPipeline)
     }
 
     fun stageDetection(opmode: LinearOpMode): Int? {
@@ -91,8 +98,6 @@ class Camera {
                 aprilTagDetectionPipeline.setDecimation(DECIMATION_LOW)
             }
         } else {
-            numFramesWithoutDetection = 0
-
             if (detections[0].pose.z < THRESHOLD_HIGH_DECIMATION_RANGE_METERS) {
                 aprilTagDetectionPipeline.setDecimation(DECIMATION_HIGH)
             }

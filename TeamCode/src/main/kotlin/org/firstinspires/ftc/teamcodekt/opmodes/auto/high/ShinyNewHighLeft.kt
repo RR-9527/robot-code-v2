@@ -2,16 +2,11 @@ package org.firstinspires.ftc.teamcodekt.opmodes.auto.high
 
 import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
-import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import ftc.rogue.blacksmith.Anvil
-import ftc.rogue.blacksmith.listeners.Listener
-import ftc.rogue.blacksmith.listeners.On
 import ftc.rogue.blacksmith.units.GlobalUnits
 import ftc.rogue.blacksmith.util.toIn
-import ftc.rogue.blacksmith.util.toRad
 import org.firstinspires.ftc.teamcode.AutoData
 import org.firstinspires.ftc.teamcode.AutoData.liftOffsets
-import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants
 import org.firstinspires.ftc.teamcodekt.components.LIFT_LOW
 import org.firstinspires.ftc.teamcodekt.components.LIFT_MID
 import org.firstinspires.ftc.teamcodekt.opmodes.auto.RogueBaseAuto
@@ -25,7 +20,7 @@ class ShinyNewHighLeft : RogueBaseAuto() {
         Anvil.forgeTrajectory(bot.drive, startPose)
 
             .addTemporalMarker {
-                bot.lift.targetHeight = LIFT_LOW - 200
+                bot.lift.targetHeight = LIFT_LOW - 150
                 bot.claw.close()
                 bot.arm.setToForwardsDownPos()
                 bot.wrist.setToForwardsPos()
@@ -47,12 +42,13 @@ class ShinyNewHighLeft : RogueBaseAuto() {
 
                 goToIntake(it)
 
-                setPoseEstimateInTemporalMarker(-375) {
-                    Pose2d(
-                        bot.drive.localizer.poseEstimate.x,
-                        bot.drive.localizer.poseEstimate.y + tapeCorrection.toIn(),
-                        bot.drive.localizer.poseEstimate.heading,
-                    ).also {  }
+                setPoseEstimateInTemporalMarker(-150) {
+                    val correction = bot.camera.tapeDetectorPipeline.correction.toIn()
+
+                    val (x, _y, h) = bot.drive.localizer.poseEstimate
+                    val y = _y + correction
+
+                    Pose2d(x, y, h)
                 }
 
                 when (it) {
@@ -67,23 +63,23 @@ class ShinyNewHighLeft : RogueBaseAuto() {
             .thenRun(::parkTraj)
 
     private fun Anvil.initialGoToDeposit() = this
-        .splineTo(-77.5, -42.5, -43.75)
+        .splineTo(-78, -42.5, -43.75)
 
     private fun Anvil.goToDeposit(it: Int) = when (it) {
-        0 -> splineTo(-84.5 + poleOffset.x, -4.3 + poleOffset.y, 35.5)
-        1 -> splineTo(-84.5 + poleOffset.x, -5.0 + poleOffset.y, 34)
-        2 -> splineTo(-84.5 + poleOffset.x, -5.9 + poleOffset.y, 34)
-        3 -> splineTo(-84.5 + poleOffset.x, -8.4 + poleOffset.y, 34)
-        4 -> splineTo(-84.5 + poleOffset.x, -12.3 + poleOffset.y, 33.5)
+        0 -> splineTo(-84.5 + poleOffset.x, -4.3 + poleOffset.y, 36)
+        1 -> splineTo(-84.5 + poleOffset.x, -5.0 + poleOffset.y, 35)
+        2 -> splineTo(-84.5 + poleOffset.x, -5.9 + poleOffset.y, 35)
+        3 -> splineTo(-84.5 + poleOffset.x, -8.4 + poleOffset.y, 35)
+        4 -> splineTo(-84.5 + poleOffset.x, -12.3 + poleOffset.y, 35.5)
         else -> throw CycleException()
     }
 
     private fun Anvil.goToIntake(it: Int) = when (it) {
-        0 -> splineTo(-165.5 + .5, -21.0, 180)
-        1 -> splineTo(-166.0 + .5, -22.5, 180)
-        2 -> splineTo(-166.1 + .5, -28.0, 180)
-        3 -> splineTo(-166.2 + .5, -27.5, 180)
-        4 -> splineTo(-166.3 + .5, -29.6, 180)
+        0 -> splineTo(-165.0, -21.0, 180)
+        1 -> splineTo(-165.3, -22.5, 180)
+        2 -> splineTo(-165, -28.0, 180)
+        3 -> splineTo(-165, -27.5, 180)
+        4 -> splineTo(-165.5, -27.9, 180)
         else -> throw CycleException()
     }.doInReverse()
 
@@ -99,7 +95,6 @@ class ShinyNewHighLeft : RogueBaseAuto() {
         .addTemporalMarker(190) {
             bot.lift.goToHigh()
             bot.arm.setToForwardsPos()
-
         }
 
         .addTemporalMarker(450) {
@@ -197,13 +192,15 @@ class ShinyNewHighLeft : RogueBaseAuto() {
 
             when (signalID) {
                 1 -> {
-                    lineToLinearHeading(-2.500, -25, 0)
+                    lineToLinearHeading(-97.50, -35, 0)
+                    lineToLinearHeading(-155, -35, 0)
                 }
                 2 -> {
-                    lineToLinearHeading(-92.50, -25, 0)
+                    lineToLinearHeading(-97.50, -35, 0)
                 }
                 3 -> {
-                    lineToLinearHeading(-160.0, -25, 0)
+                    lineToLinearHeading(-97.50, -35, 0)
+                    lineToLinearHeading(-40, -35, 0)
                 }
             }
 

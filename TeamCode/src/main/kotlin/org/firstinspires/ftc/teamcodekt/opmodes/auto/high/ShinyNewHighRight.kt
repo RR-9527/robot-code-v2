@@ -25,7 +25,7 @@ class ShinyNewHighRight : RogueBaseAuto() {
         Anvil.forgeTrajectory(bot.drive, startPose)
 
             .addTemporalMarker {
-                bot.lift.targetHeight = LIFT_LOW - 200
+                bot.lift.targetHeight = LIFT_LOW - 150
                 bot.claw.close()
                 bot.arm.setToForwardsDownPos()
                 bot.wrist.setToForwardsPos()
@@ -47,12 +47,13 @@ class ShinyNewHighRight : RogueBaseAuto() {
 
                 goToIntake(it)
 
-                setPoseEstimateInTemporalMarker(-375) {
-                    Pose2d(
-                        bot.drive.localizer.poseEstimate.x,
-                        bot.drive.localizer.poseEstimate.y + tapeCorrection.toIn(),
-                        bot.drive.localizer.poseEstimate.heading,
-                    )
+                setPoseEstimateInTemporalMarker(-150) {
+                    val correction = bot.camera.tapeDetectorPipeline.correction.toIn()
+
+                    val (x, _y, h) = bot.drive.localizer.poseEstimate
+                    val y = _y + correction
+
+                    Pose2d(x, y, h)
                 }
 
                 when (it) {
@@ -67,7 +68,7 @@ class ShinyNewHighRight : RogueBaseAuto() {
             .thenRun(::parkTraj)
 
     private fun Anvil.initialGoToDeposit() = this
-        .splineTo(-77.5, -42.5, 180+43)
+        .splineTo(78, -42.5, 180+48)
 
     private fun Anvil.goToDeposit(it: Int) = when (it) {
         0 -> splineTo(85.0 + poleOffset.x, -4.2 + poleOffset.y, 180-34)
@@ -79,11 +80,11 @@ class ShinyNewHighRight : RogueBaseAuto() {
     }
 
     private fun Anvil.goToIntake(it: Int) = when (it) {
-        0 -> splineTo(-165.0, -21.0, 0)
-        1 -> splineTo(-165.5, -22.5, 0)
-        2 -> splineTo(-165.9, -28.0, 0)
-        3 -> splineTo(-166.3, -27.5, 0)
-        4 -> splineTo(-166.8, -29.25, 0)
+        0 -> splineTo(165.0, -21.0, 0)
+        1 -> splineTo(165.3, -22.5, 0)
+        2 -> splineTo(165, -28.0, 0)
+        3 -> splineTo(165, -27.5, 0)
+        4 -> splineTo(165.5, -27.9, 0)
         else -> throw CycleException()
     }.doInReverse()
 

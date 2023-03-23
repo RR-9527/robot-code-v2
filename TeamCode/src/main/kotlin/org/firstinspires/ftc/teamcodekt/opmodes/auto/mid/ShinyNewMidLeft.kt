@@ -1,17 +1,12 @@
-package org.firstinspires.ftc.teamcodekt.opmodes.auto.high
+package org.firstinspires.ftc.teamcodekt.opmodes.auto.mid
 
 import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
-import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import ftc.rogue.blacksmith.Anvil
-import ftc.rogue.blacksmith.listeners.Listener
-import ftc.rogue.blacksmith.listeners.On
 import ftc.rogue.blacksmith.units.GlobalUnits
 import ftc.rogue.blacksmith.util.toIn
-import ftc.rogue.blacksmith.util.toRad
 import org.firstinspires.ftc.teamcode.AutoData
 import org.firstinspires.ftc.teamcode.AutoData.liftOffsets
-import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants
 import org.firstinspires.ftc.teamcodekt.components.LIFT_LOW
 import org.firstinspires.ftc.teamcodekt.components.LIFT_MID
 import org.firstinspires.ftc.teamcodekt.opmodes.auto.RogueBaseAuto
@@ -47,13 +42,15 @@ class ShinyNewMidLeft : RogueBaseAuto() {
 
                 goToIntake(it)
 
-                setPoseEstimateInTemporalMarker(-375) {
-                    Pose2d(
-                        bot.drive.localizer.poseEstimate.x,
-                        bot.drive.localizer.poseEstimate.y + tapeCorrection.toIn(),
-                        bot.drive.localizer.poseEstimate.heading,
-                    )
+                setPoseEstimateInTemporalMarker(-150) {
+                    val correction = bot.camera.tapeDetectorPipeline.correction.toIn()
+
+                    val (x, _y, h) = bot.drive.localizer.poseEstimate
+                    val y = _y + correction
+
+                    Pose2d(x, y, h)
                 }
+
 
                 when (it) {
                     LAST_CYCLE -> awaitFastIntake()

@@ -1,17 +1,12 @@
-package org.firstinspires.ftc.teamcodekt.opmodes.auto.high
+package org.firstinspires.ftc.teamcodekt.opmodes.auto.mid
 
 import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
-import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import ftc.rogue.blacksmith.Anvil
-import ftc.rogue.blacksmith.listeners.Listener
-import ftc.rogue.blacksmith.listeners.On
 import ftc.rogue.blacksmith.units.GlobalUnits
 import ftc.rogue.blacksmith.util.toIn
-import ftc.rogue.blacksmith.util.toRad
 import org.firstinspires.ftc.teamcode.AutoData
 import org.firstinspires.ftc.teamcode.AutoData.liftOffsets
-import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants
 import org.firstinspires.ftc.teamcodekt.components.LIFT_LOW
 import org.firstinspires.ftc.teamcodekt.components.LIFT_MID
 import org.firstinspires.ftc.teamcodekt.opmodes.auto.RogueBaseAuto
@@ -19,7 +14,7 @@ import org.firstinspires.ftc.teamcodekt.util.CycleException
 
 @Autonomous
 class ShinyNewMidRight : RogueBaseAuto() {
-    override val startPose = GlobalUnits.pos(-91, -163, 90)
+    override val startPose = GlobalUnits.pos(91, -163, 90)
 
     override fun mainTraj(startPose: Pose2d) =
         Anvil.forgeTrajectory(bot.drive, startPose)
@@ -31,7 +26,7 @@ class ShinyNewMidRight : RogueBaseAuto() {
                 bot.wrist.setToForwardsPos()
             }
 
-            .addTemporalMarker(1385) {
+            .addTemporalMarker(1250) {
                 bot.lift.targetHeight = LIFT_MID
                 bot.arm.setToForwardsPos()
             }
@@ -47,12 +42,13 @@ class ShinyNewMidRight : RogueBaseAuto() {
 
                 goToIntake(it)
 
-                setPoseEstimateInTemporalMarker(-375) {
-                    Pose2d(
-                        bot.drive.localizer.poseEstimate.x,
-                        bot.drive.localizer.poseEstimate.y + tapeCorrection.toIn(),
-                        bot.drive.localizer.poseEstimate.heading,
-                    )
+                setPoseEstimateInTemporalMarker(-150) {
+                    val correction = bot.camera.tapeDetectorPipeline.correction.toIn()
+
+                    val (x, _y, h) = bot.drive.localizer.poseEstimate
+                    val y = _y + correction
+
+                    Pose2d(x, y, h)
                 }
 
                 when (it) {
@@ -67,23 +63,23 @@ class ShinyNewMidRight : RogueBaseAuto() {
             .thenRun(::parkTraj)
 
     private fun Anvil.initialGoToDeposit() = this
-        .splineTo(-77.5 + poleOffset.x, -42.5 + poleOffset.y, 180+43)
+        .splineTo(77.5 + poleOffset.x, -42.5 + poleOffset.y, 180+48)
 
     private fun Anvil.goToDeposit(it: Int) = when (it) {
-        0 -> splineTo(-77.5 + poleOffset.x, -42.5 + poleOffset.y, 180+43)
-        1 -> splineTo(-77.5 + poleOffset.x, -42.5 + poleOffset.y, 180+-43)
-        2 -> splineTo(-77.5 + poleOffset.x, -42.5 + poleOffset.y, 180+43)
-        3 -> splineTo(-77.5 + poleOffset.x, -42.5 + poleOffset.y, 180+43)
-        4 -> splineTo(-77.5 + poleOffset.x, -42.5 + poleOffset.y, 180+43)
+        0 -> splineTo(77.5 + poleOffset.x, -42.5 + poleOffset.y, 180+43)
+        1 -> splineTo(77.5 + poleOffset.x, -42.5 + poleOffset.y, 180+-43)
+        2 -> splineTo(77.5 + poleOffset.x, -42.5 + poleOffset.y, 180+43)
+        3 -> splineTo(77.5 + poleOffset.x, -42.5 + poleOffset.y, 180+43)
+        4 -> splineTo(77.5 + poleOffset.x, -42.5 + poleOffset.y, 180+43)
         else -> throw CycleException()
     }
 
     private fun Anvil.goToIntake(it: Int) = when (it) {
-        0 -> splineTo(-165.0, -21.0, 0)
-        1 -> splineTo(-165.5, -22.5, 0)
-        2 -> splineTo(-165.9, -28.0, 0)
-        3 -> splineTo(-166.3, -27.5, 0)
-        4 -> splineTo(-166.8, -29.25, 0)
+        0 -> splineTo(-165.0, -21.0, 180)
+        1 -> splineTo(-165.3, -22.5, 180)
+        2 -> splineTo(-165, -28.0, 180)
+        3 -> splineTo(-165, -27.5, 180)
+        4 -> splineTo(-165.5, -27.9, 180)
         else -> throw CycleException()
     }.doInReverse()
 
@@ -97,7 +93,7 @@ class ShinyNewMidRight : RogueBaseAuto() {
         }
 
         .addTemporalMarker(190) {
-            bot.lift.goToHigh()
+            bot.lift.goToMid()
             bot.arm.setToForwardsPos()
 
         }
@@ -118,7 +114,7 @@ class ShinyNewMidRight : RogueBaseAuto() {
         }
 
         .addTemporalMarker(60) {
-            bot.lift.goToHigh()
+            bot.lift.goToMid()
         }
 
         .addTemporalMarker(200) {

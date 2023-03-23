@@ -22,6 +22,7 @@ import kotlin.math.abs
 
 
 @JvmField var LIFT_ZERO = 0
+@JvmField var LIFT_INC = 5
 @JvmField var LIFT_LOW  = 250
 @JvmField var LIFT_MID  = 465
 @JvmField var LIFT_HIGH = 710
@@ -86,13 +87,19 @@ class Lift {
         set(height) {
             field = height
             generateMotionProfile()
-
         }
     var clippedHeight: Int
         get() = targetHeight
         set(height) {
             targetHeight = height.clamp(LIFT_ZERO, LIFT_HIGH)
         }
+
+    fun incHeight(){
+        targetHeight += LIFT_INC
+    }
+    fun decHeight(){
+        targetHeight -= LIFT_INC
+    }
 
     fun goToZero() {
         targetHeight = LIFT_ZERO

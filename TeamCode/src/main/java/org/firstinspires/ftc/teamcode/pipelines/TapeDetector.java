@@ -30,7 +30,7 @@ public class TapeDetector extends OpenCvPipeline {
 
     public static double adj_a = 0.000699205;
     public static double adj_b = 0.0016927;
-    public static double adj_c = 0.55;
+    public static double adj_c = 0.3;
 
     public double tapeAngle = -1;
     public double correction = -1;
