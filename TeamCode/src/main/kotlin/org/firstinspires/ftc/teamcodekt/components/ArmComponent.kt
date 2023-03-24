@@ -12,7 +12,7 @@ object ArmComponent {
     const val tArmBackwards = 42.0
 
     @SetMethodName("goToRest")
-    const val tArmResting = 97.5
+    const val tArmResting = 92.5
 
     const val tArmBackwardsLower = 42.0
     const val tArmForwardsAngled = 122.5

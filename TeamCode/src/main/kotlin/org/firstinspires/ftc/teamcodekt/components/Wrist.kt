@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcodekt.components.meta.DeviceNames
 
 @JvmField var WRIST_FORWARDS  = 0.81
 @JvmField var WRIST_BACKWARDS = 0.12
-@JvmField var WRIST_REST      = 0.4805
+@JvmField var WRIST_REST      = 0.12
 
 class Wrist {
     private val wristServo = SimpleServo(hwMap, DeviceNames.WRIST_SERVO, 0.0, 180.0)

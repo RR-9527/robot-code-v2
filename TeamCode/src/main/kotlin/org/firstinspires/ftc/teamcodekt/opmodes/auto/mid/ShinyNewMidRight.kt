@@ -66,20 +66,20 @@ class ShinyNewMidRight : RogueBaseAuto() {
         .splineTo(79.5, -52.5, 225)
 
     private fun Anvil.goToDeposit(it: Int) = when (it) {
-        0 -> splineTo(77.5 + poleOffset.x, -48.0 + poleOffset.y, 180+50)
-        1 -> splineTo(77.5 + poleOffset.x, -44.0 + poleOffset.y, 180+50)
-        2 -> splineTo(77.5 + poleOffset.x, -44.0 + poleOffset.y, 180+50)
-        3 -> splineTo(77.5 + poleOffset.x, -42.0 + poleOffset.y, 180+50)
-        4 -> splineTo(77.5 + poleOffset.x, -40 + poleOffset.y, 180+50)
+        0 -> splineTo(-2.0 + 77.5 + poleOffset.x, -48.0 + poleOffset.y, 180+50)
+        1 -> splineTo(-1.5 + 77 + poleOffset.x, -43.0 + poleOffset.y, 180+50)
+        2 -> splineTo(0.25 + 76 + poleOffset.x, -43.0 + poleOffset.y, 180+50)
+        3 -> splineTo(-1.5 + 75 + poleOffset.x, -40.0 + poleOffset.y, 180+50)
+        4 -> splineTo(-0.3 + 74.5 + poleOffset.x, -39 + poleOffset.y, 180+49.2)
         else -> throw CycleException()
     }
 
     private fun Anvil.goToIntake(it: Int) = when (it) {
-        0 -> splineTo(160.7, -21.0, 0)
-        1 -> splineTo(161.0, -17.8, 0)
-        2 -> splineTo(161.0, -15, 0)
-        3 -> splineTo(161.0, -13, 0)
-        4 -> splineTo(161.0, -12, 0)
+        0 -> splineTo(160.9, -22.5, 0)
+        1 -> splineTo(160.7, -19, 0)
+        2 -> splineTo(160.4, -15.25, 0)
+        3 -> splineTo(160.4, -12.75, 0)
+        4 -> splineTo(160.2, -12.25, 0)
         else -> throw CycleException()
     }.doInReverse()
 
@@ -134,7 +134,7 @@ class ShinyNewMidRight : RogueBaseAuto() {
             bot.lift.targetHeight -= AutoData.DEPOSIT_DROP_AMOUNT
             bot.arm.setToForwardsDownPos()
         }
-        .addTemporalMarker(-20) {
+        .addTemporalMarker(-25) {
             bot.claw.openForDeposit()
 //            bot.intake.enable()
         }
@@ -148,7 +148,7 @@ class ShinyNewMidRight : RogueBaseAuto() {
             bot.arm.setToForwardsDownPos()
         }
 
-        val durationOffset = if (iterations < 4) -20 else -70
+        val durationOffset = if (iterations < 4) -80 else -100
 
         addTemporalMarker(durationOffset) {
             bot.claw.openForDeposit()
@@ -166,7 +166,6 @@ class ShinyNewMidRight : RogueBaseAuto() {
 //            }
             bot.lift.targetHeight = liftOffsets[iterations]-25
             bot.wrist.setToBackwardsPos()
-            bot.arm.targetAngle = 43.0
         }
 
         .addTemporalMarker(325) {
@@ -174,17 +173,23 @@ class ShinyNewMidRight : RogueBaseAuto() {
 //            bot.intake.enable()
         }
 
+        .addTemporalMarker(500) {
+            bot.arm.targetAngle = 43.0
+        }
+
     private fun Anvil.fastIntakePrep(iterations: Int) = this
         .addTemporalMarker(185) {
             bot.lift.targetHeight = liftOffsets[iterations]
 
-            bot.arm.targetAngle = 43.0
             bot.wrist.setToBackwardsPos()
 
             bot.claw.openForIntakeNarrow()
             bot.intake.enable()
         }
 
+        .addTemporalMarker(500) {
+            bot.arm.targetAngle = 41.5
+        }
 
     private fun parkTraj(startPose: Pose2d) =
         Anvil.forgeTrajectory(bot.drive, startPose) {
@@ -205,10 +210,10 @@ class ShinyNewMidRight : RogueBaseAuto() {
                     lineToLinearHeading(90.50, -7, 0)
                 }
                 3 -> {
-                    lineToLinearHeading(90.50, -7, 0)
+                    lineToLinearHeading(90.50, -7, 180)
                     setVelConstraint(100, 260.toRad(), DriveConstants.TRACK_WIDTH)
                     setAccelConstraint(80)
-                    lineToLinearHeading(160, -7, 0)
+                    lineToLinearHeading(160, -7, 180)
                 }
             }
 

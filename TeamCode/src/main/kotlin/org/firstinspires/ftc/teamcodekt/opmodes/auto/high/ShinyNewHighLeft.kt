@@ -27,7 +27,7 @@ class ShinyNewHighLeft : RogueBaseAuto() {
                 bot.wrist.setToForwardsPos()
             }
 
-            .addTemporalMarker(1420) {
+            .addTemporalMarker(1500) {
                 bot.lift.targetHeight = LIFT_MID
                 bot.arm.setToForwardsPos()
             }
@@ -65,23 +65,23 @@ class ShinyNewHighLeft : RogueBaseAuto() {
             .thenRun(::parkTraj)
 
     private fun Anvil.initialGoToDeposit() = this
-        .splineTo(-79.5, -44.25, -46.5)
+        .splineTo(-79.5, -44.25, -50.75)
 
     private fun Anvil.goToDeposit(it: Int) = when (it) {
         0 -> splineTo(-83.0 + poleOffset.x, -3 + poleOffset.y, 36)
-        1 -> splineTo(-83.3 + poleOffset.x, -3 + poleOffset.y, 35)
+        1 -> splineTo(-83.3 + poleOffset.x, -3 + poleOffset.y, 34.8)
         2 -> splineTo(-83.0 + poleOffset.x, -3.5 + poleOffset.y, 32.5)
-        3 -> splineTo(-81.0 + poleOffset.x, -4.5 + poleOffset.y, 32)
-        4 -> splineTo(-81.5 + poleOffset.x, -5.25 + poleOffset.y, 32)
+        3 -> splineTo(-81.0 + poleOffset.x, -4.5 + poleOffset.y, 31.7)
+        4 -> splineTo(-81.5 + poleOffset.x, -5.25 + poleOffset.y, 31.7)
         else -> throw CycleException()
     }
 
     private fun Anvil.goToIntake(it: Int) = when (it) {
-        0 -> splineTo(-164.6, -21.75, 180)
-        1 -> splineTo(-164.7, -22.5, 180)
-        2 -> splineTo(-164.9, -26, 180)
-        3 -> splineTo(-164.9, -28, 180)
-        4 -> splineTo(-164.8, -32.5, 180)
+        0 -> splineTo(-164.6, .5 + -21.2, 180)
+        1 -> splineTo(-164.7, .5 + -21.2, 180)
+        2 -> splineTo(-164.9, .5 + -25, 180)
+        3 -> splineTo(-164.9, .5 + -25, 180)
+        4 -> splineTo(-164.8, .5 + -29.5, 180)
         else -> throw CycleException()
     }.doInReverse()
 
@@ -158,7 +158,7 @@ class ShinyNewHighLeft : RogueBaseAuto() {
 //                3 -> bot.lift.targetHeight = liftOffsets[iterations]-8
 //                4 -> bot.lift.targetHeight = liftOffsets[iterations]-8
 //            }
-            bot.lift.targetHeight = liftOffsets[iterations]
+            bot.lift.targetHeight = liftOffsets[iterations]-7
 
             bot.wrist.setToBackwardsPos()
             bot.arm.targetAngle = 43.0

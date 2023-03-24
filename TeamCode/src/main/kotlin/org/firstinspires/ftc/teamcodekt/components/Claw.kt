@@ -7,9 +7,9 @@ import com.arcrobotics.ftclib.hardware.SimpleServo
 import ftc.rogue.blacksmith.BlackOp.Companion.hwMap
 import org.firstinspires.ftc.teamcodekt.components.meta.DeviceNames
 
-@JvmField var CLAW_INTAKE_WIDE   = 0.6475
-@JvmField var CLAW_INTAKE_NARROW = 0.568
-@JvmField var CLAW_DEPOSIT       = 0.666
+@JvmField var CLAW_INTAKE_WIDE   = 0.6245
+@JvmField var CLAW_INTAKE_NARROW = 0.578
+@JvmField var CLAW_DEPOSIT       = 0.686
 @JvmField var CLAW_CLOSE         = 0.425
 
 class Claw {
