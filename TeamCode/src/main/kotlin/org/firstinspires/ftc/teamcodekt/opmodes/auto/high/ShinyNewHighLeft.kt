@@ -27,7 +27,7 @@ class ShinyNewHighLeft : RogueBaseAuto() {
                 bot.wrist.setToForwardsPos()
             }
 
-            .addTemporalMarker(1500) {
+            .addTemporalMarker(1420) {
                 bot.lift.targetHeight = LIFT_MID
                 bot.arm.setToForwardsPos()
             }
@@ -43,15 +43,15 @@ class ShinyNewHighLeft : RogueBaseAuto() {
 
                 goToIntake(it)
 
-                setPoseEstimateInTemporalMarker(-250) {
-                    mTelemetry.addData("Correcting amont", "")
-                    val correction = bot.camera.tapeDetectorPipeline.correction.toIn()
-
-                    val (x, _y, h) = bot.drive.localizer.poseEstimate
-                    val y = _y + correction
-
-                    Pose2d(x, y, h)
-                }
+//                setPoseEstimateInTemporalMarker(-250) {
+//                    mTelemetry.addData("Correcting amont", "")
+//                    val correction = bot.camera.tapeDetectorPipeline.correction.toIn()
+//
+//                    val (x, _y, h) = bot.drive.localizer.poseEstimate
+//                    val y = _y + correction
+//
+//                    Pose2d(x, y, h)
+//                }
 
                 when (it) {
                     LAST_CYCLE -> awaitFastIntake()
@@ -65,23 +65,23 @@ class ShinyNewHighLeft : RogueBaseAuto() {
             .thenRun(::parkTraj)
 
     private fun Anvil.initialGoToDeposit() = this
-        .splineTo(-79.5, -44.25, -50.75)
+        .splineTo(-80.5, -45.5, -41)
 
     private fun Anvil.goToDeposit(it: Int) = when (it) {
         0 -> splineTo(-83.0 + poleOffset.x, -3 + poleOffset.y, 36)
-        1 -> splineTo(-83.3 + poleOffset.x, -3 + poleOffset.y, 34.8)
+        1 -> splineTo(-83.3 + poleOffset.x, -3 + poleOffset.y, 33)
         2 -> splineTo(-83.0 + poleOffset.x, -3.5 + poleOffset.y, 32.5)
-        3 -> splineTo(-81.0 + poleOffset.x, -4.5 + poleOffset.y, 31.7)
-        4 -> splineTo(-81.5 + poleOffset.x, -5.25 + poleOffset.y, 31.7)
+        3 -> splineTo(-83.0 + poleOffset.x, -4 + poleOffset.y, 32)
+        4 -> splineTo(-81.8 + poleOffset.x, -4 + poleOffset.y, 30.5)
         else -> throw CycleException()
     }
 
     private fun Anvil.goToIntake(it: Int) = when (it) {
-        0 -> splineTo(-164.6, .5 + -21.2, 180)
-        1 -> splineTo(-164.7, .5 + -21.2, 180)
-        2 -> splineTo(-164.9, .5 + -25, 180)
-        3 -> splineTo(-164.9, .5 + -25, 180)
-        4 -> splineTo(-164.8, .5 + -29.5, 180)
+        0 -> splineTo(.452 + -165.1, -21.75, 180)
+        1 -> splineTo(.452 + -165, -21.75, 180)
+        2 -> splineTo(.452 + -165.4, -23.6, 180)
+        3 -> splineTo(.452 + -165.2, -25, 180)
+        4 -> splineTo(.452 + -165.2, -25.5, 180)
         else -> throw CycleException()
     }.doInReverse()
 
@@ -89,18 +89,18 @@ class ShinyNewHighLeft : RogueBaseAuto() {
 //        .addTemporalMarker(-200) {
 //            bot.intake.enable()
 //        }
-        .addTemporalMarker(-100) {
+//        .addTemporalMarker(-100) {
 //            bot.intake.disable()
-            bot.arm.targetAngle = 40.25
-        }
-        .addTemporalMarker(-60) {
+//            bot.arm.targetAngle = 40.25
+//        }
+        .addTemporalMarker(-75) {
             bot.claw.close()
         }
         .addTemporalMarker(190) {
             bot.lift.goToHigh()
             bot.arm.setToForwardsPos()
         }
-        .addTemporalMarker(450) {
+        .addTemporalMarker(250) {
             bot.wrist.setToForwardsPos()
         }
         .waitTime(80)
@@ -109,17 +109,20 @@ class ShinyNewHighLeft : RogueBaseAuto() {
         .addTemporalMarker(-75) {
             bot.claw.close()
         }
-        .addTemporalMarker(-55) {
+        .addTemporalMarker(-95) {
             bot.intake.disable()
+        }
+        .addTemporalMarker(-50) {
+            bot.arm.targetAngle = 40.25
+            bot.lift.targetHeight -= 50
         }
         .addTemporalMarker(60) {
             bot.lift.goToHigh()
         }
         .addTemporalMarker(200) {
             bot.arm.setToForwardsPos()
-
         }
-        .addTemporalMarker(410) {
+        .addTemporalMarker(230) {
             bot.wrist.setToForwardsPos()
         }
         .waitTime(0)
@@ -158,10 +161,10 @@ class ShinyNewHighLeft : RogueBaseAuto() {
 //                3 -> bot.lift.targetHeight = liftOffsets[iterations]-8
 //                4 -> bot.lift.targetHeight = liftOffsets[iterations]-8
 //            }
-            bot.lift.targetHeight = liftOffsets[iterations]-7
+            bot.lift.targetHeight = liftOffsets[iterations] - 8
 
             bot.wrist.setToBackwardsPos()
-            bot.arm.targetAngle = 43.0
+            bot.arm.targetAngle = 43.5
         }
 
         .addTemporalMarker(325) {
@@ -173,7 +176,7 @@ class ShinyNewHighLeft : RogueBaseAuto() {
         .addTemporalMarker(185) {
             bot.lift.targetHeight = liftOffsets[iterations]
 
-            bot.arm.targetAngle = 43.0
+            bot.arm.targetAngle = 43.5
             bot.wrist.setToBackwardsPos()
 
             bot.claw.openForIntakeNarrow()
@@ -185,21 +188,21 @@ class ShinyNewHighLeft : RogueBaseAuto() {
             resetBot()
             when (signalID) {
                 1 -> {
-                    lineToLinearHeading(-97.50, -35, 0)
+                    lineToLinearHeading(-97.50, -20, 0)
                     setVelConstraint(100, 260.toRad(), DriveConstants.TRACK_WIDTH)
                     setAccelConstraint(80)
-                    lineToLinearHeading(-160, -35, 0)
+                    lineToLinearHeading(-160, -20, 0)
                 }
                 2 -> {
                     setVelConstraint(100, 260.toRad(), DriveConstants.TRACK_WIDTH)
                     setAccelConstraint(80)
-                    lineToLinearHeading(-97.50, -35, 0)
+                    lineToLinearHeading(-97.50, -20, 0)
                 }
                 3 -> {
-                    lineToLinearHeading(-97.50, -35, 0)
+                    lineToLinearHeading(-97.50, -20, 0)
                     setVelConstraint(100, 260.toRad(), DriveConstants.TRACK_WIDTH)
                     setAccelConstraint(80)
-                    lineToLinearHeading(-40, -35, 0)
+                    lineToLinearHeading(-40, -20, 0)
                 }
             }
 
@@ -207,7 +210,7 @@ class ShinyNewHighLeft : RogueBaseAuto() {
         }
 
     private fun Anvil.resetBot() = this
-        .addTemporalMarker {
+        .addTemporalMarker(250) {
             bot.arm.goToRest()
             bot.wrist.setToRestingPos()
             bot.lift.goToZero()

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcodekt.opmodes.auto.mid
+package org.firstinspires.ftc.teamcodekt.opmodes.auto.high
 
 import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcodekt.opmodes.auto.RogueBaseAuto
 import org.firstinspires.ftc.teamcodekt.util.CycleException
 
 @Autonomous
-class ShinyNewMidRight : RogueBaseAuto() {
+class DoNotUseLol : RogueBaseAuto() {
     override val startPose = GlobalUnits.pos(91, -163, 90)
 
     override fun mainTraj(startPose: Pose2d) =
@@ -31,6 +31,7 @@ class ShinyNewMidRight : RogueBaseAuto() {
                 bot.lift.targetHeight = LIFT_MID
                 bot.arm.setToForwardsPos()
             }
+
             .initialGoToDeposit()
             .initialDeposit()
 
@@ -42,11 +43,12 @@ class ShinyNewMidRight : RogueBaseAuto() {
 
                 goToIntake(it)
 
-//                setPoseEstimateInTemporalMarker(-150) {
+//                setPoseEstimateInTemporalMarker(-250) {
+//                    mTelemetry.addData("Correcting amont", "")
 //                    val correction = bot.camera.tapeDetectorPipeline.correction.toIn()
 //
 //                    val (x, _y, h) = bot.drive.localizer.poseEstimate
-//                    val y = _y - correction
+//                    val y = _y + correction
 //
 //                    Pose2d(x, y, h)
 //                }
@@ -63,80 +65,75 @@ class ShinyNewMidRight : RogueBaseAuto() {
             .thenRun(::parkTraj)
 
     private fun Anvil.initialGoToDeposit() = this
-        .splineTo(82.25, -52, 215)
+        .splineTo(80.5, -45.5, 180 + 41)
 
     private fun Anvil.goToDeposit(it: Int) = when (it) {
-        0 -> splineTo(-2.0 + 78 + poleOffset.x, -46.0 + poleOffset.y, 180+50)
-        1 -> splineTo(-1.5 + 78 + poleOffset.x, -41.0 + poleOffset.y, 180+50)
-        2 -> splineTo(0.25 + 77 + poleOffset.x, -41.0 + poleOffset.y, 180+47)
-        3 -> splineTo(-1.5 + 76.5 + poleOffset.x, -38.0 + poleOffset.y, 180+48)
-        4 -> splineTo(-0.3 + 76 + poleOffset.x, -37 + poleOffset.y, 180+47)
+        0 -> splineTo(83.0 + poleOffset.x, -3 + poleOffset.y,  180 + 36)
+        1 -> splineTo(83.3 + poleOffset.x, -3 + poleOffset.y,  180 + 33)
+        2 -> splineTo(83.0 + poleOffset.x, -3.5 + poleOffset.y, 180 + 32.5)
+        3 -> splineTo(83.0 + poleOffset.x, -4 + poleOffset.y,  180 + 32)
+        4 -> splineTo(81.8 + poleOffset.x, -4 + poleOffset.y,  180 + 30.5)
         else -> throw CycleException()
     }
 
     private fun Anvil.goToIntake(it: Int) = when (it) {
-        0 -> splineTo(160.9 + .8, -28.25, 0)
-        1 -> splineTo(160.7 + .6, -23.75, 0)
-        2 -> splineTo(160.4 + 0.3, -21.5, 0)
-        3 -> splineTo(160.4 + 0.3, -21.5, 0)
-        4 -> splineTo(160.2 + 0.3, -21.5, 0)
+        0 -> splineTo(-.452 + 165.1, -21.75, 180 + 180)
+        1 -> splineTo(-.452 + 165, -21.75, 180 + 180)
+        2 -> splineTo(-.452 + 165.4, -23.6, 180 + 180)
+        3 -> splineTo(-.452 + 165.2, -25, 180 + 180)
+        4 -> splineTo(-.452 + 165.2, -25.5, 180 + 180)
         else -> throw CycleException()
     }.doInReverse()
 
     private fun Anvil.awaitRegularIntake() = this
-        .addTemporalMarker(-170) {
-            bot.intake.disable()
-        }
-
-        .addTemporalMarker(-60) {
-            bot.claw.close()
-        }
-
-        .addTemporalMarker(190) {
-            bot.lift.goToMid()
-            bot.arm.setToForwardsPos()
-
-        }
-
-        .addTemporalMarker(450) {
-            bot.wrist.setToForwardsPos()
-        }
-
-        .waitTime(80)
-
-    private fun Anvil.awaitFastIntake() = this
-        .addTemporalMarker(-275) {
-            bot.intake.disable()
-        }
-
+//        .addTemporalMarker(-200) {
+//            bot.intake.enable()
+//        }
+//        .addTemporalMarker(-100) {
+//            bot.intake.disable()
+//            bot.arm.targetAngle = 40.25
+//        }
         .addTemporalMarker(-75) {
             bot.claw.close()
         }
-
-        .addTemporalMarker(60) {
-            bot.lift.goToMid()
+        .addTemporalMarker(190) {
+            bot.lift.goToHigh()
+            bot.arm.setToForwardsPos()
         }
+        .addTemporalMarker(250) {
+            bot.wrist.setToForwardsPos()
+        }
+        .waitTime(80)
 
+    private fun Anvil.awaitFastIntake() = this
+        .addTemporalMarker(-75) {
+            bot.claw.close()
+        }
+        .addTemporalMarker(-95) {
+            bot.intake.disable()
+        }
+        .addTemporalMarker(-50) {
+            bot.arm.targetAngle = 40.25
+            bot.lift.targetHeight -= 50
+        }
+        .addTemporalMarker(60) {
+            bot.lift.goToHigh()
+        }
         .addTemporalMarker(200) {
             bot.arm.setToForwardsPos()
-
         }
-
-        .addTemporalMarker(410) {
+        .addTemporalMarker(230) {
             bot.wrist.setToForwardsPos()
         }
         .waitTime(0)
-
-
 
     private fun Anvil.initialDeposit() = this
         .addTemporalMarker(-120) {
             bot.lift.targetHeight -= AutoData.DEPOSIT_DROP_AMOUNT
             bot.arm.setToForwardsDownPos()
         }
-        .addTemporalMarker(-25) {
+        .addTemporalMarker(-20) {
             bot.claw.openForDeposit()
-//            bot.intake.enable()
         }
         .addTemporalMarker(300) {
             bot.lift.targetHeight = liftOffsets[0]
@@ -148,7 +145,7 @@ class ShinyNewMidRight : RogueBaseAuto() {
             bot.arm.setToForwardsDownPos()
         }
 
-        val durationOffset = if (iterations < 4) -80 else -100
+        val durationOffset = if (iterations < 4) -20 else -70
 
         addTemporalMarker(durationOffset) {
             bot.claw.openForDeposit()
@@ -164,8 +161,10 @@ class ShinyNewMidRight : RogueBaseAuto() {
 //                3 -> bot.lift.targetHeight = liftOffsets[iterations]-8
 //                4 -> bot.lift.targetHeight = liftOffsets[iterations]-8
 //            }
-            bot.lift.targetHeight = liftOffsets[iterations]-25
+            bot.lift.targetHeight = liftOffsets[iterations] - 8
+
             bot.wrist.setToBackwardsPos()
+            bot.arm.targetAngle = 43.5
         }
 
         .addTemporalMarker(325) {
@@ -173,47 +172,37 @@ class ShinyNewMidRight : RogueBaseAuto() {
 //            bot.intake.enable()
         }
 
-        .addTemporalMarker(500) {
-            bot.arm.targetAngle = 43.0
-        }
-
     private fun Anvil.fastIntakePrep(iterations: Int) = this
         .addTemporalMarker(185) {
             bot.lift.targetHeight = liftOffsets[iterations]
 
+            bot.arm.targetAngle = 43.5
             bot.wrist.setToBackwardsPos()
 
             bot.claw.openForIntakeNarrow()
             bot.intake.enable()
         }
 
-        .addTemporalMarker(500) {
-            bot.arm.targetAngle = 41.5
-        }
-
     private fun parkTraj(startPose: Pose2d) =
         Anvil.forgeTrajectory(bot.drive, startPose) {
             resetBot()
-
             when (signalID) {
-                1 -> inReverse {
-                    lineToLinearHeading(90.50, -17, 0)
+                1 -> {
+                    lineToLinearHeading(97.50, -20, 180 + 0)
                     setVelConstraint(100, 260.toRad(), DriveConstants.TRACK_WIDTH)
                     setAccelConstraint(80)
-                    lineToLinearHeading(30, -13, 0)
-
-
+                    lineToLinearHeading(160, -20, 180 + 0)
                 }
                 2 -> {
                     setVelConstraint(100, 260.toRad(), DriveConstants.TRACK_WIDTH)
                     setAccelConstraint(80)
-                    lineToLinearHeading(90.50, -17, 0)
+                    lineToLinearHeading(97.50, -20, 180 + 0)
                 }
                 3 -> {
-                    lineToLinearHeading(90.50, -17, 180)
+                    lineToLinearHeading(97.50, -20, 180 + 0)
                     setVelConstraint(100, 260.toRad(), DriveConstants.TRACK_WIDTH)
                     setAccelConstraint(80)
-                    lineToLinearHeading(160, -17, 180)
+                    lineToLinearHeading(40, -20, 180 + 0)
                 }
             }
 
@@ -221,7 +210,7 @@ class ShinyNewMidRight : RogueBaseAuto() {
         }
 
     private fun Anvil.resetBot() = this
-        .addTemporalMarker {
+        .addTemporalMarker(250) {
             bot.arm.goToRest()
             bot.wrist.setToRestingPos()
             bot.lift.goToZero()
