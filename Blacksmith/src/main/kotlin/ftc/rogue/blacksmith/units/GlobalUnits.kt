@@ -11,6 +11,7 @@ import java.io.File
 import java.io.FileReader
 import java.util.*
 import kotlin.reflect.KProperty
+import kotlin.reflect.full.companionObjectInstance
 
 /**
  * [READ DOCS FOR ME (click me)](https://blacksmithftc.vercel.app/util/global-units)
@@ -100,13 +101,42 @@ object GlobalUnits {
     }
 
     private fun setUnitsFromProperty(properties: Properties) = properties.run {
+//        val d = getProperty("distance") ?: "inches".also { setProperty("distance", it) }
+//        val a = getProperty("angle") ?: "radians".also { setProperty("angle", it) }
+//        val t = getProperty("time") ?: "seconds".also { setProperty("time", it) }
+//
+//        distance = enumValueOf(d.uppercase())
+//           angle = enumValueOf(a.uppercase())
+//            time = enumValueOf(t.uppercase())
+
         val d = getProperty("distance") ?: "inches".also { setProperty("distance", it) }
         val a = getProperty("angle") ?: "radians".also { setProperty("angle", it) }
         val t = getProperty("time") ?: "seconds".also { setProperty("time", it) }
 
-        distance = enumValueOf(d.uppercase())
-           angle = enumValueOf(a.uppercase())
-            time = enumValueOf(t.uppercase())
+        distance = extractUnit(d)
+           angle = extractUnit(a)
+            time = extractUnit(t)
+    }
+
+    private inline fun <reified T : UnitType> extractUnit(name: String): T = when {
+        name.uppercase() in T::class.java.declaredFields.map { it.name } -> {
+            T::class.java.getDeclaredField(name.uppercase()).get(T::class.companionObjectInstance) as? T
+                ?: throw IllegalArgumentException("Provided unit class doesn't provide the right unit, did you set it to the right unit/field?")
+        }
+
+        name.toDoubleOrNull() != null -> {
+            T::class.java.constructors.first().newInstance(name.toDouble()) as T
+        }
+
+        "." in name -> {
+            val provider = Class.forName(name).newInstance() as? UnitProvider<*>
+                ?: throw IllegalArgumentException("Provided unit class isn't a UnitProvider, did you spell it right?")
+
+            provider.get() as? T
+                ?: throw IllegalArgumentException("Provided unit class doesn't provide the right unit, did you set it to the right unit/field?")
+        }
+
+        else -> throw IllegalArgumentException("Invalid unit set, are you sure you spelled it right?")
     }
 
     private class SetUnitFirst<T : Any> {
@@ -123,4 +153,8 @@ object GlobalUnits {
             value = _value
         }
     }
+}
+
+fun main() {
+    println(GlobalUnits.distance.toIn(3))
 }

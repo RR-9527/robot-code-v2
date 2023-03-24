@@ -54,8 +54,8 @@ dependencies {
     implementation 'org.ftclib.ftclib:core:2.0.1'
     implementation 'org.ftclib.ftclib:vision:2.0.1'
 
-    implementation 'org.openftc:easyopencv:1.5.2'
-    implementation 'org.openftc:apriltag:1.1.0'
+    implementation 'org.openftc:easyopencv:1.6.1'
+    implementation 'org.openftc:apriltag:1.1.1'
 
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
 }

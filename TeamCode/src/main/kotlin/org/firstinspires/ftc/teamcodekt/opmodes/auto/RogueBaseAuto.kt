@@ -33,12 +33,11 @@ abstract class RogueBaseAuto : BlackOp() {
         PhotonCore.enable()
         PhotonCore.CONTROL_HUB.bulkCachingMode = LynxModule.BulkCachingMode.MANUAL
 
-        Imu.init(this)
-        Imu.start()
+//        Imu.init(this)
+//        Imu.start()
 
         val startTraj = mainTraj(startPose)
-        Anvil.startAutoWith(startTraj).onSchedulerLaunch()
-
+        val runner = Anvil.startAutoWith(startTraj).onSchedulerLaunch()
 
         bot.camera.lookForwards()
 
@@ -47,7 +46,7 @@ abstract class RogueBaseAuto : BlackOp() {
             signalID = bot.camera.stageDetection(this) ?: 2
         }
 
-//        bot.camera.setTapeDetectionPipeline()
+        bot.camera.setTapeDetectionPipeline()
         bot.camera.lookDown()
 
         Scheduler.debug({ opModeIsActive() && !isStopRequested }) {

@@ -4,7 +4,7 @@ package ftc.rogue.blacksmith.util.kalman
 import com.acmerobotics.dashboard.config.Config
 import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.acmerobotics.roadrunner.localization.TwoTrackingWheelLocalizer
-import ftc.rogue.blacksmith.units.AngleUnit.DEGREES
+import ftc.rogue.blacksmith.units.AngleUnit
 import ftc.rogue.blacksmith.util.toRad
 
 @JvmField
@@ -96,7 +96,7 @@ class KalmanTwoWheelLocalizer(
 
             return listOf(
                 Pose2d(parallelX, parallelY, 0.0),
-                Pose2d(perpendicularX, perpendicularY, 90.toRad(from = DEGREES)),
+                Pose2d(perpendicularX, perpendicularY, 90.toRad(from = AngleUnit.DEGREES)),
             )
         }
     }

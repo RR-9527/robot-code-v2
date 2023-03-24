@@ -17,6 +17,7 @@ import org.openftc.easyopencv.OpenCvCamera
 import org.openftc.easyopencv.OpenCvCameraFactory
 import org.openftc.easyopencv.OpenCvCameraRotation
 import org.openftc.easyopencv.OpenCvPipeline
+import org.openftc.easyopencv.OpenCvWebcam
 
 @JvmField
 var CAM_FORWARDS = 56.5
@@ -64,12 +65,14 @@ class Camera {
             R.id.cameraMonitorViewId,
         )
 
-//        camera.setPipeline(aprilTagDetectionPipeline)
-        camera.setPipeline(tapeDetectorPipeline) // TODO: change back for actual autos
+        camera.setPipeline(aprilTagDetectionPipeline)
+//        camera.setPipeline(tapeDetectorPipeline) // TODO: change back for actual autos
 
         camera.openCameraDeviceAsync(object : OpenCvCamera.AsyncCameraOpenListener {
             override fun onOpened() {
                 camera.startStreaming(1280, 720, OpenCvCameraRotation.UPRIGHT)
+//                camera.startStreaming(width, height, OpenCvCameraRotation.UPRIGHT)
+//                camera.ptzControl.setZoom(4)
             }
 
             override fun onError(errorCode: Int) {
@@ -79,13 +82,24 @@ class Camera {
     }
 
     fun setTapeDetectionPipeline() {
+//        camera.closeCameraDevice()
+//        camera.setPipeline(tapeDetectorPipeline)
+//
+//        camera.openCameraDeviceAsync(object : OpenCvCamera.AsyncCameraOpenListener {
+//            override fun onOpened() {
+//                camera.startStreaming(width, height, OpenCvCameraRotation.UPRIGHT)
+//            }
+//
+//            override fun onError(errorCode: Int) {
+//                throw RuntimeException("Error opening camera! Error code $errorCode")
+//            }
+//        })
         camera.stopStreaming()
-        camera.startStreaming(width, height)
+        camera.startStreaming(width, height, OpenCvCameraRotation.UPRIGHT)
         camera.setPipeline(tapeDetectorPipeline)
     }
 
     fun stageDetection(opmode: LinearOpMode): Int? {
-
         var numFramesWithoutDetection = 0
         var lastIntID: Int? = null
 
@@ -105,8 +119,6 @@ class Camera {
             lastIntID = detections.last().id
             mTelemetry.addLine("\nDetected tag ID=$lastIntID")
         }
-
-        mTelemetry.update()
 
         return lastIntID.takeIf { it in 1..3 }
     }

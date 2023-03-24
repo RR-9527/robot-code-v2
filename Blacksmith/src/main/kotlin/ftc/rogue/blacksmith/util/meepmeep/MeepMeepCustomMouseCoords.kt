@@ -40,14 +40,14 @@ object MeepMeepCustomMouseCoords {
                 gfx.setColor(txtColor)
 
                 var str = "(%s: %4.1f, %4.1f)".format(
-                    distanceUnit.name.lowercase(),
+                    distanceUnit::class.java.simpleName.lowercase(),
                     DistanceUnit.INCHES.toOtherDistanceUnit(mouseToFieldCoords.x, distanceUnit),
                     DistanceUnit.INCHES.toOtherDistanceUnit(mouseToFieldCoords.y, distanceUnit),
                 )
 
                 if (MeepMeepBotHover.heading.isFinite()) {
                     str += " (%s: %3.1f)".format(
-                        angleUnit.name.lowercase(),
+                        distanceUnit::class.java.simpleName.lowercase(),
                         AngleUnit.DEGREES.to(angleUnit, MeepMeepBotHover.heading),
                     )
                 }

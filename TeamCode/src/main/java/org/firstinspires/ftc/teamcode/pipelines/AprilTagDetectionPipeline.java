@@ -16,6 +16,8 @@ import org.openftc.easyopencv.OpenCvPipeline;
 
 import java.util.ArrayList;
 
+import ftc.rogue.blacksmith.BlackOp;
+
 public class AprilTagDetectionPipeline extends OpenCvPipeline
 {
     private long nativeApriltagPtr;
@@ -78,6 +80,8 @@ public class AprilTagDetectionPipeline extends OpenCvPipeline
     @Override
     public Mat processFrame(Mat input)
     {
+        BlackOp.mTelemetry().addLine("sssss");
+
         // Convert to grayscale
         Imgproc.cvtColor(input, grey, Imgproc.COLOR_RGBA2GRAY);
 
@@ -127,7 +131,7 @@ public class AprilTagDetectionPipeline extends OpenCvPipeline
     {
         synchronized (detectionsUpdateSync)
         {
-            ArrayList<AprilTagDetection> ret = detectionsUpdate;
+            ArrayList<AprilTagDetection> ret = detectionsUpdate; // do not change!
             return ret;
         }
     }

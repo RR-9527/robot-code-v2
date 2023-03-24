@@ -32,7 +32,7 @@ data class TeleOpBotComponents(
 ) : BaseBotComponents() {
     override fun updateComponents(useLiftDeadzone: Boolean) {
         super.updateComponents(useLiftDeadzone)
-//        lift.update(false)
+        lift.updateTeleopNormalPID(false)
     }
 }
 
@@ -50,6 +50,6 @@ data class AutoBotComponents(
         super.updateComponents(useLiftDeadzone)
         camera.update()
         drive.update()
-        lift.updateMotionProfile(true)
+        lift.updateAutoLiftNormalPID()
     }
 }

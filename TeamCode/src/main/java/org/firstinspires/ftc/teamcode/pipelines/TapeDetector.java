@@ -14,6 +14,8 @@ import org.openftc.easyopencv.OpenCvPipeline;
 
 import java.util.ArrayList;
 
+import ftc.rogue.blacksmith.BlackOp;
+
 /**
  * Class to apply a canny edge detector in an EasyOpenCV pipeline.
  */
@@ -30,7 +32,7 @@ public class TapeDetector extends OpenCvPipeline {
 
     public static double adj_a = 0.000699205;
     public static double adj_b = 0.0016927;
-    public static double adj_c = 0.3;
+    public static double adj_c = 0.5;
 
     public double tapeAngle = -1;
     public double correction = -1;
@@ -59,6 +61,7 @@ public class TapeDetector extends OpenCvPipeline {
      */
     @Override
     public Mat processFrame(Mat img) {
+        BlackOp.mTelemetry().addLine("joe shmama");
         return detection(img);
     }
 

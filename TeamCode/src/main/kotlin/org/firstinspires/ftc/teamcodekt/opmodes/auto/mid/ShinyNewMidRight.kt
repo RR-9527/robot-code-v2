@@ -5,8 +5,10 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import ftc.rogue.blacksmith.Anvil
 import ftc.rogue.blacksmith.units.GlobalUnits
 import ftc.rogue.blacksmith.util.toIn
+import ftc.rogue.blacksmith.util.toRad
 import org.firstinspires.ftc.teamcode.AutoData
 import org.firstinspires.ftc.teamcode.AutoData.liftOffsets
+import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants
 import org.firstinspires.ftc.teamcodekt.components.LIFT_LOW
 import org.firstinspires.ftc.teamcodekt.components.LIFT_MID
 import org.firstinspires.ftc.teamcodekt.opmodes.auto.RogueBaseAuto
@@ -18,19 +20,17 @@ class ShinyNewMidRight : RogueBaseAuto() {
 
     override fun mainTraj(startPose: Pose2d) =
         Anvil.forgeTrajectory(bot.drive, startPose)
-
             .addTemporalMarker {
-                bot.lift.targetHeight = LIFT_LOW - 200
+                bot.lift.targetHeight = LIFT_LOW - 95
                 bot.claw.close()
                 bot.arm.setToForwardsDownPos()
                 bot.wrist.setToForwardsPos()
             }
 
-            .addTemporalMarker(1250) {
+            .addTemporalMarker(1420) {
                 bot.lift.targetHeight = LIFT_MID
                 bot.arm.setToForwardsPos()
             }
-
             .initialGoToDeposit()
             .initialDeposit()
 
@@ -46,7 +46,7 @@ class ShinyNewMidRight : RogueBaseAuto() {
                     val correction = bot.camera.tapeDetectorPipeline.correction.toIn()
 
                     val (x, _y, h) = bot.drive.localizer.poseEstimate
-                    val y = _y + correction
+                    val y = _y - correction
 
                     Pose2d(x, y, h)
                 }
@@ -63,23 +63,23 @@ class ShinyNewMidRight : RogueBaseAuto() {
             .thenRun(::parkTraj)
 
     private fun Anvil.initialGoToDeposit() = this
-        .splineTo(77.5 + poleOffset.x, -42.5 + poleOffset.y, 180+48)
+        .splineTo(79.5, -52.5, 225)
 
     private fun Anvil.goToDeposit(it: Int) = when (it) {
-        0 -> splineTo(77.5 + poleOffset.x, -42.5 + poleOffset.y, 180+43)
-        1 -> splineTo(77.5 + poleOffset.x, -42.5 + poleOffset.y, 180+-43)
-        2 -> splineTo(77.5 + poleOffset.x, -42.5 + poleOffset.y, 180+43)
-        3 -> splineTo(77.5 + poleOffset.x, -42.5 + poleOffset.y, 180+43)
-        4 -> splineTo(77.5 + poleOffset.x, -42.5 + poleOffset.y, 180+43)
+        0 -> splineTo(77.5 + poleOffset.x, -48.0 + poleOffset.y, 180+50)
+        1 -> splineTo(77.5 + poleOffset.x, -44.0 + poleOffset.y, 180+50)
+        2 -> splineTo(77.5 + poleOffset.x, -44.0 + poleOffset.y, 180+50)
+        3 -> splineTo(77.5 + poleOffset.x, -42.0 + poleOffset.y, 180+50)
+        4 -> splineTo(77.5 + poleOffset.x, -40 + poleOffset.y, 180+50)
         else -> throw CycleException()
     }
 
     private fun Anvil.goToIntake(it: Int) = when (it) {
-        0 -> splineTo(-165.0, -21.0, 180)
-        1 -> splineTo(-165.3, -22.5, 180)
-        2 -> splineTo(-165, -28.0, 180)
-        3 -> splineTo(-165, -27.5, 180)
-        4 -> splineTo(-165.5, -27.9, 180)
+        0 -> splineTo(160.7, -21.0, 0)
+        1 -> splineTo(161.0, -17.8, 0)
+        2 -> splineTo(161.0, -15, 0)
+        3 -> splineTo(161.0, -13, 0)
+        4 -> splineTo(161.0, -12, 0)
         else -> throw CycleException()
     }.doInReverse()
 
@@ -164,8 +164,7 @@ class ShinyNewMidRight : RogueBaseAuto() {
 //                3 -> bot.lift.targetHeight = liftOffsets[iterations]-8
 //                4 -> bot.lift.targetHeight = liftOffsets[iterations]-8
 //            }
-            bot.lift.targetHeight = liftOffsets[iterations]-13
-
+            bot.lift.targetHeight = liftOffsets[iterations]-25
             bot.wrist.setToBackwardsPos()
             bot.arm.targetAngle = 43.0
         }
@@ -192,14 +191,24 @@ class ShinyNewMidRight : RogueBaseAuto() {
             resetBot()
 
             when (signalID) {
-                1 -> {
-                    lineToLinearHeading(-2.5, 9, 0)
+                1 -> inReverse {
+                    lineToLinearHeading(90.50, -7, 0)
+                    setVelConstraint(100, 260.toRad(), DriveConstants.TRACK_WIDTH)
+                    setAccelConstraint(80)
+                    lineToLinearHeading(30, -7, 0)
+
+
                 }
                 2 -> {
-                    lineToLinearHeading(-92.5, 9, 0)
+                    setVelConstraint(100, 260.toRad(), DriveConstants.TRACK_WIDTH)
+                    setAccelConstraint(80)
+                    lineToLinearHeading(90.50, -7, 0)
                 }
                 3 -> {
-                    lineToLinearHeading(-160, 9, 0)
+                    lineToLinearHeading(90.50, -7, 0)
+                    setVelConstraint(100, 260.toRad(), DriveConstants.TRACK_WIDTH)
+                    setAccelConstraint(80)
+                    lineToLinearHeading(160, -7, 0)
                 }
             }
 
