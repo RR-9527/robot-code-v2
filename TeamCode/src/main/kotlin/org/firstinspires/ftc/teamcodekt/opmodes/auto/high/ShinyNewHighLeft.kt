@@ -65,23 +65,23 @@ class ShinyNewHighLeft : RogueBaseAuto() {
             .thenRun(::parkTraj)
 
     private fun Anvil.initialGoToDeposit() = this
-        .splineTo(-79.5, -41.5, -46.5)
+        .splineTo(-79.5, -44.25, -46.5)
 
     private fun Anvil.goToDeposit(it: Int) = when (it) {
-        0 -> splineTo(-85.0 + poleOffset.x, -4.30 + poleOffset.y, 36)
-        1 -> splineTo(-85.3 + poleOffset.x, -5.00 + poleOffset.y, 35)
-        2 -> splineTo(-85.0 + poleOffset.x, -6.90 + poleOffset.y, 32.5)
-        3 -> splineTo(-85.9 + poleOffset.x, -8.50 + poleOffset.y, 32)
-        4 -> splineTo(-86.2 + poleOffset.x, -12.6 + poleOffset.y, 32)
+        0 -> splineTo(-83.0 + poleOffset.x, -3 + poleOffset.y, 36)
+        1 -> splineTo(-83.3 + poleOffset.x, -3 + poleOffset.y, 35)
+        2 -> splineTo(-83.0 + poleOffset.x, -3.5 + poleOffset.y, 32.5)
+        3 -> splineTo(-81.0 + poleOffset.x, -4.5 + poleOffset.y, 32)
+        4 -> splineTo(-81.5 + poleOffset.x, -5.25 + poleOffset.y, 32)
         else -> throw CycleException()
     }
 
     private fun Anvil.goToIntake(it: Int) = when (it) {
-        0 -> splineTo(-164.6, -21.0, 180)
-        1 -> splineTo(-164.7, -23.5, 180)
-        2 -> splineTo(-164.9, -29.25, 180)
-        3 -> splineTo(-164.9, -32.5, 180)
-        4 -> splineTo(-164.8, -32.9, 180)
+        0 -> splineTo(-164.6, -21.75, 180)
+        1 -> splineTo(-164.7, -22.5, 180)
+        2 -> splineTo(-164.9, -26, 180)
+        3 -> splineTo(-164.9, -28, 180)
+        4 -> splineTo(-164.8, -32.5, 180)
         else -> throw CycleException()
     }.doInReverse()
 
