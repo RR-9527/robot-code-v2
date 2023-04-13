@@ -34,7 +34,7 @@ const config = {
           sidebarPath: require.resolve('./sidebars.js'),
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
-          editUrl: 'https://github.com/RR-9527/robot-code-v2/tree/master/blacksmith-docs/',
+          editUrl: 'https://github.com/toptobes/robot-code-v2/tree/master/blacksmith-docs/',
         },
         blog: false,
         theme: {
@@ -71,7 +71,7 @@ const config = {
             label: 'Docs',
           },
           {
-            href: 'https://github.com/RR-9527/robot-code-v2',
+            href: 'https://github.com/toptobes/robot-code-v2',
             label: 'GitHub',
             position: 'right',
           },
@@ -115,7 +115,7 @@ const config = {
             items: [
               {
                 label: 'GitHub',
-                href: 'https://github.com/RR-9527/robot-code-v2',
+                href: 'https://github.com/toptobes/robot-code-v2',
               },
             ],
           },
