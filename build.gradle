@@ -5,7 +5,7 @@
  */
 
 buildscript {
-    ext.kotlin_version = '1.7.20'
+    ext.kotlin_version = '1.9.10'
     repositories {
         mavenCentral()
         google()
@@ -28,8 +28,4 @@ allprojects {
 
 repositories {
     mavenCentral()
-
-    flatDir {
-        dirs '../libs'
-    }
 }

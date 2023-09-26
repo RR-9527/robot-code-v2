@@ -35,7 +35,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
 
 /**
- * {@link FtcOpModeRegister} is responsible for registering opmodes for use in an FTC game.
+ * {@link FtcOpModeRegister} is responsible for registering OpModes for use in an FTC game.
  * @see #register(OpModeManager)
  */
 public class FtcOpModeRegister implements OpModeRegister {
