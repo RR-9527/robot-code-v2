@@ -24,6 +24,16 @@ allprojects {
         mavenCentral()
         google()
     }
+
+    if (System.getenv('JITPACK') != null && project.name == 'TeamCode') {
+        logger.lifecycle("JitPack build detected; skipping TeamCode")
+
+        project.gradle.projectsEvaluated {
+            tasks.each { task ->
+                task.enabled = false
+            }
+        }
+    }
 }
 
 repositories {

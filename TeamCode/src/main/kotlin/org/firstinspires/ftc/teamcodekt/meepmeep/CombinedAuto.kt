@@ -39,8 +39,8 @@ fun main() {
         .addEntity(util.botShadowOnHover(12.0, 12.0))
         .addEntity(util.customMouseCoords())
 
-    mm::class.java.getMethod("requestToRemoveEntity", Entity::class.java)
-        .invoke(mm, mm::class.java.getDeclaredField("DEFAULT_AXES_ENTITY").get(mm))
+//    mm::class.java.getMethod("requestToRemoveEntity", Entity::class.java)
+//        .invoke(mm, mm::class.java.getDeclaredField("DEFAULT_AXES_ENTITY").get(mm))
 
     mm.start()
 }
